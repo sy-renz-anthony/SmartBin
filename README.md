@@ -1,6 +1,6 @@
 # SmartBin
 
-Trash Bin that automatically segregates wet, dry, and metallic materials. It also detects when the bins are full and can be monitored online through a MERN web app.
+Trash Bin that automatically segregates wet, dry, and metallic materials. It also detects when the bins are full and can be monitored online through a MERN web app. I deployed the backend of this project to render.com and is now currently running, though it isn't really deployed appropriate for production still it is enough to play around with it's functionalities. the URL for the backend is: https://smartbin-x0i7.onrender.com
 
 ## Backend NPM modules setup
 ### Run this command in the directory of the backend
@@ -8,7 +8,7 @@ Trash Bin that automatically segregates wet, dry, and metallic materials. It als
 -npm install nodemon -D
 
 ### About the .env file
-I excluded the .env file that was suppose to be inside of the backend folder for security purposes since it would expose the accounts I used for some of the external services I used to build this app. Please just create your own .env file inside of the backend folder and follow this format: \
+Since I deployed it already on render.com, I included my own .env file here despite the security issues that might happen later. Anyways, I am not expecting this to be used in a real production server but incase you would, please change the values inside of it and hide it from public to ensure the safety of your project. Update the .env file into your own account. Just follow this format: \
 \
 \
 MONGO_URI= <*URL of your mongodb collection>/SmartBin \
