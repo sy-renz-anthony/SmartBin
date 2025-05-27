@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import axios from 'axios'
+import axiosInstance from '../axiosConfig.js'
 
 
 
@@ -15,7 +15,7 @@ const Login = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-        const response = await axios.post("/users/login", {"employeeID": employeeID, "password": password });
+        const response = await axiosInstance.post("/users/login", {"employeeID": employeeID, "password": password }, {withCredentials: true});
 
         console.log(JSON.stringify(response.data));
         if(!response.data.success){
