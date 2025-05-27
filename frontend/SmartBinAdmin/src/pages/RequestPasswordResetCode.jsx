@@ -4,10 +4,10 @@ import { useState } from 'react'
 const ResetPassword = () => {
   const [email, setEmail] = useState("");
 
-  const sendCodeButtonPressed =async () =>{
+  const sendCodeButtonPressed =async (e) =>{
     e.preventDefault();
 
-    
+    console.log("sending email: "+email);
   }
 
   return (
@@ -24,7 +24,9 @@ const ResetPassword = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-        <button className="w-full bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700 transition duration-200">
+        <button className="w-full bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700 transition duration-200"
+          onClick={(e)=>sendCodeButtonPressed()}
+        >
           Send Codes
         </button>
       </div>

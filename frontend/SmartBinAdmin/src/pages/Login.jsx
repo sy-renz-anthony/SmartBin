@@ -15,7 +15,7 @@ const Login = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-        const response = await axios.post("https://smartbin-x0i7.onrender.com/api/users/login", {"employeeID": employeeID, "password": password });
+        const response = await axios.post("/users/login", {"employeeID": employeeID, "password": password });
 
         console.log(JSON.stringify(response.data));
         if(!response.data.success){
