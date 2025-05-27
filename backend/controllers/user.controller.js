@@ -258,19 +258,19 @@ export const logout = async (req, res) =>{
 
 export const sendPasswordResetOTP = async (req, res) =>{
     if(!req.body){
-        return res.status(400).json({success: false, message: "Invalid values!"});
+        return res.status(200).json({success: false, message: "Invalid values!"});
     }
 
     const email = req.body.emailAddress;
 
     if(!email){
-        return res.status(400).json({success: false, message: "Invalid email!"});
+        return res.status(200).json({success: false, message: "Invalid email!"});
     }
 
     try{
         const userData = await User.findOne({emailAddress: email});
         if(!userData){
-            res.status(404).json({success: false, message: "No Employee Account found with this email!"});
+            res.status(200).json({success: false, message: "No Employee Account found with this email!"});
         }else{
             const otp = String(Math.floor(100000 + Math.random() * 900000));
 
