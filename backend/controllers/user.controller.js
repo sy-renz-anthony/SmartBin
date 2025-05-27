@@ -196,30 +196,30 @@ export const update = async(req, res) =>{
 
 export const login = async (req, res) =>{
     if(!req.body){
-        return res.status(400).json({success: false, message: "Invalid values!"});
+        return res.status(200).json({success: false, message: "Invalid values!"});
     }
 
     const employeeID = req.body.employeeID;
     const password = req.body.password;
 
     if(!employeeID){
-        return res.status(400).json({success: false, message: "Invalid Employee ID number!"});
+        return res.status(200).json({success: false, message: "Invalid Employee ID number!"});
     }
 
     if(!password){
-        return res.status(400).json({success: false, message: "Invalid Password!"});
+        return res.status(200).json({success: false, message: "Invalid Password!"});
     }
 
     try{
         const userData = await User.findOne({employeeID});
         if(!userData){
-            return res.status(404).json({success: false, message: "Invalid Employee ID number or Password!"});
+            return res.status(200).json({success: false, message: "Invalid Employee ID number or Password!"});
         }
 
         const correctPassword = await bcrypt.compare(password, userData.password);
 
         if(!correctPassword){
-            return res.status(404).json({success: false, message: "Invalid Employee ID number or Password!"});
+            return res.status(200).json({success: false, message: "Invalid Employee ID number or Password!"});
         }
 
         const token = jwt.sign({id: userData._id}, process.env.JWT_SECRET, {expiresIn: '7d'});
