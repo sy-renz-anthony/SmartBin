@@ -303,13 +303,13 @@ export const resetPassword = async (req, res) =>{
         return res.status(400).json({success: false, message: "Invalid values!"});
     }
 
-    const email = req.body.emailAddress;
+    const employeeID = req.body.employeeID;
     const otp = req.body.otp;
     const newPassword =req.body.password;
     const confirmNewPassword = req.body.confirmPassword;
 
-    if(!email){
-        return res.status(404).json({success: false, message: "Please fill-in your email to reset password!"});
+    if(!employeeID){
+        return res.status(404).json({success: false, message: "Please fill-in your Employee ID# to reset password!"});
     }else if(!otp){
         return res.status(404).json({success: false, message: "Input the OTP codes to reset password!"});
     }else if(!newPassword){
@@ -323,7 +323,7 @@ export const resetPassword = async (req, res) =>{
     }
 
     try{
-        const userData = await User.findOne({emailAddress: email});
+        const userData = await User.findOne({"employeeID": employeeID});
 
         if(!userData){
             res.status(401).json({success: false, message: "Employee Account not found!"});
@@ -509,6 +509,42 @@ export const getAllEmployees = async(req, res) =>{
     }catch(error){
         console.log("Server Error! - "+error.message);
         res.status(500).json({success: false, message: "Server Error!\n"+error.message});
+    }
+
+    return res;
+}
+
+export const isOTPCodesCorrect = async (req, res) =>{
+    if(!req.body){
+        return res.status(400).json({success: false, message: "Invalid values!"});
+    }
+
+    const employeeID = req.body.employeeID;
+    const otp = req.body.otp;
+    
+    if(!employeeID){
+        return res.status(200).json({success: false, message: "Please fill-in your Employee ID# to reset password!"});
+    }else if(!otp){
+        return res.status(200).json({success: false, message: "Input the OTP codes to reset password!"});
+    }
+
+    try{
+        const userData = await User.findOne({"employeeID": employeeID});
+
+        var output = {success: true, message: "OTP codes are valid!"};
+
+        if(!userData){
+            output={success: false, message: "Employee Account not found!"};
+        }else if(userData.resetOTP === "" || userData.resetOTP !== otp){
+            output = {success: false, message: "Invalid OTP codes!"};
+        }else if(userData.resetOTPExpire <= Date.now()){
+            output={success: false, message: "OTP codes are already expired!"};
+        }
+
+        res.status(200).json(output);
+        
+    }catch(error){
+        res.status(500).json({success: false, message: error.message});
     }
 
     return res;

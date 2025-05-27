@@ -2,7 +2,8 @@ import React from 'react'
 import { Routes, Route} from 'react-router-dom'
 import Home from './pages/Home'
 import Login from './pages/Login'
-import ResetPassword from './pages/RequestPasswordResetCode'
+import RequestResetPassword from './pages/RequestPasswordResetCode'
+import ResetPassword from './pages/ResetPassword'
 
 function App() {
 
@@ -13,7 +14,8 @@ function App() {
       <Routes>
         <Route path='/' element={<Login />} />
         <Route path='/home' element={<Home />} />
-        <Route path='/request-password-reset' element={<ResetPassword />} />
+        <Route path='/request-password-reset' element={<RequestResetPassword />} />
+        <Route path='/reset-password' element={<ResetPassword />} />
       </Routes>
     </div>
   )

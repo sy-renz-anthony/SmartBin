@@ -1,16 +1,18 @@
 import React from 'react'
 import { useState } from 'react'
+import { Link } from "react-router-dom"
 
 import axiosInstance from '../axiosConfig.js'
 
 const ResetPassword = () => {
   const [email, setEmail] = useState("");
-
+  
   const sendCodeButtonPressed =async (e) =>{
     e.preventDefault();
 
     try {
-      const response = await axiosInstance.post("/users/password-reset-otp", {"email": email});
+      console.log("sending email: "+email);
+      const response = await axiosInstance.post("/users/password-reset-otp", {"emailAddress": email}, {withCredentials: true});
       alert(response.data.message);
         
     } catch (err) {
@@ -37,6 +39,12 @@ const ResetPassword = () => {
             Send Codes
           </button>
         </form>
+
+          <div className="mt-10 text-right">
+            <Link to="/reset-password" className="text-sm text-blue-500 hover:underline">
+                I already have my codes
+            </Link>
+          </div>
       </div>
     </div>
   )
