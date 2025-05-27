@@ -69,7 +69,7 @@ const Login = () => {
           Login
         </button>
             <div className="mt-10 text-right">
-            <Link to="/reset-password" className="text-sm text-blue-500 hover:underline">
+            <Link to="/request-password-reset" className="text-sm text-blue-500 hover:underline">
                 Reset my Password
             </Link>
             </div>

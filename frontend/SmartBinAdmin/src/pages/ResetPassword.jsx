@@ -3,20 +3,47 @@ import React from 'react'
 const ResetPassword = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-2xl shadow-lg max-w-sm w-full text-center">
-        <h2 className="text-xl font-bold mb-4 text-gray-800">Recover my Password</h2>
-        <p className="text-sm text-gray-600 mb-6">
-          Please input your email and we will send a password reset codes to it.
-        </p>
-        <input
-          type="email"
-          placeholder="Enter your email"
-          className="w-full mb-4 px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
-        />
-        <button className="w-full bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700 transition duration-200">
-          Send Reset Link
+      <form onSubmit={handleLogin} className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-sm" >
+        <h2 className="text-xl font-bold mb-4 text-gray-800">Verify Password Reset OTP Codes</h2>
+        <div className="mb-4">
+          <label className="block text-gray-600 mb-1" htmlFor="email">
+            Employee ID#:
+          </label>
+          <input
+            id="employeeID"
+            type="text"
+            className="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
+            value={employeeID}
+            onChange={(e) => {}}
+            required
+          />
+        </div>
+        <div className="mb-6">
+          <label className="block text-gray-600 mb-1" htmlFor="password">
+            Password
+          </label>
+          <input
+            id="password"
+            type="password"
+            className="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
+            value={password}
+            onChange={(e) => {}}
+            required
+          />
+        </div>
+        <button
+          type="submit"
+          className="w-full bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700 transition duration-200"
+        >
+          Login
         </button>
-      </div>
+            <div className="mt-10 text-right">
+            <Link to="/request-password-reset" className="text-sm text-blue-500 hover:underline">
+                Reset my Password
+            </Link>
+            </div>
+      </form>
+        
     </div>
   )
 }

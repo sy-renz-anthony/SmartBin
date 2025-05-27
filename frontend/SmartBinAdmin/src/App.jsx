@@ -2,7 +2,7 @@ import React from 'react'
 import { Routes, Route} from 'react-router-dom'
 import Home from './pages/Home'
 import Login from './pages/Login'
-import ResetPassword from './pages/ResetPassword'
+import ResetPassword from './pages/RequestPasswordResetCode'
 
 function App() {
 
@@ -13,7 +13,7 @@ function App() {
       <Routes>
         <Route path='/' element={<Login />} />
         <Route path='/home' element={<Home />} />
-        <Route path='/reset-password' element={<ResetPassword />} />
+        <Route path='/request-password-reset' element={<ResetPassword />} />
       </Routes>
     </div>
   )
