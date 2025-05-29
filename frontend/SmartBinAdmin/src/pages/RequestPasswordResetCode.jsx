@@ -18,7 +18,6 @@ const ResetPassword = () => {
     e.preventDefault();
 
     try {
-      console.log("sending email: "+email);
       const response = await axiosInstance.post("/users/password-reset-otp", {"emailAddress": email}, {withCredentials: true});
       if(!response.data.success){
         toast.error(response.data.message);

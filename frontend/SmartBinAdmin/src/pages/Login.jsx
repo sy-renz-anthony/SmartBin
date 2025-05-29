@@ -17,7 +17,6 @@ const Login = () => {
         e.preventDefault();
         try {
         const response = await axiosInstance.post("/users/login", {"employeeID": employeeID, "password": password }, {withCredentials: true});
-
         console.log(JSON.stringify(response.data));
         if(!response.data.success){
             toast.error(response.data.message);

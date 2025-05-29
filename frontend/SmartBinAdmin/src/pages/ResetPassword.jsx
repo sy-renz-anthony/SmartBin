@@ -22,7 +22,6 @@ const ResetPassword = () => {
         try {
         const response = await axiosInstance.post("/users/is-valid-otp", {"employeeID": employeeID, "otp": otpCode }, {withCredentials: true});
 
-        console.log(JSON.stringify(response.data));
         if(!response.data.success){
             toast.error(response.data.message);
         }else{
@@ -46,14 +45,13 @@ const ResetPassword = () => {
       }
 
       try {
-        const response = await axiosInstance.post("/users/reset-password", {"employeeID": employeeID, "otp": otpCode, "newPassword":newPassword, "confirmNewPassword":confirmNewPassword }, {withCredentials: true});
+        const response = await axiosInstance.post("/users/reset-password", {"employeeID": employeeID, "otp": otpCode, "password":newPassword, "confirmPassword":confirmNewPassword }, {withCredentials: true});
 
-        console.log(JSON.stringify(response.data));
         if(!response.data.success){
             toast.error(response.data.message);
         }else{
             toast.success(response.data.message);
-            navigate("/home");
+            navigate("/");
         }
 
       } catch (err) {
