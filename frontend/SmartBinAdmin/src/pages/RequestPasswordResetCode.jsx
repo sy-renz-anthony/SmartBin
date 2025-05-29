@@ -1,20 +1,38 @@
-import React from 'react'
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link } from "react-router-dom"
+import { toast } from 'react-toastify'
 
 import axiosInstance from '../axiosConfig.js'
 
 const ResetPassword = () => {
   const [email, setEmail] = useState("");
+  const [disableSubmit, setDisableSubmit] = useState(false);
+  const timerRef = useRef(null);
   
+
+  useEffect(() => {
+    return () => clearTimeout(timerRef.current);
+  }, []);
+
   const sendCodeButtonPressed =async (e) =>{
     e.preventDefault();
 
     try {
       console.log("sending email: "+email);
       const response = await axiosInstance.post("/users/password-reset-otp", {"emailAddress": email}, {withCredentials: true});
-      alert(response.data.message);
-        
+      if(!response.data.success){
+        toast.error(response.data.message);
+      }else{
+        toast.success(response.data.message+"\nPlease check your email and go to the next page to input your OTP codes and proceed to reset the password or you can wait for 3 mins and request for another code.", {autoClose: 180000});
+        setDisableSubmit(true);
+
+        if (timerRef.current)
+          clearTimeout(timerRef.current);
+
+        timerRef.current = setTimeout(() => {
+          setDisableSubmit(false);
+        }, 180000);
+      }
     } catch (err) {
       console.error("Login error:", err.message);
     }
@@ -35,7 +53,8 @@ const ResetPassword = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-          <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700 transition duration-200">
+          <button type="submit" className={`w-full bg-blue-600 text-white py-2 rounded-xl ${disableSubmit ? 'bg-gray-400 cursor-not-allowed' : 'hover:bg-blue-700 transition duration-200'}` }
+          disabled={disableSubmit}>
             Send Codes
           </button>
         </form>

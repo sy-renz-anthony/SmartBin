@@ -300,7 +300,7 @@ export const sendPasswordResetOTP = async (req, res) =>{
 
 export const resetPassword = async (req, res) =>{
     if(!req.body){
-        return res.status(400).json({success: false, message: "Invalid values!"});
+        return res.status(200).json({success: false, message: "Invalid values!"});
     }
 
     const employeeID = req.body.employeeID;
@@ -309,28 +309,28 @@ export const resetPassword = async (req, res) =>{
     const confirmNewPassword = req.body.confirmPassword;
 
     if(!employeeID){
-        return res.status(404).json({success: false, message: "Please fill-in your Employee ID# to reset password!"});
+        return res.status(200).json({success: false, message: "Please fill-in your Employee ID# to reset password!"});
     }else if(!otp){
-        return res.status(404).json({success: false, message: "Input the OTP codes to reset password!"});
+        return res.status(200).json({success: false, message: "Input the OTP codes to reset password!"});
     }else if(!newPassword){
-        return res.status(404).json({success: false, message: "Please input your new password!"});
+        return res.status(200).json({success: false, message: "Please input your new password!"});
     }else if(newPassword.length<10){
-        return res.status(404).json({success: false, message: "Passwords should not be less than 10 characters in length!"});
+        return res.status(200).json({success: false, message: "Passwords should not be less than 10 characters in length!"});
     }else if(!confirmNewPassword){
-        return res.status(404).json({success: false, message: "Please confirm your password!"});
+        return res.status(200).json({success: false, message: "Please confirm your password!"});
     }else if(newPassword !== confirmNewPassword){
-        return res.status(404).json({success: false, message: "Passwords mismatched! Please confirm your password again."});
+        return res.status(200).json({success: false, message: "Passwords mismatched! Please confirm your password again."});
     }
 
     try{
         const userData = await User.findOne({"employeeID": employeeID});
 
         if(!userData){
-            res.status(401).json({success: false, message: "Employee Account not found!"});
+            res.status(200).json({success: false, message: "Employee Account not found!"});
         }else if(userData.resetOTP === "" || userData.resetOTP !== otp){
-            res.status(401).json({success: false, message: "Invalid OTP codes!"});
+            res.status(200).json({success: false, message: "Invalid OTP codes!"});
         }else if(userData.resetOTPExpire <= Date.now()){
-            res.status(401).json({success: false, message: "OTP codes are already expired!"});
+            res.status(200).json({success: false, message: "OTP codes are already expired!"});
         }else{
             const salt = Number (process.env.SALT || 10);
             const hashedPassword = await bcrypt.hash(newPassword, salt);

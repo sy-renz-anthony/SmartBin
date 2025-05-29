@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import {toast} from "react-toastify"
 
 import axiosInstance from '../axiosConfig.js'
 
@@ -19,7 +20,7 @@ const Login = () => {
 
         console.log(JSON.stringify(response.data));
         if(!response.data.success){
-            alert(response.data.message);
+            toast.error(response.data.message);
         }else{
             navigate("/home");
         }
