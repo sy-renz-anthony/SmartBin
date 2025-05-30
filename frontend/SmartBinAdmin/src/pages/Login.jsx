@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {toast} from "react-toastify"
+import { useAuth } from "../AuthContext.jsx";
 
 import axiosInstance from '../axiosConfig.js'
 
@@ -12,6 +13,7 @@ const Login = () => {
     
     const navigate = useNavigate();
     
+    const {login} = useAuth();
     
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -21,6 +23,9 @@ const Login = () => {
         if(!response.data.success){
             toast.error(response.data.message);
         }else{
+            console.log(JSON.stringify(document.cookie));
+            const token = response.data.token;
+            login(token);
             navigate("/home");
         }
 
