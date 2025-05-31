@@ -1,6 +1,6 @@
 import express from 'express';
 import userAuthentication from '../functions/userAuthentication.js';
-import {register, update, login, logout, changePassword, sendPasswordResetOTP, resetPassword, getMyInfo, searchEmployees, getAllEmployees, isOTPCodesCorrect} from '../controllers/user.controller.js';
+import {register, update, login, logout, changePassword, sendPasswordResetOTP, resetPassword, getMyInfo, searchEmployees, getAllEmployees, isOTPCodesCorrect, validateMyPassword} from '../controllers/user.controller.js';
 
 const router =express.Router();
 
@@ -11,6 +11,7 @@ router.post("/change-password", userAuthentication, changePassword);
 router.post("/password-reset-otp", sendPasswordResetOTP);
 router.post("/reset-password", resetPassword);
 router.post("/is-valid-otp", isOTPCodesCorrect);
+router.post("/validate-my-password", validateMyPassword);
 router.put("/update", userAuthentication, update);
 router.get("/my-info", userAuthentication, getMyInfo);
 router.get("/search-employees", userAuthentication, searchEmployees);

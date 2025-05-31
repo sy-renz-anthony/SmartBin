@@ -5,4 +5,29 @@
         @apply relative flex flex-col items-center justify-center bg-gray-800 h-20 w-20 mt-2 mb-2 mx-auto
         hover:bg-green-600 hover:rounded-full transition-all duration-500 ease-linear cursor-pointer;
     }
+
+    .content-pane{
+        @apply relative top-30 left-25 flex-1 mx-10 bg-white shadow rounded-lg px-5 py-5;
+    }
+
+    .content-title{
+        @apply mx-5 font-bold text-gray-800 text-2xl my-5;
+    }
+
+    .personal-info-pane{
+        @apply grid grid-cols-1 sm:grid-cols-[minmax(0,_15rem)_1fr] gap-4 my-5 mx-5 text-xl;
+    }
+
+    .button-in-use{
+        @apply w-fit bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700 transition duration-200 p-10;
+    }
+}
+
+.content-pane{
+    width: calc(100vw - 12rem);
+    min-width: 30rem;
+}
+
+.content-label-identifier{
+    font-weight: bold;
 }

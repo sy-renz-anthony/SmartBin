@@ -549,3 +549,40 @@ export const isOTPCodesCorrect = async (req, res) =>{
 
     return res;
 }
+
+export const validateMyPassword = async(req, res) =>{
+    if(!req.body){
+        return res.status(400).json({success: false, message: "Invalid values!"});
+    }
+    const id= req.body._id;
+    const password=req.body.password;
+
+    if(!id || !mongoose.isValidObjectId(id)){
+        return res.status(401).json({success: false, message: "Authentication failed!"});
+    } 
+
+    if(!password){
+        return res.status(200).json({success: false, message: "Invalid Password!"});
+    }
+
+    try{
+        const personalInfo = await User.findById(id).select("-resetOTPExpire -resetOTP");
+        if(!personalInfo){
+            return res.status(401).json({success: false, message: "Authentication failed!"});
+        }
+
+        const correctPassword = await bcrypt.compare(password, personalInfo.password);
+
+        if(!correctPassword){
+            return res.status(200).json({success: false, message: "Invalid Password!"});
+        }
+
+        res.status(200).json({success: true, message:"Password Validated!"});
+
+    }catch(error){
+        console.log("Server Error! - "+error.message);
+        res.status(500).json({success: false, message: "Server Error!\n"+error.message});
+    }
+
+    return res;
+}

@@ -1,14 +1,18 @@
 import { useEffect, useState } from 'react';
-
 import SideBar from '../components/SideBar';
 import Header from '../components/Header';
 import LogoutModal from './LogoutConfirmModal';
+import PasswordConfirmModal from './PasswordConfirmModal';
 
 const BasePage = ({pageTitle, pageContent}) => {
   const [isLogoutModalVisible, setLogoutModalVisibility] = useState(false);
+  const [isPasswordModalVisible, setPasswordModalVisibility] = useState(false);
 
   useEffect(()=>{
-    return()=>{ setLogoutModalVisibility(false); }
+    return()=>{ 
+      setLogoutModalVisibility(false); 
+      setPasswordModalVisibility(false);
+    }
   }, []);
 
   const logOutButtonEventHandler=()=>{
@@ -18,13 +22,26 @@ const BasePage = ({pageTitle, pageContent}) => {
   const closeLogoutModalButtonEventHandler=()=>{
     setLogoutModalVisibility(false);
   }
+  const closePasswordModalButtonEventHandler=()=>{
+    setPasswordModalVisibility(false);
+  }
+
+  const showPasswordModal=(nextRoute)=>{
+    console.log("nextRoute: "+nextRoute);
+    setPasswordModalVisibility(true);
+  }
+
   return (
     <>
-    <div className="flex bg-gray-300">
+    <div className="flex w-screen h-screen">
       <Header pageTitle={pageTitle}/>
       <SideBar logoutButtonEventHandler={logOutButtonEventHandler} />
+      <div className="flex-1 bg-gray-100">
+        { pageContent && pageContent(showPasswordModal) }
+      </div>
     </div>
     <LogoutModal isOpen={isLogoutModalVisible} onClose={closeLogoutModalButtonEventHandler}/>
+    <PasswordConfirmModal isOpen={isPasswordModalVisible} onClose={closePasswordModalButtonEventHandler} />
     </>
   )
 }

@@ -19,11 +19,9 @@ const Login = () => {
         e.preventDefault();
         try {
         const response = await axiosInstance.post("/users/login", {"employeeID": employeeID, "password": password }, {withCredentials: true});
-        console.log(JSON.stringify(response.data));
         if(!response.data.success){
             toast.error(response.data.message);
         }else{
-            console.log(JSON.stringify(document.cookie));
             const token = response.data.token;
             login(token);
             navigate("/home");

@@ -16,7 +16,6 @@ export default function Modal({ isOpen, onClose}) {
         e.preventDefault();
         try {
         const response = await axiosInstance.post("/users/logout", {}, {withCredentials: true});
-        console.log(JSON.stringify(response.data));
         if(!response.data.success){
             toast.error(response.data.message);
         }else{
