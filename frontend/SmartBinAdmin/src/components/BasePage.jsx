@@ -4,7 +4,7 @@ import Header from '../components/Header';
 import LogoutModal from './LogoutConfirmModal';
 import PasswordConfirmModal from './PasswordConfirmModal';
 
-const BasePage = ({pageTitle, pageContent}) => {
+const BasePage = ({pageTitle, setNextPage, pageContent, passwordModalReroute}) => {
   const [isLogoutModalVisible, setLogoutModalVisibility] = useState(false);
   const [isPasswordModalVisible, setPasswordModalVisibility] = useState(false);
 
@@ -27,7 +27,9 @@ const BasePage = ({pageTitle, pageContent}) => {
   }
 
   const showPasswordModal=(nextRoute)=>{
-    console.log("nextRoute: "+nextRoute);
+    if(setNextPage !== null){
+      setNextPage("/"+nextRoute);
+    }
     setPasswordModalVisibility(true);
   }
 
@@ -41,7 +43,7 @@ const BasePage = ({pageTitle, pageContent}) => {
       </div>
     </div>
     <LogoutModal isOpen={isLogoutModalVisible} onClose={closeLogoutModalButtonEventHandler}/>
-    <PasswordConfirmModal isOpen={isPasswordModalVisible} onClose={closePasswordModalButtonEventHandler} />
+    <PasswordConfirmModal isOpen={isPasswordModalVisible} onClose={closePasswordModalButtonEventHandler} confirmationEventHandler={passwordModalReroute}/>
     </>
   )
 }

@@ -6,6 +6,7 @@ import BasePage from '../components/BasePage';
 
 const MyAccount = () => {
   const [data, setData]  = useState({});
+  const [nextPage, setNextPage] = useState("/change-password");
 
   const navigate = useNavigate();
 
@@ -28,6 +29,10 @@ const MyAccount = () => {
   }, []);
 
 
+  const passwordCorrectReroute =()=>{
+    navigate(nextPage);
+  }
+
   const pageContent=(showPasswordModal)=>{
     return(
       <div className="content-pane">
@@ -42,7 +47,7 @@ const MyAccount = () => {
         </div>
         <hr />
         <div className="flex mx-10 my-10 justify-end gap-10">
-          <button type="submit" className="button-in-use" onClick={(e)=>showPasswordModal("update-info")}>Update Personal Info</button>
+          <button type="submit" className="button-in-use" onClick={(e)=>showPasswordModal("update-my-info")}>Update Personal Info</button>
           <button type="submit" className="button-in-use" onClick={(e)=>showPasswordModal("change-password")}>Change Password</button>
           
         </div>
@@ -52,7 +57,7 @@ const MyAccount = () => {
 
   return (
     <>
-      <BasePage pageTitle="My Account" pageContent={pageContent}/>
+      <BasePage pageTitle="My Account" pageContent={pageContent} setNextPage={setNextPage} passwordModalReroute={passwordCorrectReroute}/>
     </>
   )
 }

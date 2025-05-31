@@ -3,7 +3,7 @@ import {toast} from "react-toastify"
 
 import axiosInstance from '../axiosConfig.js'
 
-export default function Modal({ isOpen, onClose}) {
+export default function Modal({ isOpen, onClose, confirmationEventHandler}) {
   const [password, setPassword] = useState("");
 
   useEffect(() => {
@@ -19,12 +19,15 @@ export default function Modal({ isOpen, onClose}) {
         e.preventDefault();
         try {
           console.log("password: "+password);
-            /*const response = await axiosInstance.post("/users/logout", {}, {withCredentials: true});
+          const response = await axiosInstance.post("/users/validate-my-password", {"password": password}, {withCredentials: true});
           if(!response.data.success){
               toast.error(response.data.message);
           }else{
+              if(confirmationEventHandler !== null){
+                confirmationEventHandler();
+              }
               toast.success(response.data.message);
-          }*/
+          }
 
         } catch (err) {
             console.error("Login error:", err.message);
@@ -57,7 +60,7 @@ export default function Modal({ isOpen, onClose}) {
                 required
               />
             </div>
-            <button className="relative top-3 w-20 self-center bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700 transition duration-200" >Submit</button>
+            <button className="relative top-3 w-20 justify-self-center bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700 transition duration-200" >Submit</button>
                 
           </form>
           

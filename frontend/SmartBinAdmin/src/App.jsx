@@ -8,6 +8,7 @@ import ResetPassword from './pages/ResetPassword'
 import MyAccount from './pages/MyAccount'
 import AddUser from './pages/AddUser'
 import ChangePassword from './pages/ChangePassword'
+import UpdateMyInfo from './pages/UpdateMyInfo'
 import { ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-tooltip/dist/react-tooltip.css';
@@ -24,6 +25,7 @@ function App() {
         <Route path='/my-account' element={<ProtectedRoute> <MyAccount /> </ProtectedRoute>} />
         <Route path='/add-user' element={<ProtectedRoute> <AddUser /> </ProtectedRoute>} />
         <Route path='/change-password' element={<ProtectedRoute> <ChangePassword /> </ProtectedRoute>} />
+        <Route path='/update-my-info' element={<ProtectedRoute> <UpdateMyInfo /> </ProtectedRoute>} />
       </Routes>
       <ToastContainer />
     </div>
