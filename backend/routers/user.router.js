@@ -11,7 +11,7 @@ router.post("/change-password", userAuthentication, changePassword);
 router.post("/password-reset-otp", sendPasswordResetOTP);
 router.post("/reset-password", resetPassword);
 router.post("/is-valid-otp", isOTPCodesCorrect);
-router.post("/validate-my-password", validateMyPassword);
+router.post("/validate-my-password", userAuthentication, validateMyPassword);
 router.put("/update", userAuthentication, update);
 router.get("/my-info", userAuthentication, getMyInfo);
 router.get("/search-employees", userAuthentication, searchEmployees);
