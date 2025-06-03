@@ -125,31 +125,31 @@ export const update = async(req, res) =>{
     const add = req.body.address;
     
     if(!empID){
-        return res.status(400).json({success: false, message: "Invalid Employee ID!"});
+        return res.status(200).json({success: false, message: "Invalid Employee ID!"});
     }
 
     if(!lName){
-        return res.status(400).json({success: false, message: "Please provide the employee's Last Name!"});
+        return res.status(200).json({success: false, message: "Please provide the employee's Last Name!"});
     }else if(!fName){
-        return res.status(400).json({success: false, message: "Please provide the employee's First Name!"});
+        return res.status(200).json({success: false, message: "Please provide the employee's First Name!"});
     }else if(!mName){
-        return res.status(400).json({success: false, message: "Please provide the employee's Middle Name!"});
+        return res.status(200).json({success: false, message: "Please provide the employee's Middle Name!"});
     }
 
     if(!contactNum){
-        return res.status(400).json({success: false, message: "Please provide the employee's Contact Number!"});
+        return res.status(200).json({success: false, message: "Please provide the employee's Contact Number!"});
     }
 
     if(!emailAdd){
-        return res.status(400).json({success: false, message: "Please provide the employee's Email Address!"});
+        return res.status(200).json({success: false, message: "Please provide the employee's Email Address!"});
     }
     
     if(!add){
-        return res.status(400).json({success: false, message: "Please provide the employee's address!"});
+        return res.status(200).json({success: false, message: "Please provide the employee's address!"});
     }
 
     if(!mongoose.Types.ObjectId.isValid(id)){
-        return res.status(401).json({success: false, message: "Invalid Employee DB ID!"});
+        return res.status(200).json({success: false, message: "Invalid Employee DB ID!"});
     }
 
     const session = await mongoose.startSession();
@@ -157,15 +157,15 @@ export const update = async(req, res) =>{
 
         const onRecordUser = await User.findById(id);
         if(!onRecordUser){
-            return res.status(401).json({success: false, message: "Invalid Employee DB ID!"});
+            return res.status(200).json({success: false, message: "Invalid Employee DB ID!"});
         }
         
         if(await isUserIDExisting(empID, id)){
-            return res.status(400).json({success: false, message: "Employee ID is already in use!"});
+            return res.status(200).json({success: false, message: "Employee ID is already in use!"});
         }
 
         if(await isUserEmailExisting(emailAdd, id)){
-            return res.status(400).json({success: false, message: "Email Address is already in use!"});
+            return res.status(200).json({success: false, message: "Email Address is already in use!"});
         }
 
         session.startTransaction();

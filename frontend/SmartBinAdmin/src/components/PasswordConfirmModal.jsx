@@ -18,7 +18,6 @@ export default function Modal({ isOpen, onClose, confirmationEventHandler}) {
   const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-          console.log("password: "+password);
           const response = await axiosInstance.post("/users/validate-my-password", {"password": password}, {withCredentials: true});
           if(!response.data.success){
               toast.error(response.data.message);
@@ -60,8 +59,9 @@ export default function Modal({ isOpen, onClose, confirmationEventHandler}) {
                 required
               />
             </div>
-            <button className="relative top-3 w-20 justify-self-center bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700 transition duration-200" >Submit</button>
-                
+            <div className="relative flex top-0 left-0 w-full h-auto justify-center">
+              <button className="w-20 bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700 transition duration-200" >Submit</button>
+            </div>
           </form>
           
         </div>
