@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../axiosConfig';
+import { toast } from 'react-toastify';
 
 import BasePage from '../components/BasePage';
 
@@ -7,7 +9,7 @@ import BasePage from '../components/BasePage';
 const UpdateMyInfo = () => {
   const [data, setData]  = useState({});
   
-  
+  const navigate= useNavigate();
 
   useEffect(()=>{
     async function reloadData(){
@@ -29,13 +31,12 @@ const UpdateMyInfo = () => {
   
   
   const handleSubmit= async(e) =>{
-    console.log("pressed submit!\n"+JSON.stringify(data));
     try {
         const response = await axiosInstance.put("/users/update", data, {withCredentials: true});
         if(!response.data.success){
             toast.error(response.data.message);
         }else{
-            toast.success(response.data.message);
+            toast.success("Personal Information updated successfully!");
             navigate("/my-account");
         }
 

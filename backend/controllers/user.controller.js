@@ -7,12 +7,10 @@ import { isUserEmailExisting, isUserIDExisting } from '../functions/functions.js
 
 export const register = async(req, res) =>{
     if(!req.body){
-        return res.status(400).json({success: false, message: "Invalid values!"});
+        return res.status(200).json({success: false, message: "Invalid values!"});
     }
 
     const empID =  req.body.employeeID;
-    const pwd = req.body.password;
-    const conPassword = req.body.confirmPassword;
     const lName = req.body.lastName;
     const fName = req.body.firstName;
     const mName = req.body.middleName;
@@ -21,40 +19,30 @@ export const register = async(req, res) =>{
     const add = req.body.address;
 
     if(!empID){
-        return res.status(400).json({success: false, message: "Invalid Employee ID!"});
-    }
-
-    if(!pwd){
-        return res.status(400).json({success: false, message: "Please provide a password!"});
-    }else if(!conPassword){
-        return res.status(400).json({success: false, message: "Please confirm the employee's password!"});
-    }else if(pwd.length < 10){
-        return res.status(400).json({success: false, message: "Password should not be less than 10 characters length!"});
-    }else if(pwd !== conPassword){
-        return res.status(400).json({success: false, message: "Password mismatched!"});
+        return res.status(200).json({success: false, message: "Invalid Employee ID!"});
     }
 
     if(!lName){
-        return res.status(400).json({success: false, message: "Please provide the employee's Last Name!"});
+        return res.status(200).json({success: false, message: "Please provide the employee's Last Name!"});
     }else if(!fName){
-        return res.status(400).json({success: false, message: "Please provide the employee's First Name!"});
+        return res.status(200).json({success: false, message: "Please provide the employee's First Name!"});
     }else if(!mName){
-        return res.status(400).json({success: false, message: "Please provide the employee's Middle Name!"});
+        return res.status(200).json({success: false, message: "Please provide the employee's Middle Name!"});
     }
 
 
     if(!contactNum){
-        return res.status(400).json({success: false, message: "Please provide the employee's Contact Number!"});
+        return res.status(200).json({success: false, message: "Please provide the employee's Contact Number!"});
     }
 
     if(!emailAdd){
-        return res.status(400).json({success: false, message: "Please provide the employee's Email Address!"});
+        return res.status(200).json({success: false, message: "Please provide the employee's Email Address!"});
     }
 
     
     
     if(!add){
-        return res.status(400).json({success: false, message: "Please provide the employee's address!"});
+        return res.status(200).json({success: false, message: "Please provide the employee's address!"});
     }
 
 
@@ -64,14 +52,15 @@ export const register = async(req, res) =>{
     try{
         
         if(await isUserIDExisting(empID)){
-            return res.status(400).json({success: false, message: "Employee ID is already registered!"});
+            return res.status(200).json({success: false, message: "Employee ID is already registered!"});
         }
 
         if(await isUserEmailExisting(emailAdd)){
-            return res.status(400).json({success: false, message: "Email Address is already in use!"});
+            return res.status(200).json({success: false, message: "Email Address is already in use!"});
         }
 
         session.startTransaction();
+        const pwd = Math.random().toString(36).slice(2, 12);
         const hashedPassword = await bcrypt.hash(pwd, salt);
 
         const user = new User();
@@ -90,7 +79,7 @@ export const register = async(req, res) =>{
             from: process.env.SENDER_EMAIL_ID,
             to: emailAdd,
             subject: "Welcome to SmartBin v_0.1 User Admin Console",
-            text: `Welcome to SmartBin v_0.1 User Admin Console. You have successfully registered your account with email: `+emailAdd+"\n\nThank you."
+            text: `Welcome to SmartBin v_0.1 User Admin Console. You have successfully registered your account with email: `+emailAdd+"\n\nA random password is generated for you: "+pwd+"\n\nPlease update this when you login.\n\nThank you."
         }
 
         await transporter.sendMail(mailContents);
