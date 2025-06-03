@@ -30,7 +30,7 @@ const SideBar = ({logoutButtonEventHandler}) => {
     <div className="fixed top-0 left-0 h-screen w-25 m-0 flex flex-col bg-gray-900 text-white text-xs shadow-lg p-1">
         <SideBarIcon textLabel="Home" icon={<MdHome size="28"/>} route="/home"/>
         <SideBarIcon textLabel="Add User" icon={<MdGroupAdd size="28" />} route="/add-user"/>
-        <SideBarIcon textLabel="Devices" icon={<BsFillTrashFill size="28" />} />
+        <SideBarIcon textLabel="Devices" icon={<BsFillTrashFill size="28" />} route="/devices"/>
         <SideBarIcon textLabel="Usages" icon={<MdSummarize size="28" />} />
         <SideBarIcon textLabel="Map" icon={<MdPinDrop size="28"/>} />
         <SideBarIcon textLabel="My Account" icon={<MdAccountCircle size="28" />} route="/my-account"/>

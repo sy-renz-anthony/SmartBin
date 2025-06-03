@@ -9,6 +9,8 @@ import MyAccount from './pages/MyAccount'
 import AddUser from './pages/AddUser'
 import ChangePassword from './pages/ChangePassword'
 import UpdateMyInfo from './pages/UpdateMyInfo'
+import Devices from './pages/Devices'
+import AddDevice from './pages/AddDevice'
 import { ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-tooltip/dist/react-tooltip.css';
@@ -26,6 +28,8 @@ function App() {
         <Route path='/add-user' element={<ProtectedRoute> <AddUser /> </ProtectedRoute>} />
         <Route path='/change-password' element={<ProtectedRoute> <ChangePassword /> </ProtectedRoute>} />
         <Route path='/update-my-info' element={<ProtectedRoute> <UpdateMyInfo /> </ProtectedRoute>} />
+        <Route path='/devices' element={<ProtectedRoute> <Devices /> </ProtectedRoute>} />
+        <Route path='/add-device' element={<ProtectedRoute> <AddDevice /> </ProtectedRoute>} />
       </Routes>
       <ToastContainer />
     </div>

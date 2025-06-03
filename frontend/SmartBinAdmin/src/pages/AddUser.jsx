@@ -11,20 +11,18 @@ const AddUser = () => {
 
 
   const handleSubmit= async(e) =>{
-    console.log("data: "+JSON.stringify(data));
-    /*
     try {
-        const response = await axiosInstance.put("/users/update", data, {withCredentials: true});
+        const response = await axiosInstance.post("/users/register", data, {withCredentials: true});
         if(!response.data.success){
             toast.error(response.data.message);
         }else{
-            toast.success("Personal Information updated successfully!");
-            navigate("/my-account");
+            toast.success("New User registered successfully!");
+            navigate("/home");
         }
 
     } catch (err) {
       console.error("Login error:", err.message);
-    }*/
+    }
   }
 
 const pageContent=()=>{

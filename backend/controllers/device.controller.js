@@ -65,11 +65,11 @@ export const registerNewDevice = async(req, res) =>{
     const location = req.body.location;
 
     if(!deviceID){
-        return res.status(400).json({success: false, message: "Invalid Device ID!"});
+        return res.status(200).json({success: false, message: "Invalid Device ID!"});
     }
 
     if(!location){
-        return res.status(400).json({success: false, message: "Invalid Device Location!"});
+        return res.status(200).json({success: false, message: "Invalid Device Location!"});
     }
 
     const session = await mongoose.startSession();
@@ -77,7 +77,7 @@ export const registerNewDevice = async(req, res) =>{
         const existingDevice = await Device.find({"deviceID": deviceID});
 
         if(existingDevice.length > 0){
-            return res.status(400).json({success: false, message: "Device ID is already registered!"});
+            return res.status(200).json({success: false, message: "Device ID is already registered!"});
         }
 
         session.startTransaction();
@@ -108,15 +108,15 @@ export const updateDevice = async(req, res) =>{
     const location = req.body.location;
 
     if(!id || !mongoose.isValidObjectId(id)){
-        return res.status(400).json({success: false, message: "Invalid Device DB ID!"});
+        return res.status(200).json({success: false, message: "Invalid Device DB ID!"});
     }
 
     if(!deviceID){
-        return res.status(400).json({success: false, message: "Invalid Device ID!"});
+        return res.status(200).json({success: false, message: "Invalid Device ID!"});
     }
 
     if(!location){
-        return res.status(400).json({success: false, message: "Invalid Device Location!"});
+        return res.status(200).json({success: false, message: "Invalid Device Location!"});
     }
 
     const session = await mongoose.startSession();
@@ -124,12 +124,12 @@ export const updateDevice = async(req, res) =>{
 
         const device = await Device.findById(id);
         if(!device){
-            return res.status(400).json({success: false, message: "Device DB ID not found!"});
+            return res.status(200).json({success: false, message: "Device DB ID not found!"});
         }
 
         const existingDevice = await Device.find({"deviceID": deviceID});
         if(Array.isArray(existingDevice) && existingDevice.length>0 && existingDevice[0]._id.toString() != id.toString()){
-            return res.status(400).json({success: false, message: "Device ID is already registered!"});
+            return res.status(200).json({success: false, message: "Device ID is already registered!"});
         }
 
         session.startTransaction();
