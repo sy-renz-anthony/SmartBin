@@ -1,22 +1,29 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axiosInstance from '../axiosConfig';
 import { toast } from 'react-toastify';
 
 import BasePage from '../components/BasePage';
 
-const AddDevice = () => {
+const UpdateDevice = () => {
   const [data, setData]  = useState({});
   const navigate= useNavigate();
+  const location = useLocation();
 
+
+  useEffect(() => {
+    if (location.state?.deviceInfo) {
+      setData(location.state.deviceInfo);
+    }
+  }, [location.state]);
 
   const handleSubmit= async(e) =>{
     try {
-        const response = await axiosInstance.post("/devices/register", data, {withCredentials: true});
+        const response = await axiosInstance.put("/devices/update/"+data._id, data, {withCredentials: true});
         if(!response.data.success){
             toast.error(response.data.message);
         }else{
-            toast.success("New Device registered successfully!");
+            toast.success("Device Info updated successfully!");
             navigate("/devices");
         }
 
@@ -30,7 +37,7 @@ const pageContent=()=>{
 
     return(
       <div className="content-pane">
-        <h1 className='content-title'>Add New Device</h1>
+        <h1 className='content-title'>Update Device Info</h1>
         <hr />
         <form action={handleSubmit} className="p-8 w-full" >
           <div className="personal-info-pane">
@@ -72,7 +79,6 @@ const pageContent=()=>{
               submit
             </button>
           </div>
-          
               
         </form>
         
@@ -87,4 +93,4 @@ const pageContent=()=>{
   )
 }
 
-export default AddDevice
+export default UpdateDevice
