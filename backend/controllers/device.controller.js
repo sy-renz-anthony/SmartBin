@@ -94,7 +94,7 @@ export const registerNewDevice = async(req, res) =>{
         const newDevice = new Device();
         newDevice.deviceID = deviceID;
         newDevice.location = location;
-        newDevice.coordinate = [longitude, latitude];
+        newDevice.coordinate = [latitude, longitude];
 
         await newDevice.save({session});
         await session.commitTransaction();
@@ -156,7 +156,7 @@ export const updateDevice = async(req, res) =>{
         session.startTransaction();
         device.deviceID = deviceID;
         device.location = location;
-        device.coordinate = [longitude, latitude];
+        device.coordinate = [latitude, longitude];
 
         const updatedDevice = await Device.findByIdAndUpdate(id, device, {new: true, session});
 
