@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
 
 @layer components {
     .sidebar-icon {
@@ -23,7 +24,7 @@
     }
 
     .button-edit{
-        @apply relative w-fit top-1 h-fit right-10 bg-green-500 text-white py-1 rounded-xl hover:bg-green-700 transition duration-200 p-10;
+        @apply relative w-fit top-1 h-fit right-3 bg-green-500 text-white py-1 rounded-xl hover:bg-green-700 transition duration-200 p-10;
     }
 
     .table-general {

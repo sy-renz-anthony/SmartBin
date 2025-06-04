@@ -32,7 +32,7 @@ const SideBar = ({logoutButtonEventHandler}) => {
         <SideBarIcon textLabel="Add User" icon={<MdGroupAdd size="28" />} route="/add-user"/>
         <SideBarIcon textLabel="Devices" icon={<BsFillTrashFill size="28" />} route="/devices"/>
         <SideBarIcon textLabel="Usages" icon={<MdSummarize size="28" />} />
-        <SideBarIcon textLabel="Map" icon={<MdPinDrop size="28"/>} />
+        <SideBarIcon textLabel="Map" icon={<MdPinDrop size="28" />} route="/map"/>
         <SideBarIcon textLabel="My Account" icon={<MdAccountCircle size="28" />} route="/my-account"/>
         <SideBarIcon textLabel="Logout" icon={<MdLogout size="28" onClick={logoutButtonEventHandler}/>} />
     </div>

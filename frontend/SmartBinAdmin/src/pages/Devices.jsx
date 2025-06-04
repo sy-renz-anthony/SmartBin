@@ -42,6 +42,7 @@ const Devices= () => {
                     <tr>
                       <th className="tableheadentry-general">Device ID#</th>
                       <th className="tableheadentry-general">Location</th>
+                      <th className="tableheadentry-general">Status</th>
                       <th className="tableheadentry-general">Action</th>
                     </tr>
                   </thead>
@@ -51,6 +52,7 @@ const Devices= () => {
                       <tr key={device._id} className="tablerow-general">
                         <td className="tableentry-general">{device.deviceID}</td>
                         <td className="tableentry-general">{device.location}</td>
+                        <td className="tableentry-general mx-10">{!device.isOnline ? "Offline" : "Online"}</td>
                         <td className="tableentry-general">
                           <Link to="/update-device" className="absolute button-edit h-fit" state={{ "deviceInfo": device }}>
                             Update
@@ -58,7 +60,7 @@ const Devices= () => {
                         </td>
                       </tr>
                     ))) : (
-                      <tr className="tablerow-general">No Device available</tr>
+                      <tr className="tablerow-general"><td className="tableentry-general">No Device available</td></tr>
                     )
                   }
                   </tbody>

@@ -63,6 +63,8 @@ export const searchDevice = async(req, res) =>{
 export const registerNewDevice = async(req, res) =>{
     const deviceID = req.body.deviceID;
     const location = req.body.location;
+    const latitude = req.body.latitude;
+    const longitude = req.body.longitude;
 
     if(!deviceID){
         return res.status(200).json({success: false, message: "Invalid Device ID!"});
@@ -71,6 +73,14 @@ export const registerNewDevice = async(req, res) =>{
     if(!location){
         return res.status(200).json({success: false, message: "Invalid Device Location!"});
     }
+    if(!longitude || typeof longitude !== 'number' || isNaN(longitude)){
+        return res.status(200).json({success: false, message: "Invalid Device longitude!"});
+    }
+
+    if(!latitude || typeof latitude !== 'number' || isNaN(latitude)){
+        return res.status(200).json({success: false, message: "Invalid Device latitude!"});
+    }
+    
 
     const session = await mongoose.startSession();
     try{
@@ -84,6 +94,7 @@ export const registerNewDevice = async(req, res) =>{
         const newDevice = new Device();
         newDevice.deviceID = deviceID;
         newDevice.location = location;
+        newDevice.coordinate = [longitude, latitude];
 
         await newDevice.save({session});
         await session.commitTransaction();
@@ -106,6 +117,8 @@ export const updateDevice = async(req, res) =>{
     const { id } = req.params;
     const deviceID = req.body.deviceID;
     const location = req.body.location;
+    const latitude = req.body.latitude;
+    const longitude = req.body.longitude;
 
     if(!id || !mongoose.isValidObjectId(id)){
         return res.status(200).json({success: false, message: "Invalid Device DB ID!"});
@@ -117,6 +130,14 @@ export const updateDevice = async(req, res) =>{
 
     if(!location){
         return res.status(200).json({success: false, message: "Invalid Device Location!"});
+    }
+
+    if(!longitude || typeof longitude !== 'number' || isNaN(longitude)){
+        return res.status(200).json({success: false, message: "Invalid Device longitude!"});
+    }
+
+    if(!latitude || typeof latitude !== 'number' || isNaN(latitude)){
+        return res.status(200).json({success: false, message: "Invalid Device latitude!"});
     }
 
     const session = await mongoose.startSession();
@@ -135,6 +156,7 @@ export const updateDevice = async(req, res) =>{
         session.startTransaction();
         device.deviceID = deviceID;
         device.location = location;
+        device.coordinate = [longitude, latitude];
 
         const updatedDevice = await Device.findByIdAndUpdate(id, device, {new: true, session});
 

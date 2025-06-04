@@ -9,6 +9,16 @@ const deviceSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    coordinate:{
+        type: [Number],
+        validate: {
+            validator: function (arr) {
+                return arr.length === 2;
+            },
+            message: 'Coordinates must be an array of exactly 2 numbers [longitude, latitude].'
+        },
+        required: true
+    },
     isWetBinFull:{
         type: Boolean,
         required: true,
