@@ -12,7 +12,6 @@ const Devices= () => {
     async function reloadData(){
       try {
         const response = await axiosInstance.get("/devices/all", {}, {withCredentials: true});
-        //console.log(JSON.stringify(response.data.data));
         if(!response.data.success){
               toast.error(response.data.message);
         }else{
@@ -41,7 +40,7 @@ const Devices= () => {
                   <thead className="tablehead-general">
                     <tr>
                       <th className="tableheadentry-general">Device ID#</th>
-                      <th className="tableheadentry-general">Location</th>
+                      <th className="tableheadentry-general">Location Description</th>
                       <th className="tableheadentry-general">Status</th>
                       <th className="tableheadentry-general">Action</th>
                     </tr>

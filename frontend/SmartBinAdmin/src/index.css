@@ -58,3 +58,7 @@
 .content-label-identifier{
     font-weight: bold;
 }
+
+.leaflet-routing-container {
+  display: none !important;
+}

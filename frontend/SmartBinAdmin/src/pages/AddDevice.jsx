@@ -75,7 +75,6 @@ const AddDevice = () => {
     } catch (err) {
       console.error("Login error:", err.message);
     }
-   console.log("data: "+JSON.stringify(data));
   }
 
 const pageContent=()=>{
