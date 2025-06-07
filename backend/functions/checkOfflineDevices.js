@@ -1,5 +1,3 @@
-import React from 'react'
-import mongoose from 'mongoose';
 import Device from '../models/device.model.js';
 
 
