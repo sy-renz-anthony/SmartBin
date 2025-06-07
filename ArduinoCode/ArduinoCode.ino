@@ -32,7 +32,7 @@ Servo floorServo2;
 unsigned long lastDHTRead = 0;
 const unsigned long DHT_INTERVAL = 2000; // 2 seconds
 
-int mainServoAngle = 90; //current angle of mainServo;
+int mainServoAngle = 60; //current angle of mainServo;
 
 char STATE_IDLE = 'a',
      STATE_IDENTIFYING = 'b',
@@ -84,7 +84,7 @@ void setup() {
   pinMode(INDUCTIVE_PIN, INPUT);
   pinMode(LED_PIN, OUTPUT);
 
-  mainServo.write(90);
+  mainServo.write(60);
   floorServo1.write(180);
   floorServo2.write(0);
   currentState = STATE_IDLE;
@@ -119,7 +119,6 @@ void setup() {
   lcd.backlight();
   lcd.print("Initializing...");
 
-  mainServo.detach();
 }
 
 //------------------------------------ function to read the distance using HC-SR04 sensor -----------------------------------------
@@ -217,6 +216,7 @@ void loop() {
   unsigned long currentMillis = millis();
   if(currentState == STATE_IDENTIFYING){
     lcd.setCursor(0, 0);
+    Serial.print("identifying");
     lcd.print("Identifying...");
     int sensedMetal = digitalRead(INDUCTIVE_PIN);
     if(currentDetectionPhase == DETECTIONPHASE_1){
@@ -289,7 +289,6 @@ void loop() {
     
   }else if(currentState == STATE_DUMPING){
     lcd.setCursor(0, 0);
-    mainServo.attach(MAIN_SERVO_PIN);
     if(garbageType == TYPE_WET){
       if(isWetFull){
         lcd.print("Wet Bin Full");
@@ -301,7 +300,7 @@ void loop() {
         delay(800);
         digitalWrite(LED_PIN, LOW);
         noTone(BUZZER_PIN);
-        mainServo.write(180);
+        mainServo.write(0);
         delay(500);
         floorServo1.write(90);
         floorServo2.write(90);
@@ -339,6 +338,8 @@ void loop() {
         delay(200);
         digitalWrite(LED_PIN, LOW);
         noTone(BUZZER_PIN);
+        mainServo.write(135);
+        delay(500);
         floorServo1.write(90);
         floorServo2.write(90);
 
@@ -381,7 +382,7 @@ void loop() {
         digitalWrite(LED_PIN, LOW);
         noTone(BUZZER_PIN);
         delay(100);
-        mainServo.write(0);
+        mainServo.write(180);
         delay(500);
         floorServo1.write(90);
         floorServo2.write(90);
@@ -402,7 +403,7 @@ void loop() {
       }
       
     }
-    mainServo.write(90);
+    mainServo.write(60);
     garbageType = TYPE_DRY;
     currentDetectionPhase = DETECTIONPHASE_1;
     detectionCount = 0;
@@ -415,7 +416,6 @@ void loop() {
     dhtCount = 0;
     currentState = STATE_IDLE;
     delay(200);
-    mainServo.detach();
   }else if(currentState == STATE_ERROR){
     lcd.setCursor(0, 0);
     lcd.print("Error!");
@@ -447,7 +447,6 @@ void loop() {
     if(currentState == STATE_IDLE){
       int sensedHand = digitalRead(IR_PIN);
       if(sensedHand == LOW){
-        //Serial.println("Hand Detected!");
         delay(100);
         garbageType = TYPE_DRY;
         currentDetectionPhase = DETECTIONPHASE_1;
@@ -480,43 +479,44 @@ void loop() {
     }
     
   }
-
+///*
   long dist = readDistance(METALIC_ECHO_PIN);
   /*
   Serial.print("Metallic distance: ");
   Serial.print(dist);
-  Serial.println(" cm");*/
-  if(dist<=13){
+  Serial.println(" cm");
+  /*if(dist<=13){
     isMetallicFull = true;
   }else{
     isMetallicFull=false;
-  }
-  delay(60);
+  }*/
+  //delay(60);
 
   dist = readDistance(DRY_ECHO_PIN);
-  /*
-  Serial.print("Dry distance: ");
-  Serial.print(dist);
-  Serial.println(" cm");//*/
-  if(dist<=13){
+  ///*
+  //Serial.print("Dry distance: ");
+  //Serial.print(dist);
+  //Serial.println(" cm");//
+  /*if(dist<=13){
     isDryFull = true;
   }else{
     isDryFull=false;
-  }
+  }*/
   delay(60);
 
+  ///*
   dist = readDistance(WET_ECHO_PIN);
-  /*
+  ///*
   Serial.print("Wet distance: ");
   Serial.print(dist);
-  Serial.println(" cm");*/
-  if(dist<=13){
+  Serial.println(" cm");
+  /*if(dist<=13){
     isWetFull = true;
   }else{
     isWetFull=false;
-  }
-  delay(60);
-
+  }*/
+  //delay(60);
+//*/
   if(Serial.available()){
     char requestChar = Serial.read();
     if(requestChar == REQUEST_INFO){
