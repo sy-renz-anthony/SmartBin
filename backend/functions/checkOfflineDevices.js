@@ -9,13 +9,12 @@ const checkOfflineDevices = async() => {
         }
 
         const timeNow = Date.now();
-        const idleTimeThreshold = 3 * 60 * 1000;
+        const idleTimeThreshold = 2 * 60 * 1000;
 
         for(var i=0; i<devices.length; i++){
             const device = devices[i];
             try{
                 if(timeNow >= (device.lastOnlineCheck+idleTimeThreshold)){
-                    console.log("device: "+device.deviceID+" is offline!");
                     device.isOnline=false;
                     await Device.findByIdAndUpdate(device._id, device, {new: true});
                 }

@@ -1,29 +1,34 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import axiosInstance from '../axiosConfig';
 import { toast } from 'react-toastify';
+
+import {GoDotFill} from 'react-icons/go'
 
 import BasePage from '../components/BasePage';
 
 const Devices= () => {
   const [data, setData] = useState({});
 
-  useEffect(()=>{
-    async function reloadData(){
-      try {
+  const reloadData = async () =>{
+    try {
         const response = await axiosInstance.get("/devices/all", {}, {withCredentials: true});
-        if(!response.data.success){
-              toast.error(response.data.message);
-        }else{
-            setData(response.data.data);
-        }
-
-      } catch (err) {
-          console.error("Login error:", err.message);
+      if(!response.data.success){
+        toast.error(response.data.message);
+      }else{
+        setData(response.data.data);
       }
+
+    } catch (err) {
+      console.error("Login error:", err.message);
     }
-    
+  }
+
+  useEffect(()=>{
     reloadData();
+    const interval = setInterval(reloadData, 30000);
+
+    return ()=>clearInterval(interval);
   }, []);
 
     const pageContent=()=>{
@@ -51,7 +56,15 @@ const Devices= () => {
                       <tr key={device._id} className="tablerow-general">
                         <td className="tableentry-general">{device.deviceID}</td>
                         <td className="tableentry-general">{device.location}</td>
-                        <td className="tableentry-general mx-10">{!device.isOnline ? "Offline" : "Online"}</td>
+                        <td className="tableentry-general mx-10">
+                          {!device.isOnline ? 
+                            <div className="flex items-center"><GoDotFill size='30' className="text-red-500"/>
+                              <span>Offline</span>
+                            </div> : 
+                            <div className="flex items-center"><GoDotFill size='30' className="text-green-500"/>
+                              <span>Online</span>
+                            </div>
+                          }</td>
                         <td className="tableentry-general">
                           <Link to="/update-device" className="absolute button-edit h-fit" state={{ "deviceInfo": device }}>
                             Update
