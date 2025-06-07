@@ -38,6 +38,10 @@ const deviceSchema = new mongoose.Schema({
         type: Boolean,
         required: true,
         default: false
+    },
+    lastOnlineCheck:{
+        type: Number,
+        default: 0
     }
 });
 

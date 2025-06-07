@@ -176,3 +176,38 @@ export const updateDevice = async(req, res) =>{
 
     return res;
 }
+
+export const deviceSelfCheck = async(req, res) =>{
+    const deviceID = req.body.deviceID;
+    
+    if(deviceID != null && deviceID.toString().length <=0){
+        return res.status(200).json({success: false, message: "Invalid Device ID!"});    
+    }
+
+    const session = await mongoose.startSession();
+    try{
+        const existingDevice = await Device.find({"deviceID": deviceID});
+
+        if(existingDevice.length <= 0){
+            return res.status(200).json({success: false, message: "Invalid Device ID!"});
+        }else{
+            session.startTransaction();
+            const device = existingDevice[0];
+            device.isOnline=true;
+            device.lastOnlineCheck=Date.now();
+            await Device.findByIdAndUpdate(device._id, device, {new: true, session});
+            await session.commitTransaction();
+
+            res.status(200).json({success: true, message: "Device checked!"});
+        }
+        
+    }catch(error){
+        await session.abortTransaction();
+        console.error("Error trying to search for devices in the Database!");
+        res.status(500).json({success: false, message: "Server Error"});
+    }finally{
+        await session.endSession();
+    }
+
+    return res;
+}
