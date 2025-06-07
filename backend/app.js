@@ -9,6 +9,7 @@ import deviceRouters from './routers/devices.router.js';
 import userRouters from './routers/user.router.js';
 import usageRouters from './routers/usage.router.js';
 
+import checkOfflineDevices from './functions/checkOfflineDevices.js';
 
 dotenv.config();
 
@@ -36,6 +37,8 @@ app.use("/api/usages", usageRouters);
 app.get("/", (req, res) => {
     res.send("Server is Ready!");
 });
+
+setInterval(checkOfflineDevices, 60000);
 
 app.listen(PORT, ()=>{
     dbConnectionString();
