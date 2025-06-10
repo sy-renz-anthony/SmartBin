@@ -34,7 +34,13 @@ app.use("/api/devices", deviceRouters);
 app.use("/api/users", userRouters);
 app.use("/api/usages", usageRouters);
 
-/*
+
+app.get("/", (req, res) => {
+    res.send("Server is Ready!");
+});
+
+setInterval(checkOfflineDevices, 60000);
+
 app.use(
   '/route',
   createProxyMiddleware({
@@ -44,14 +50,7 @@ app.use(
       '^/route': '/route', // keep /route/v1/... path
     },
   })
-);*/
-
-app.get("/", (req, res) => {
-    res.send("Server is Ready!");
-});
-
-setInterval(checkOfflineDevices, 60000);
-
+);
 app.listen(PORT, ()=>{
     dbConnectionString();
     console.log("server started at http://localhost:"+PORT);
