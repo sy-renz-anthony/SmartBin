@@ -3,6 +3,7 @@ import "dotenv/config";
 import dotenv from 'dotenv';
 import cors from 'cors';
 import cookieParser from "cookie-parser";
+import { createProxyMiddleware } from 'http-proxy-middleware';
 
 import { dbConnectionString } from './config/db.js';
 import deviceRouters from './routers/devices.router.js';
@@ -33,6 +34,16 @@ app.use("/api/devices", deviceRouters);
 app.use("/api/users", userRouters);
 app.use("/api/usages", usageRouters);
 
+app.use(
+  '/route',
+  createProxyMiddleware({
+    target: 'https://router.project-osrm.org',
+    changeOrigin: true,
+    pathRewrite: {
+      '^/route': '/route', // keep /route/v1/... path
+    },
+  })
+);
 
 app.get("/", (req, res) => {
     res.send("Server is Ready!");

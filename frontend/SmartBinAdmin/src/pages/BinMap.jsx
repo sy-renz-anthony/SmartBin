@@ -1,6 +1,5 @@
 import { useState, useEffect} from 'react';
 import axiosInstance from '../axiosConfig';
-import { useNavigate } from "react-router-dom";
 
 import BasePage from '../components/BasePage';
 import { toast } from 'react-toastify';
@@ -37,20 +36,21 @@ const BinMap = () => {
               toast.error(response.data.message);
         }else{
             setData(response.data.data);
+
         }
 
       } catch (err) {
           console.error("Login error:", err.message);
       }
     }
-    
     reloadData();
     
   }, []);
 
+
+
   const handleCheckboxChange = (event) => {
     setShowRoute(event.target.checked);
-    console.log("value: "+showRoute);
   };
 
   const pageContent=()=>{
