@@ -12,9 +12,11 @@ const RoutingMachine = ({ waypoints }) => {
     const routingControl = L.Routing.control({
       waypoints: waypoints.map((point) => L.latLng(point[0], point[1])),
       router: new L.Routing.OSRMv1({
-        serviceUrl: "https://smartbin-x0i7.onrender.com/route/v1",
+        serviceUrl: "https://smartbin-x0i7.onrender.com/route/v2/directions/driving-car",
+        //serviceUrl: "https://api.openrouteservice.org/v2/directions/driving-car",
+        //api_key: "5b3ce3597851110001cf62484ec4c79d93ad4421997e30091615a308"
       }),
-      routeWhileDragging: false,
+      routeWhileDragging: true,
       addWaypoints: false,
       show: false,
       lineOptions: {

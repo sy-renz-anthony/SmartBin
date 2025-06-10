@@ -44,11 +44,25 @@ setInterval(checkOfflineDevices, 60000);
 app.use(
   '/route',
   createProxyMiddleware({
-    target: 'https://router.project-osrm.org',
+    target: 'https://api.openrouteservice.org',
     changeOrigin: true,
     pathRewrite: {
       '^/route': '/route', // keep /route/v1/... path
     },
+    onProxyReq: (proxyReq, req, res) => {
+      if (OPENROUTESERVICE_API_KEY) {
+          proxyReq.setHeader('Authorization', OPENROUTESERVICE_API_KEY);
+          console.log(`[Proxy] Added Authorization header for ORS. Path: ${proxyReq.path}`);
+      } else {
+          console.warn("[Proxy] OPENROUTESERVICE_API_KEY not found, proxying without API key.");
+      }
+    },
+    onError: (err, req, res) => {
+        console.error('[Proxy Error to ORS]:', err);
+        res.status(504).send('Routing service unavailable or timed out from backend.');
+    },
+    timeout: 60000,
+    proxyTimeout: 60000
   })
 );
 app.listen(PORT, ()=>{
