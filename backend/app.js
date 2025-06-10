@@ -34,6 +34,7 @@ app.use("/api/devices", deviceRouters);
 app.use("/api/users", userRouters);
 app.use("/api/usages", usageRouters);
 
+/*
 app.use(
   '/route',
   createProxyMiddleware({
@@ -43,7 +44,7 @@ app.use(
       '^/route': '/route', // keep /route/v1/... path
     },
   })
-);
+);*/
 
 app.get("/", (req, res) => {
     res.send("Server is Ready!");
