@@ -41,6 +41,10 @@ app.get("/", (req, res) => {
 
 setInterval(checkOfflineDevices, 60000);
 
+const GRAPHHOPPER_API_KEY = process.env.GRAPHHOPPER_API_KEY;
+
+console.log("Backend GRAPHHOPPER_API_KEY status on startup:", GRAPHHOPPER_API_KEY ? "Loaded" : "NOT LOADED");
+
 app.use(
   '/route',
   createProxyMiddleware({
