@@ -29,13 +29,7 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(cors({
   origin: (origin, callback) => {
-    const allowedOrigins = [
-        'http://localhost:5173', // Your local frontend
-        'https://smartbin-x0i7.onrender.com', // Your deployed backend itself
-        // Add your deployed frontend URL here when you have it, e.g.:
-        // 'https://your-frontend-app.onrender.com'
-    ];
-    if (!origin || origin === "null" || allowedOrigins.includes(origin)) 
+    if (!origin || origin === "null") 
       return callback(null, false);
 
     const msg = `The CORS policy for this site does not allow access from the specified Origin: ${origin}`;
