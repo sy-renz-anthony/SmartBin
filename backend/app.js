@@ -44,17 +44,19 @@ setInterval(checkOfflineDevices, 60000);
 app.use(
   '/route',
   createProxyMiddleware({
-    target: 'https://api.openrouteservice.org',
+    target: 'https://graphhopper.com/api',
     changeOrigin: true,
     pathRewrite: {
-      '^/route': '/route', // keep /route/v1/... path
+      '^/route': '',
     },
     onProxyReq: (proxyReq, req, res) => {
-      if (OPENROUTESERVICE_API_KEY) {
-          proxyReq.setHeader('Authorization', OPENROUTESERVICE_API_KEY);
-          console.log(`[Proxy] Added Authorization header for ORS. Path: ${proxyReq.path}`);
+      if (process.env.GRAPHHOPPER_KEY) {
+          const originalPath = proxyReq.path;
+          const separator = originalPath.includes('?') ? '&' : '?';
+          proxyReq.path = `<span class="math-inline">\{originalPath\}</span>{separator}key=${process.env.GRAPHHOPPER_KEY}`;
+          console.log(`[Proxy] Added GraphHopper API key. New path: ${proxyReq.path}`);
       } else {
-          console.warn("[Proxy] OPENROUTESERVICE_API_KEY not found, proxying without API key.");
+          console.warn("[Proxy] GRAPHHOPPER_KEY not found, proxying without API key.");
       }
     },
     onError: (err, req, res) => {
