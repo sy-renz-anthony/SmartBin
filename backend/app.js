@@ -42,10 +42,6 @@ app.use("/api/users", userRouters);
 app.use("/api/usages", usageRouters);
 
 
-app.get("/", (req, res) => {
-    res.send("Server is Ready!");
-});
-
 setInterval(checkOfflineDevices, 60000);
 
 const GRAPHHOPPER_API_KEY = process.env.GRAPHHOPPER_API_KEY;
@@ -55,7 +51,7 @@ console.log("Backend GRAPHHOPPER_API_KEY status on startup:", GRAPHHOPPER_API_KE
 app.use(
   '/route',
   createProxyMiddleware({
-    target: 'https://graphhopper.com/route',
+    target: 'https://graphhopper.com/api',
     changeOrigin: true,
     pathRewrite: {
       '^/route': '',
