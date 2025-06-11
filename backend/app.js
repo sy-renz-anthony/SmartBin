@@ -34,11 +34,6 @@ app.use("/api/devices", deviceRouters);
 app.use("/api/users", userRouters);
 app.use("/api/usages", usageRouters);
 
-
-app.get("/", (req, res) => {
-    res.send("Server is Ready!");
-});
-
 setInterval(checkOfflineDevices, 60000);
 
 const GRAPHHOPPER_API_KEY = process.env.GRAPHHOPPER_API_KEY;
@@ -71,6 +66,7 @@ app.use(
     proxyTimeout: 60000
   })
 );
+
 app.listen(PORT, ()=>{
     dbConnectionString();
     console.log("server started at http://localhost:"+PORT);
