@@ -50,17 +50,17 @@ app.use(
       '^/route': '',
     },
     onProxyReq: (proxyReq, req, res) => {
-      if (process.env.GRAPHHOPPER_KEY) {
+      if (GRAPHHOPPER_API_KEY) {
           const originalPath = proxyReq.path;
           const separator = originalPath.includes('?') ? '&' : '?';
-          proxyReq.path = `<span class="math-inline">\{originalPath\}</span>{separator}key=${process.env.GRAPHHOPPER_KEY}`;
+          proxyReq.path = `${originalPath}${separator}key=${GRAPHHOPPER_API_KEY}`;
           console.log(`[Proxy] Added GraphHopper API key. New path: ${proxyReq.path}`);
       } else {
-          console.warn("[Proxy] GRAPHHOPPER_KEY not found, proxying without API key.");
+          console.warn("[Proxy] GRAPHHOPPER_API_KEY not found, proxying without API key.");
       }
     },
     onError: (err, req, res) => {
-        console.error('[Proxy Error to ORS]:', err);
+        console.error('[Proxy Error to GraphHopper]:', err);
         res.status(504).send('Routing service unavailable or timed out from backend.');
     },
     timeout: 60000,
