@@ -55,7 +55,7 @@ console.log("Backend GRAPHHOPPER_API_KEY status on startup:", GRAPHHOPPER_API_KE
 app.use(
   '/route',
   createProxyMiddleware({
-    target: 'https://graphhopper.com/api',
+    target: 'https://graphhopper.com/route',
     changeOrigin: true,
     pathRewrite: {
       '^/route': '',
