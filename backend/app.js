@@ -15,17 +15,32 @@ import checkOfflineDevices from './functions/checkOfflineDevices.js';
 dotenv.config();
 
 const app=express();
+
+// --- ADD THIS LOGGING MIDDLEWARE AT THE VERY TOP ---
+app.use((req, res, next) => {
+    console.log(`[GLOBAL REQUEST LOG] URL: ${req.url}, Method: ${req.method}, Host: ${req.headers.host}`);
+    next(); // Pass control to the next middleware
+});
+// --- END GLOBAL LOGGING MIDDLEWARE ---
+
 const PORT = process.env.PORT || 5000;
 
 app.use(cookieParser());
 app.use(express.json());
-/*suppose to be, we need to specify here the url of the frontend server where we deploy our frontend, since it is still in development and not yet uploaded to a server, this is just a temporary work around for allowing all urls to connect to our backend while strictly enforcing to use jwt tokens saved on cookies*/
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || origin === "null") 
-      return callback(null, false); // block null origins
+    const allowedOrigins = [
+        'http://localhost:5173', // Your local frontend
+        'https://smartbin-x0i7.onrender.com', // Your deployed backend itself
+        // Add your deployed frontend URL here when you have it, e.g.:
+        // 'https://your-frontend-app.onrender.com'
+    ];
+    if (!origin || origin === "null" || allowedOrigins.includes(origin)) 
+      return callback(null, false);
 
-    return callback(null, origin);
+    const msg = `The CORS policy for this site does not allow access from the specified Origin: ${origin}`;
+    return callback(new Error(msg), false);
+    //return callback(null, origin);
   },
   credentials: true
 }));
