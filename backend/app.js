@@ -37,17 +37,9 @@ app.use(cors({
   credentials: true
 }));
 
-app.use("/api/devices", deviceRouters);
-app.use("/api/users", userRouters);
-app.use("/api/usages", usageRouters);
-
-
-setInterval(checkOfflineDevices, 60000);
-
 const GRAPHHOPPER_API_KEY = process.env.GRAPHHOPPER_API_KEY;
 
 console.log("Backend GRAPHHOPPER_API_KEY status on startup:", GRAPHHOPPER_API_KEY ? "Loaded" : "NOT LOADED");
-
 app.use(
   '/route',
   createProxyMiddleware({
@@ -74,6 +66,14 @@ app.use(
     proxyTimeout: 60000
   })
 );
+
+app.use("/api/devices", deviceRouters);
+app.use("/api/users", userRouters);
+app.use("/api/usages", usageRouters);
+
+
+setInterval(checkOfflineDevices, 60000);
+
 app.listen(PORT, ()=>{
     dbConnectionString();
     console.log("server started at http://localhost:"+PORT);
