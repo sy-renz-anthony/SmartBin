@@ -30,11 +30,9 @@ app.use(express.json());
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin || origin === "null") 
-      return callback(null, false);
+      return callback(null, false); // block null origins
 
-    const msg = `The CORS policy for this site does not allow access from the specified Origin: ${origin}`;
-    return callback(new Error(msg), false);
-    //return callback(null, origin);
+    return callback(null, origin);
   },
   credentials: true
 }));
@@ -42,6 +40,11 @@ app.use(cors({
 app.use("/api/devices", deviceRouters);
 app.use("/api/users", userRouters);
 app.use("/api/usages", usageRouters);
+
+
+app.get("/", (req, res) => {
+    res.send("Server is Ready!");
+});
 
 setInterval(checkOfflineDevices, 60000);
 
@@ -75,7 +78,6 @@ app.use(
     proxyTimeout: 60000
   })
 );
-
 app.listen(PORT, ()=>{
     dbConnectionString();
     console.log("server started at http://localhost:"+PORT);
