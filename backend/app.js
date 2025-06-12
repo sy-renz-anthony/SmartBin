@@ -8,7 +8,7 @@ import { createProxyMiddleware } from 'http-proxy-middleware';
 import { dbConnectionString } from './config/db.js';
 import deviceRouters from './routers/devices.router.js';
 import userRouters from './routers/user.router.js';
-import usageRouters from './routers/usage.router.js';
+import usageRouters from './routers/usageRecord.router.js';
 
 import checkOfflineDevices from './functions/checkOfflineDevices.js';
 

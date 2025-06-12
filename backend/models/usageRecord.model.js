@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const usageSchema = new mongoose.Schema({
+const usageRecordSchema = new mongoose.Schema({
     device:{
         type: mongoose.Types.ObjectId,
         ref: 'Device',
@@ -17,6 +17,6 @@ const usageSchema = new mongoose.Schema({
     }
 });
 
-const Usage = mongoose.model('Usage', usageSchema);
+const UsageRecord = mongoose.model('UsageRecord', usageRecordSchema);
 
-export default Usage;
+export default UsageRecord;
