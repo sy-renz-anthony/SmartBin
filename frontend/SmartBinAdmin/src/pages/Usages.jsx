@@ -17,7 +17,7 @@ const Usages = () => {
   const pageContent=()=>{
     return(
       <div className="content-pane">
-        <h1 className='content-title'>Devices Records</h1>
+        <h1 className='content-title'>Search Records</h1>
         <hr />
         
       </div>

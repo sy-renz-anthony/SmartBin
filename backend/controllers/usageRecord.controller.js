@@ -64,35 +64,36 @@ export const retrieveUsageRecord = async(req, res) =>{
         return res.status(200).json({success: false, message: "Invalid values!"});
     }
 
-    const deviceID = req.body.deviceID;
+    const deviceID = req.body.keyword;
     const isWet = req.body.isWet;
     const isDry = req.body.isDry;
     const isMetallic = req.body.isMetallic;
     const startDate = req.body.startDate;
     const endDate = req.body.endDate;
 
-    let garbageTypeFilter=[];
+    let filter=[];
     let idFilter = null;
     let startDateUTC,
         endDateUTC;
 
     if(deviceID != null && deviceID.toString().length >0){
-        idFilter=[{"device.deviceID": {$regex: deviceID.toString(), $options: "i"}}];
+        filter.push({"device.deviceID": {$regex: deviceID.toString(), $options: "i"}});
+        filter.push({"device.location": {$regex: deviceID.toString(), $options: "i"}});
     }
 
     if(typeof isWet === 'boolean' && isWet){
-        garbageTypeFilter.push({"garbageType": {$regex: "WET", $options: "i"}});
+        filter.push({"garbageType": {$regex: "WET", $options: "i"}});
     }
 
     if(typeof isDry === 'boolean' && isDry){
-        garbageTypeFilter.push({"garbageType": {$regex: "Dry", $options: "i"}});
+        filter.push({"garbageType": {$regex: "Dry", $options: "i"}});
     }
 
     if(typeof isMetallic === 'boolean' && isMetallic){
-        garbageTypeFilter.push({"garbageType": {$regex: "METALLIC", $options: "i"}});
+        filter.push({"garbageType": {$regex: "METALLIC", $options: "i"}});
     }
 
-    if((!garbageTypeFilter || garbageTypeFilter.length < 1) && !idFilter){
+    if((!filter || filter.length < 1) && !idFilter){
         return res.status(200).json({success: false, message: "Invalid values!"});
     }
 
@@ -109,27 +110,14 @@ export const retrieveUsageRecord = async(req, res) =>{
     try{
 
         var matchParams = {};
-        if(idFilter && (garbageTypeFilter.length > 0)){
+        if(filter.length>0){
             matchParams = {
-                    $match: {
-                        $and: idFilter,
-                        $or: garbageTypeFilter
-                    }
-                };
-        }else if(idFilter && (garbageTypeFilter.length<1)){
-            matchParams = {
-                    $match: {
-                        $or: idFilter
-                    }
+                $match: {
+                    $or: filter
                 }
-        }else if(!idFilter && garbageTypeFilter){
-            matchParams = {
-                    $match: {
-                        $or: garbageTypeFilter
-                    }
-                }
+            }
         }
-        
+
         if(startDate !==null && startDate !== undefined && startDate.length>0){
             startDateUTC = moment.tz(startDate, 'YYYY-MM-DD', 'Asia/Manila').startOf('day').toDate();
 
