@@ -1,5 +1,7 @@
 import UsageRecord from '../models/usageRecord.model.js';
 import Device from '../models/device.model.js';
+import { isDateValid } from '../functions/functions.js';
+import moment from 'moment-timezone';
 
 import mongoose from "mongoose";
 
@@ -71,6 +73,8 @@ export const retrieveUsageRecord = async(req, res) =>{
 
     let garbageTypeFilter=[];
     let idFilter = null;
+    let startDateUTC,
+        endDateUTC;
 
     if(deviceID != null && deviceID.toString().length >0){
         idFilter=[{"device.deviceID": {$regex: deviceID.toString(), $options: "i"}}];
@@ -88,9 +92,18 @@ export const retrieveUsageRecord = async(req, res) =>{
         garbageTypeFilter.push({"garbageType": {$regex: "METALLIC", $options: "i"}});
     }
 
-
     if((!garbageTypeFilter || garbageTypeFilter.length < 1) && !idFilter){
         return res.status(200).json({success: false, message: "Invalid values!"});
+    }
+
+    if(startDate !==null && startDate !== undefined && startDate.length>0){
+        if(!await isDateValid(startDate)){
+            return res.status(200).json({success: false, message: "Start date was invalid!"});
+        }else if(endDate !==null && endDate !== undefined && endDate.length>0  && !await isDateValid(endDate)){
+            return res.status(200).json({success: false, message: "End date was invalid!"});
+        }
+    }else if(endDate !==null && endDate !== undefined && endDate.length>0){
+        return res.status(200).json({success: false, message: "Cannot have an End date without a Start date!"});
     }
 
     try{
@@ -116,7 +129,22 @@ export const retrieveUsageRecord = async(req, res) =>{
                     }
                 }
         }
+        
+        if(startDate !==null && startDate !== undefined && startDate.length>0){
+            startDateUTC = moment.tz(startDate, 'YYYY-MM-DD', 'Asia/Manila').startOf('day').toDate();
 
+            if(endDate !==null && endDate !== undefined && endDate.length>0){
+                endDateUTC = moment.tz(endDate, 'YYYY-MM-DD', 'Asia/Manila').endOf('day').toDate();
+            }else{
+                endDateUTC = moment.tz(startDate, 'YYYY-MM-DD', 'Asia/Manila').endOf('day').toDate();
+            }
+            matchParams.$match["eventDate"]={ 
+                $gte: startDateUTC,
+                $lte: endDateUTC
+            };
+        }
+
+        
             const usageRecords = await UsageRecord.aggregate([
                 {
                     $lookup: {
@@ -129,7 +157,25 @@ export const retrieveUsageRecord = async(req, res) =>{
                     $addFields: {
                     device:{$first:"$device"} 
                     }
-                },matchParams
+                },
+                matchParams,{
+                    $project:{
+                        _id: 1,
+                        garbageType: 1,
+                        eventDate: {
+                            $dateToString: {
+                            date: '$eventDate',
+                            format: '%Y-%m-%d %H:%M:%S', // Example format: YYYY-MM-DD HH:MM:SS
+                            timezone: 'Asia/Manila'
+                            }
+                        },
+                        device:{
+                            _id: 1,
+                            deviceID: 1,
+                            location: 1
+                        }
+                    }
+                }
             ]);
             
             if(!usageRecords instanceof Array || usageRecords.length === 0){
