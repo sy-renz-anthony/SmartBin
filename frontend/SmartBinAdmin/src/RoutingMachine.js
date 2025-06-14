@@ -11,9 +11,6 @@ const RoutingMachine = ({ waypoints }) => {
 
     const routingControl = L.Routing.control({
       waypoints: waypoints.map((point) => L.latLng(point[0], point[1])),
-      router: new L.Routing.osrmv1({
-        serviceUrl: "https://smartbin-x0i7.onrender.com/route/1/route",
-      }),
       routeWhileDragging: false,
       addWaypoints: false,
       show: false,
