@@ -21,7 +21,7 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || origin === "null") 
+    if (!origin || origin === "null")
       return callback(null, false);
 
     return callback(null, origin);

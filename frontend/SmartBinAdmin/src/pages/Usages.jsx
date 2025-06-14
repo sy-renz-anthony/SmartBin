@@ -1,9 +1,8 @@
 import { useState} from 'react';
 import axiosInstance from '../axiosConfig';
-import { useNavigate } from "react-router-dom";
-
 import BasePage from '../components/BasePage';
-import { toast } from 'react-toastify';
+import { useNavigate } from "react-router-dom";
+import UsageTablePanel from '../components/UsageTablePanel';
 
 const Usages = () => {
 
@@ -19,7 +18,7 @@ const Usages = () => {
       <div className="content-pane">
         <h1 className='content-title'>Search Records</h1>
         <hr />
-        
+        <UsageTablePanel />
       </div>
     );
   }

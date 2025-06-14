@@ -72,7 +72,6 @@ export const retrieveUsageRecord = async(req, res) =>{
     const endDate = req.body.endDate;
 
     let filter=[];
-    let idFilter = null;
     let startDateUTC,
         endDateUTC;
 
@@ -93,7 +92,7 @@ export const retrieveUsageRecord = async(req, res) =>{
         filter.push({"garbageType": {$regex: "METALLIC", $options: "i"}});
     }
 
-    if((!filter || filter.length < 1) && !idFilter){
+    if((!filter || filter.length < 1) && (!startDate || startDate.length<1)){
         return res.status(200).json({success: false, message: "Invalid values!"});
     }
 

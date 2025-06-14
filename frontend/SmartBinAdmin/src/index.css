@@ -16,7 +16,7 @@
     }
 
     .personal-info-pane{
-        @apply grid grid-cols-1 sm:grid-cols-[minmax(0,_15rem)_1fr] gap-4 my-5 mx-5 text-xl;
+        @apply grid grid-cols-1 lg:grid-cols-[minmax(0,_15rem)_1fr] gap-4 my-5 mx-5 text-xl;
     }
 
     .button-in-use{
@@ -45,6 +45,16 @@
 
     .tableentry-general {
         @apply px-4 py-2 text-gray-800;
+    }
+
+    .search-pane-element-field{
+        @apply grid grid-cols-1 xl:grid-cols-[minmax(0,_15rem)_1fr] my-2 text-xl gap-2 items-center;
+    }
+    .search-pane-element-checkbox{
+        @apply grid grid-cols-3 min-w-90 max-w-110 my-2 text-xl gap-2 items-center;
+    }
+    .search-pane-row{
+        @apply flex flex-col xl:flex-row gap-4 w-full;
     }
 }
 
