@@ -5,13 +5,15 @@ import { toast } from 'react-toastify';
 
 const UsageTablePanel = () => {
     const [keyword, setKeyword] = useState("");
-    const [isWet, setIsWet] = useState(false);
-    const [isDry, setIsDry] = useState(false);
-    const [isMetallic, setIsMetallic] = useState(false);
+    const [selectedTypes, setSelectedTypes] = useState({
+        "isWet": false,
+        "isDry": false,
+        "isMetallic": false
+    });
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
 
-    const [data, setData] = useState(null);
+    const [data, setData] = useState([]);
 
     useEffect(()=>{
         if(startDate.length<1)
@@ -29,38 +31,49 @@ const UsageTablePanel = () => {
     }, [startDate]);
 
     const handleSubmit= async(e) =>{
-        console.log("Search parameter: {keyword: "+keyword+", isWet: "+isWet+", isDry: "+isDry+", isMetallic: "+isMetallic+", startDate: "+startDate+", endDate: "+endDate+"}");
+        console.log("Search parameter: {keyword: "+keyword+", isWet: "+selectedTypes.isWet+", isDry: "+selectedTypes.isDry+", isMetallic: "+selectedTypes.isMetallic+", startDate: "+startDate+", endDate: "+endDate+"}");
         
         try {
             const searchParams={
                 "keyword": keyword,
-                "isWet": isWet,
-                "isDry": isDry,
-                "isMetallic": isMetallic,
+                "isWet": selectedTypes.isWet,
+                "isDry": selectedTypes.isDry,
+                "isMetallic": selectedTypes.isMetallic,
                 "startDate": startDate,
                 "endDate": endDate
             }
             const response = await axiosInstance.post("/usages/search-record", searchParams, {withCredentials: true});
             if(!response.data.success){
                 toast.error(response.data.message);
+                setData([]);
             }else{
-                console.log(JSON.stringify(response.data));
-                //setEndDate(response.data.);
+                setData(response.data.data);
             }
 
         } catch (err) {
-        console.error("Login error:", err.message);
+        console.error("Data retrieval error:", err.message);
         }
     }
 
     const clearAll=()=>{
         setKeyword("");
-        setIsDry(false);
-        setIsMetallic(false);
-        setIsWet(false);
+        setSelectedTypes({
+            "isWet": false,
+            "isDry": false,
+            "isMetallic": false
+        });
         setStartDate("");
         setEndDate("");
+        setData([]);
     }
+
+    const checkBoxEventHandler=(id)=>{
+        setSelectedTypes(prev =>({
+            ...prev,
+            [id]: !prev[id],
+        }));
+    }
+
     return (
         <>
             <form action={handleSubmit} className="p-8 w-full" >
@@ -87,8 +100,8 @@ const UsageTablePanel = () => {
                                 className="ml-5 scale-150"
                                 id="isWet"
                                 type="checkbox"
-                                checked={isWet}
-                                onChange={(e)=>setIsWet(e.target.checked)}
+                                checked={selectedTypes.isWet}
+                                onChange={()=>checkBoxEventHandler("isWet")}
                             />
                         </div>
                         <div className="w-fit">
@@ -99,8 +112,8 @@ const UsageTablePanel = () => {
                                 className="ml-5 scale-150"
                                 id="isDry"
                                 type="checkbox"
-                                checked={isDry}
-                                onChange={(e)=>setIsDry(e.target.checked)}
+                                checked={selectedTypes.isDry}
+                                onChange={()=>checkBoxEventHandler("isDry")}
                             />
                         </div>
                         <div className="w-fit">
@@ -111,8 +124,8 @@ const UsageTablePanel = () => {
                                 className="ml-5 scale-150"
                                 id="isMetallic"
                                 type="checkbox"
-                                checked={isMetallic}
-                                onChange={(e)=>setIsMetallic(e.target.checked)}
+                                checked={selectedTypes.isMetallic}
+                                onChange={()=>checkBoxEventHandler("isMetallic")}
                             />
                         </div>
                     </div>
@@ -129,7 +142,7 @@ const UsageTablePanel = () => {
                         placeholder="YYYY-MM-DD"
                         
                         value={startDate}
-                        onChange={(e) => setStartDate(e.target.value)}
+                        onChange={(f) => setStartDate(f.target.value)}
                         />
                     </div>
                     <div className="search-pane-element-field">
@@ -143,7 +156,7 @@ const UsageTablePanel = () => {
                         placeholder="YYYY-MM-DD"
                         value={endDate}
                         min={startDate}
-                        onChange={(e) => setEndDate(e.target.value)}
+                        onChange={(g) => setEndDate(g.target.value)}
                         />
                     </div>
                 </div>
@@ -168,6 +181,32 @@ const UsageTablePanel = () => {
                     
                 </div>
             </form>
+            <div>
+            {data !== null && data.length > 0 ? (
+
+                <table className="table-general">
+                  <thead className="tablehead-general">
+                    <tr>
+                      <th className="tableheadentry-general">Date</th>
+                      <th className="tableheadentry-general">Device ID#</th>
+                      <th className="tableheadentry-general">Location Description</th>
+                      <th className="tableheadentry-general">Garbage Type</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {data.map((usageRecord) => (
+                      <tr key={usageRecord._id} className="tablerow-general">
+                        <td className="tableentry-general">{usageRecord.eventDate}</td>
+                        <td className="tableentry-general">{usageRecord.device.deviceID}</td>
+                        <td className="tableentry-general">{usageRecord.device.location}</td>
+                        <td className="tableentry-general">{usageRecord.garbageType}</td>
+                      </tr>
+                    ))} 
+                  </tbody>
+                </table>
+            
+            ):(null)}
+            </div>
         </>
     )
 }
