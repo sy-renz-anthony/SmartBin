@@ -125,10 +125,22 @@ export const retrieveUsageRecord = async(req, res) =>{
             }else{
                 endDateUTC = moment.tz(startDate, 'YYYY-MM-DD', 'Asia/Manila').endOf('day').toDate();
             }
-            matchParams.$match["eventDate"]={ 
-                $gte: startDateUTC,
-                $lte: endDateUTC
-            };
+
+            if(filter.length<1){
+                matchParams = {
+                    $match:{
+                        "eventDate": {
+                            $gte: startDateUTC,
+                            $lte: endDateUTC
+                        }
+                    }
+                }
+            }else{
+                matchParams.$match["eventDate"]={ 
+                    $gte: startDateUTC,
+                    $lte: endDateUTC
+                };
+            }
         }
 
         
