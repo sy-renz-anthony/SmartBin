@@ -216,12 +216,19 @@ export const getOnlineStatusCount = async (req, res) =>{
     try{
         const result = await Device.aggregate([
             {
-            $group: {
+                $group: {
                 _id: "$isOnline",
-                value:{
-                    $sum: 1
+                value: { $sum: 1 }
                 }
-            }  
+            },
+            {
+                $project: {
+                _id: 0,
+                status: {
+                    $cond: { if: { $eq: ["$_id", true] }, then: "Online", else: "Offline" }
+                },
+                value: 1
+                }
             }
         ]);
 
