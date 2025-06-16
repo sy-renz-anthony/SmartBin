@@ -71,29 +71,28 @@ export const retrieveUsageRecord = async(req, res) =>{
     const startDate = req.body.startDate;
     const endDate = req.body.endDate;
 
-    let filter=[];
+    let garbageTypeFilter=[];
+    let idFilter = null;
     let startDateUTC,
         endDateUTC;
 
     if(deviceID != null && deviceID.toString().length >0){
-        filter.push({"device.deviceID": {$regex: deviceID.toString(), $options: "i"}});
-        filter.push({"device.location": {$regex: deviceID.toString(), $options: "i"}});
+        idFilter={"$or":[
+                {"device.deviceID": {$regex: deviceID.toString(), $options: "i"}},
+                {"device.location": {$regex: deviceID.toString(), $options: "i"}}
+            ]};
     }
 
     if(typeof isWet === 'boolean' && isWet){
-        filter.push({"garbageType": {$regex: "WET", $options: "i"}});
+        garbageTypeFilter.push({"garbageType": {$regex: "WET", $options: "i"}});
     }
 
     if(typeof isDry === 'boolean' && isDry){
-        filter.push({"garbageType": {$regex: "Dry", $options: "i"}});
+        garbageTypeFilter.push({"garbageType": {$regex: "Dry", $options: "i"}});
     }
 
     if(typeof isMetallic === 'boolean' && isMetallic){
-        filter.push({"garbageType": {$regex: "METALLIC", $options: "i"}});
-    }
-
-    if((!filter || filter.length < 1) && (!startDate || startDate.length<1)){
-        return res.status(200).json({success: false, message: "Invalid values!"});
+        garbageTypeFilter.push({"garbageType": {$regex: "METALLIC", $options: "i"}});
     }
 
     if(startDate !==null && startDate !== undefined && startDate.length>0){
@@ -106,15 +105,30 @@ export const retrieveUsageRecord = async(req, res) =>{
         return res.status(200).json({success: false, message: "Cannot have an End date without a Start date!"});
     }
 
+    if((!garbageTypeFilter || garbageTypeFilter.length < 1) && !idFilter && !startDate){
+        return res.status(200).json({success: false, message: "Invalid values!"});
+    }
+    
     try{
 
         var matchParams = {};
-        if(filter.length>0){
+         if(idFilter && (garbageTypeFilter.length > 0)){
             matchParams = {
-                $match: {
-                    $or: filter
+                    $match: {
+                        $and: [idFilter],
+                        $or: garbageTypeFilter
+                    }
+                };
+        }else if(idFilter && (garbageTypeFilter.length<1)){
+            matchParams = {
+                    $match: idFilter
                 }
-            }
+        }else if(!idFilter && garbageTypeFilter){
+            matchParams = {
+                    $match: {
+                        $or: garbageTypeFilter
+                    }
+                }
         }
 
         if(startDate !==null && startDate !== undefined && startDate.length>0){
@@ -126,7 +140,7 @@ export const retrieveUsageRecord = async(req, res) =>{
                 endDateUTC = moment.tz(startDate, 'YYYY-MM-DD', 'Asia/Manila').endOf('day').toDate();
             }
 
-            if(filter.length<1){
+            if(garbageTypeFilter.length<1&&idFilter===null){
                 matchParams = {
                     $match:{
                         "eventDate": {
@@ -143,7 +157,6 @@ export const retrieveUsageRecord = async(req, res) =>{
             }
         }
 
-        
             const usageRecords = await UsageRecord.aggregate([
                 {
                     $lookup: {
