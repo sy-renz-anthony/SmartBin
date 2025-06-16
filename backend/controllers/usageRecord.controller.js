@@ -204,3 +204,36 @@ export const retrieveUsageRecord = async(req, res) =>{
     
         return res;
 }
+
+export const retrieveChartValuesThisWeek = async(req, res) =>{
+    try{
+        const usageRecords = await UsageRecord.aggregate([
+            {
+                $match: {
+                    eventDate:{
+                        $gte: new Date(Date.now() - 1000 * 60 * 60 * 24 * 7)
+                    }
+                }
+            },{
+                $group: {
+                    _id: "$garbageType",
+                    value:{
+                        $sum: 1
+                    }
+                }
+            }
+        ]);
+
+
+        if(!usageRecords instanceof Array || usageRecords.length === 0){
+            res.status(200).json({success: false, message: "No record found!"});
+        }else{
+            res.status(200).json({success: true, data: usageRecords});
+        }
+
+    }catch(error){
+        console.error("Error trying retrieve the Data for the last 7 days!");
+        console.error(error.stack);
+        res.status(500).json({success: false, message: "Server Error"});
+    }
+}
