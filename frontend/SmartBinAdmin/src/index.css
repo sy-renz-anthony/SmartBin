@@ -4,11 +4,11 @@
 @layer components {
     .sidebar-icon {
         @apply relative flex flex-col items-center justify-center bg-gray-800 h-20 w-20 mt-2 mb-2 mx-auto
-        hover:bg-green-600 hover:rounded-full transition-all duration-500 ease-linear cursor-pointer;
+        hover:bg-green-600 hover:rounded-full transition-all duration-300 ease-linear cursor-pointer;
     }
 
     .content-pane{
-        @apply relative top-30 left-25 flex-1 mx-10 bg-white shadow rounded-lg px-5 py-5;
+        @apply relative top-30 left-25 flex-1 mx-10 bg-white shadow rounded-lg px-5 pt-5;
     }
 
     .content-title{
@@ -48,13 +48,19 @@
     }
 
     .search-pane-element-field{
-        @apply grid grid-cols-1 xl:grid-cols-[minmax(0,_15rem)_1fr] my-2 text-xl gap-2 items-center;
+        @apply grid grid-cols-2 sm:grid-cols-[minmax(0,_15rem)_1fr] my-2 text-xl gap-2 items-center;
     }
-    .search-pane-element-checkbox{
+    /*.search-pane-element-checkbox{
         @apply grid grid-cols-3 min-w-90 max-w-110 my-2 text-xl gap-2 items-center;
+    }*/
+    .search-pane-element-checkbox{
+        @apply flex flex-row min-w-90 my-2 text-xl gap-2 items-center;
     }
     .search-pane-row{
         @apply flex flex-col xl:flex-row gap-4 w-full;
+    }
+    .search-pane-row-flexible{
+        @apply flex flex-col lg:flex-row gap-4 max-w-150;
     }
 }
 

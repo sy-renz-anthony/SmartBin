@@ -1,25 +1,22 @@
-import { useState} from 'react';
-import axiosInstance from '../axiosConfig';
+import { useState } from 'react';
 import BasePage from '../components/BasePage';
-import { useNavigate } from "react-router-dom";
-import UsageTablePanel from '../components/UsageTablePanel';
+import UsageTablePanelSearchBar from '../components/UsageTablePanelSearchBar';
+import UsageTablePanelContents from '../components/UsageTablePanelContents';
 
 const Usages = () => {
-
-  const navigate = useNavigate();
-
-  const handleSubmit= async(e) =>{
-    
-  }
-
+  const [data, setData] = useState([]);
 
   const pageContent=()=>{
     return(
+    <>
       <div className="content-pane">
         <h1 className='content-title'>Search Records</h1>
         <hr />
-        <UsageTablePanel />
-      </div>
+        <UsageTablePanelSearchBar apiResultListener={setData}/>  
+      </div>  
+      {data !== null && data !== undefined && data.length > 0 ? 
+      (<UsageTablePanelContents dataReference={data} />) : (null)}
+    </>
     );
   }
 
