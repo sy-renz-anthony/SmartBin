@@ -211,3 +211,30 @@ export const deviceSelfCheck = async(req, res) =>{
 
     return res;
 }
+
+export const getOnlineStatusCount = async (req, res) =>{
+    try{
+        const result = await Device.aggregate([
+            {
+            $group: {
+                _id: "$isOnline",
+                value:{
+                    $sum: 1
+                }
+            }  
+            }
+        ]);
+
+
+        if(!result instanceof Array || result.length === 0){
+            res.status(200).json({success: false, message: "No record found!"});
+        }else{
+            res.status(200).json({success: true, data: result});
+        }
+
+    }catch(error){
+        console.error("Error trying retrieve the Data Online status of devices!");
+        console.error(error.stack);
+        res.status(500).json({success: false, message: "Server Error"});
+    }
+}

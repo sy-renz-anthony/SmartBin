@@ -75,7 +75,6 @@ const UsageTablePanelSearchBar = ({apiResultListener}) => {
 
 
     const handleSubmit= async() =>{
-        console.log("selected: "+JSON.stringify(selected));
         try {
             const searchParams={
                 "keyword": keyword,
