@@ -34,8 +34,8 @@ const BasePage = ({pageTitle, setNextPage, pageContent, passwordModalReroute}) =
   }
 
   return (
-    <>
-    <div className="flex w-full min-h-screen bg-gray-100">
+    <div className="bg-gray-100">
+    <div className="flex w-full min-h-screen">
       <Header pageTitle={pageTitle}/>
       <SideBar logoutButtonEventHandler={logOutButtonEventHandler} />
       <div className="flex-1 min-h-screen h-full pb-40 w-full">
@@ -44,7 +44,7 @@ const BasePage = ({pageTitle, setNextPage, pageContent, passwordModalReroute}) =
     </div>
     <LogoutModal isOpen={isLogoutModalVisible} onClose={closeLogoutModalButtonEventHandler}/>
     <PasswordConfirmModal isOpen={isPasswordModalVisible} onClose={closePasswordModalButtonEventHandler} confirmationEventHandler={passwordModalReroute}/>
-    </>
+    </div>
   )
 }
 
