@@ -44,7 +44,7 @@ const Home = () => {
       <div className="content-pane">
         <h1 className='content-title'>DashBoard</h1>
         <hr />
-        <div className="w-full h-auto  grid grid-cols-2">
+        <div className="w-full h-auto  grid grid-cols-2 gap-2">
           <PieChartDashboard data={pieChartData}/>
           <div className="flex flex-col w-full h-full">
             <BarChartDashboard data={deviceStatusCount} />

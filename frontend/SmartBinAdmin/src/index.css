@@ -8,7 +8,7 @@
     }
 
     .content-pane{
-        @apply relative top-30 left-25 flex-1 mx-10 bg-white shadow rounded-lg px-5 pt-5;
+        @apply relative top-30 left-25 flex-1 ml-10 bg-white shadow rounded-lg px-5 pt-5;
     }
 
     .content-title{
@@ -28,7 +28,7 @@
     }
 
     .table-general {
-        @apply min-w-full bg-white border border-gray-200 rounded-lg my-5 text-lg;
+        @apply bg-white border border-gray-200 rounded-lg my-5 text-lg px-2;
     }
 
     .tablehead-general {
@@ -66,7 +66,7 @@
 
 .content-pane{
     width: calc(100vw - 12rem);
-    min-width: 30rem;
+    min-width: 40rem;
     padding-bottom: 5rem;
     z-index: 0;
 }
