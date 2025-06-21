@@ -38,7 +38,7 @@ const BasePage = ({pageTitle, setNextPage, pageContent, passwordModalReroute}) =
     <div className="flex w-max pr-25 bg-gray-100">
       <Header pageTitle={pageTitle}/>
       <SideBar logoutButtonEventHandler={logOutButtonEventHandler} />
-      <div className="flex-1 min-h-screen pb-40 w-full">
+      <div className="flex-1 min-h-screen pb-40 w-full overflow-y-hidden">
         { pageContent && pageContent(showPasswordModal) }
       </div>
     </div>
