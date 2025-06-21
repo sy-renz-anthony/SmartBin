@@ -41,9 +41,10 @@ const BasePage = ({pageTitle, setNextPage, pageContent, passwordModalReroute}) =
       <div className="flex-1 min-h-screen pb-40 w-full">
         { pageContent && pageContent(showPasswordModal) }
       </div>
-    </div>
+    
     <LogoutModal isOpen={isLogoutModalVisible} onClose={closeLogoutModalButtonEventHandler}/>
     <PasswordConfirmModal isOpen={isPasswordModalVisible} onClose={closePasswordModalButtonEventHandler} confirmationEventHandler={passwordModalReroute}/>
+    </div>
     </div>
   )
 }
