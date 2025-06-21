@@ -119,7 +119,7 @@ const UsageTablePanelSearchBar = ({apiResultListener}) => {
                         <input
                         id="keyword"
                         type="text"
-                        className="w-100 mx-4 py-1 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        className="max-w-100 mx-4 py-1 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
                         value={keyword}
                         onChange={(e) => setKeyword(e.target.value)}
                         />

@@ -3,7 +3,7 @@
 
 @layer components {
     .sidebar-icon {
-        @apply relative flex flex-col items-center justify-center bg-gray-800 h-20 w-20 mt-2 mb-2 mx-auto
+        @apply relative flex flex-col items-center justify-center bg-gray-800 h-15 w-15 mt-2 mb-2 mx-auto
         hover:bg-green-600 hover:rounded-full transition-all duration-300 ease-linear cursor-pointer;
     }
 

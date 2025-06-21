@@ -138,9 +138,6 @@ long readDistance(int echoPin) {
 //------------------------------- function to read the moisture using YL-100 sensor -----------------------------------------------
 char identifyBasedOnMoisture(int moisturePin){
   int moistureState = analogRead(moisturePin);
-  /*
-  Serial.print("moistureState: ");
-  Serial.println(moistureState);//*/
   if(moistureState < 200){
     return TYPE_DRY;
   }else{
@@ -151,9 +148,8 @@ char identifyBasedOnMoisture(int moisturePin){
 
 //------------------------------------- function to inform bin is full ------------------------------------------------------------
 void binIsFullError(char garbageType){
-  Serial.print("[t,E,");
+  Serial.print("tE");
   Serial.print(garbageType);
-  Serial.println("]");
   digitalWrite(LED_PIN, HIGH);
   tone(BUZZER_PIN, 1500);
   delay(500);
@@ -216,7 +212,6 @@ void loop() {
   unsigned long currentMillis = millis();
   if(currentState == STATE_IDENTIFYING){
     lcd.setCursor(0, 0);
-    Serial.print("identifying");
     lcd.print("Identifying...");
     int sensedMetal = digitalRead(INDUCTIVE_PIN);
     if(currentDetectionPhase == DETECTIONPHASE_1){
@@ -227,12 +222,6 @@ void loop() {
       }
 
       if(detectionCount>3){
-        /*
-          Serial.print("metallic: ");
-          Serial.print(metallicCount);
-          Serial.print("     -     non-metallic: ");
-          Serial.println(nonMetallicCount);
-        //*/
         if(metallicCount>nonMetallicCount){
           garbageType = TYPE_METAL;
           currentState = STATE_DUMPING;
@@ -258,17 +247,6 @@ void loop() {
 
         lastDHTRead = currentMillis;
         if(dhtCount>=3){
-          /*
-          Serial.print("[");
-          Serial.print(lastHumidityReading);
-          Serial.print("] - [");
-          Serial.print(firstReading);
-          Serial.print("] - [");
-          Serial.print(secondReading);
-          Serial.print("] - [");
-          Serial.print(thirdReading);
-          Serial.println("]");
-          */
           if(firstReading >= lastHumidityReading){
             if((thirdReading >= secondReading) && (secondReading >= firstReading) && (thirdReading-firstReading >= 0.3)){
               garbageType = TYPE_WET;
@@ -276,7 +254,6 @@ void loop() {
               garbageType = identifyBasedOnMoisture(MOISTURE_PIN);
             }
           }else{
-            //Serial.println("previously wet already");
             garbageType = identifyBasedOnMoisture(MOISTURE_PIN);
           }
           
@@ -433,14 +410,8 @@ void loop() {
   }else{
     lcd.setCursor(0, 0);
     lcd.print("Idle");
-    // Read DHT22 every 2 seconds
     if (currentMillis - lastDHTRead >= DHT_INTERVAL) {
       lastHumidityReading = dht.readHumidity();
-      /*
-      if (isnan(lastHumidityReading)) {
-        //Serial.println("Failed to read from DHT22!");
-      }*/
-
       lastDHTRead = currentMillis;
     }
 
@@ -467,55 +438,37 @@ void loop() {
 
         currentState = STATE_IDENTIFYING;
       }
-
-      /*
-      Serial.print("[i,");
-      Serial.print(isMetallicFull);
-      Serial.print(",");
-      Serial.print(isDryFull);
-      Serial.print(",");
-      Serial.print(isWetFull);
-      Serial.println("]");*/
     }
     
   }
 ///*
   long dist = readDistance(METALIC_ECHO_PIN);
-  /*
-  Serial.print("Metallic distance: ");
-  Serial.print(dist);
-  Serial.println(" cm");
-  /*if(dist<=13){
+  if(dist<=20){
     isMetallicFull = true;
   }else{
     isMetallicFull=false;
-  }*/
-  //delay(60);
+  }
+  delay(60);
 
   dist = readDistance(DRY_ECHO_PIN);
-  ///*
-  //Serial.print("Dry distance: ");
-  //Serial.print(dist);
-  //Serial.println(" cm");//
-  /*if(dist<=13){
+  if(dist<=20){
     isDryFull = true;
   }else{
     isDryFull=false;
-  }*/
+  }
   delay(60);
 
-  ///*
   dist = readDistance(WET_ECHO_PIN);
-  ///*
+  /*
   Serial.print("Wet distance: ");
   Serial.print(dist);
-  Serial.println(" cm");
-  /*if(dist<=13){
+  Serial.println(" cm");*/
+  if(dist<=13){
     isWetFull = true;
   }else{
     isWetFull=false;
-  }*/
-  //delay(60);
+  }
+  delay(60);
 //*/
   if(Serial.available()){
     char requestChar = Serial.read();

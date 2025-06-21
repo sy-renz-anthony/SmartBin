@@ -28,7 +28,7 @@ const Header = ({pageTitle}) => {
   }, []);
 
   return (
-    <div className='fixed top-0 left-25 w-screen h-20 flex items-center bg-white shadow text-black z-10'>
+    <div className='fixed top-0 left-25 w-full h-20 flex items-center bg-white shadow text-black z-10'>
         <h1 className="mx-5 font-bold text-gray-800 text-2xl w-3/4">{pageTitle}</h1>
         <span>Hi, {name}</span>
     </div>
