@@ -28,7 +28,7 @@
     }
 
     .table-general {
-        @apply bg-white border border-gray-200 rounded-lg my-5 text-lg px-2;
+        @apply bg-white border border-gray-200 rounded-lg my-5 text-lg w-full;
     }
 
     .tablehead-general {
@@ -66,7 +66,7 @@
 
 .content-pane{
     width: calc(100vw - 12rem);
-    min-width: 40rem;
+    min-width: 35rem;
     padding-bottom: 5rem;
     z-index: 0;
 }
