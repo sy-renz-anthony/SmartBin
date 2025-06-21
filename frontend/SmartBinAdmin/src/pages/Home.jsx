@@ -19,14 +19,14 @@ const Home = () => {
       try {
         const response1 = await axiosInstance.get("/usages/chart-values", {}, {withCredentials: true});
         if(!response1.data.success){
-              toast.error(response1.data.message);
+              toast.error("No Bin Usage record found for the last 7 days!");
         }else{
             setPieChartData(response1.data.data);
         }
 
         const response2 = await axiosInstance.get("/devices/status-count", {}, {withCredentials: true});
         if(!response2.data.success){
-              toast.error(response2.data.message);
+              toast.error("Can't get the status of SmartBin devices!");
         }else{
             setDeviceStatusCount(response2.data.data);
         }
@@ -48,7 +48,7 @@ const Home = () => {
           <PieChartDashboard data={pieChartData}/>
           <div className="flex flex-col w-full h-full">
             <BarChartDashboard data={deviceStatusCount} />
-            <div className="flex flex-row w-full h-fit gap-10">
+            <div className="grid grid-cols-1 lg:flex lg:flex-row w-full h-fit gap-10">
               <Link to="/usages" className="button-in-use h-fit mt-10 flex gap-3">
                 <MdSummarize size="30"/> Check Usage Records
               </Link>
