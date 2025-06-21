@@ -1,4 +1,3 @@
-import {useEffect} from 'react'
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import CustomToolTip from './CustomToolTip';
 
@@ -6,22 +5,13 @@ import assets from '../assets/assets';
 
 const PieChartDashboard = ({data}) => {
     const COLORS = ['#60A5FA', '#34D399', '#FBBF24'];
-  useEffect(()=>{
-    const loadChart=()=>{
-      if(data === null || data === undefined || data.length <1){
-        console.log("empty bin usage record!");
-      }
-    }
-    loadChart();
-
-  },[data]);
 
     return (
     <div className="w-full max-w-lg mx-auto my-5">
       <h2 className="text-xl font-semibold mb-4 text-center text-gray-500">Garbage Types Distribution for the last 7 days</h2>
       {data === null || data === undefined || data.length <1?
         <div className="grid grid-cols-1 justify-items-center mt-7">
-          <img src={assets.cautionPic} className="w-40 h-40 shadow-lg" />
+          <img src={assets.cautionPic} className="w-40 h-40" />
           <h2 className="text-lg font-semibold mb-4 text-center text-gray-700">
             No SmartBin record of usage found from the last 7 days!
           </h2>

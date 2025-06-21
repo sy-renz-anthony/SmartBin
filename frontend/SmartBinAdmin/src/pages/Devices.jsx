@@ -66,7 +66,7 @@ const Devices= () => {
                             </div>
                           }</td>
                         <td className="tableentry-general">
-                          <Link to="/update-device" className="absolute button-edit h-fit" state={{ "deviceInfo": device }}>
+                          <Link to="/update-device" className="button-edit h-fit" state={{ "deviceInfo": device }}>
                             Update
                           </Link>
                         </td>
