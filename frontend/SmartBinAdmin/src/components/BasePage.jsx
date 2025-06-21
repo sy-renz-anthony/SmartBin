@@ -34,8 +34,8 @@ const BasePage = ({pageTitle, setNextPage, pageContent, passwordModalReroute}) =
   }
 
   return (
-    <div className="bg-gray-600 h-fit w-screen overflow-x-auto">
-    <div className="flex w-full min-h-screen">
+    <div>
+    <div className="flex w-max pr-25 min-h-screen bg-gray-600">
       <Header pageTitle={pageTitle}/>
       <SideBar logoutButtonEventHandler={logOutButtonEventHandler} />
       <div className="flex-1 min-h-screen h-full pb-40 w-full">
