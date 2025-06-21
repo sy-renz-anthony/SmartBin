@@ -35,10 +35,10 @@ const BasePage = ({pageTitle, setNextPage, pageContent, passwordModalReroute}) =
 
   return (
     <div>
-    <div className="flex w-max pr-25 pb-50 md:pb-0 bg-gray-600">
+    <div className="flex w-max pr-25 bg-gray-100">
       <Header pageTitle={pageTitle}/>
       <SideBar logoutButtonEventHandler={logOutButtonEventHandler} />
-      <div className="flex-1 min-h-screen h-full pb-40 w-full">
+      <div className="flex-1 min-h-screen pb-40 w-full">
         { pageContent && pageContent(showPasswordModal) }
       </div>
     </div>
