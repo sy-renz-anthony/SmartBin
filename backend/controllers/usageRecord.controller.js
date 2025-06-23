@@ -237,3 +237,117 @@ export const retrieveChartValuesThisWeek = async(req, res) =>{
         res.status(500).json({success: false, message: "Server Error"});
     }
 }
+
+export const binFullError = async(req, res) =>{
+    if(!req.body){
+        return res.status(200).json({success: false, message: "Invalid values!"});
+    }
+
+    const deviceID = req.body.deviceID;
+    const garbageType = req.body.garbageType;
+
+    if(!deviceID){
+        return res.status(200).json({success: false, message: "Invalid Device ID!"});
+    }
+
+    if(!garbageType){
+        return res.status(200).json({success: false, message: "Please provide the Garbage Bin Type that overflown!"});
+    }else if(garbageType !== "WET" && garbageType !== "DRY" && garbageType !== "METALLIC"){
+        return res.status(200).json({success: false, message: "Garbage Bin Type is invalid!"});
+    }
+
+    const session = await mongoose.startSession();
+    try{
+        const device = await Device.findOne({"deviceID":deviceID});
+        if(!device){
+            return res.status(200).json({success: false, message: "Device is Not registered!"});
+        }
+        
+        /*
+        if(!device.isOnline){
+            return res.status(401).json({success: false, message: "Device is Not Online!"});
+        }*/
+
+        session.startTransaction();
+
+        if(garbageType === 'WET'){
+            device.isWetBinFull = true;
+        }else if(garbageType === 'DRY'){
+            device.isDryBinFull = true;
+        }else if(garbageType === 'METALLIC'){
+            device.isMetallicBinFull = true;
+        }
+
+        await Device.findByIdAndUpdate(device._id, device, {new: true, session});
+        await session.commitTransaction();
+
+        res.status(200).json({success: true, message: "Updated Garbage Bin Status Successfully!"});
+    }catch(error){
+        if(session.inTransaction()){
+            await session.abortTransaction();
+        }
+        console.error("Error in recording Bin Usage! - "+error.message);
+        res.status(500).json({success: false, message:"Server Error"});
+    }finally{
+        await session.endSession();
+    }
+
+    return res;
+}
+
+export const binEmptiedEvent = async(req, res) =>{
+    if(!req.body){
+        return res.status(200).json({success: false, message: "Invalid values!"});
+    }
+
+    const deviceID = req.body.deviceID;
+    const garbageType = req.body.garbageType;
+
+    if(!deviceID){
+        return res.status(200).json({success: false, message: "Invalid Device ID!"});
+    }
+
+    if(!garbageType){
+        return res.status(200).json({success: false, message: "Please provide the Garbage Bin Type that overflown!"});
+    }else if(garbageType !== "WET" && garbageType !== "DRY" && garbageType !== "METALLIC"){
+        return res.status(200).json({success: false, message: "Garbage Bin Type is invalid!"});
+    }
+
+    const session = await mongoose.startSession();
+    try{
+        const device = await Device.findOne({"deviceID":deviceID});
+        if(!device){
+            return res.status(200).json({success: false, message: "Device is Not registered!"});
+        }
+        
+        /*
+        if(!device.isOnline){
+            return res.status(401).json({success: false, message: "Device is Not Online!"});
+        }*/
+
+        session.startTransaction();
+
+        if(garbageType === 'WET'){
+            device.isWetBinFull = false;
+        }else if(garbageType === 'DRY'){
+            device.isDryBinFull = false;
+        }else if(garbageType === 'METALLIC'){
+            device.isMetallicBinFull = false;
+        }
+          
+        await Device.findByIdAndUpdate(device._id, device, {new: true, session});
+        await session.commitTransaction();
+
+        res.status(200).json({success: true, message: "Updated Garbage Bin Status Successfully!"});
+    }catch(error){
+        if(session.inTransaction()){
+            await session.abortTransaction();
+        }
+        console.error("Error in recording Bin Usage! - "+error.message);
+        res.status(500).json({success: false, message:"Server Error"});
+    }finally{
+        await session.endSession();
+    }
+
+    return res;
+}
