@@ -15,6 +15,7 @@ import assets from '../assets/assets';
 const Home = () => {
   const [pieChartData, setPieChartData] = useState([]);
   const [deviceStatusCount, setDeviceStatusCount] =useState([]);
+  const [numberDevicesOk, setNumberDevicesOk] = useState(0);
 
   useEffect(() => {
     async function reloadData(){
@@ -32,6 +33,18 @@ const Home = () => {
         }else{
             setDeviceStatusCount(response2.data.data);
         }
+
+      } catch (err) {
+          console.error("Login error:", err.message);
+      }
+
+      try {
+        //const response3 = await axiosInstance.get("/usages/chart-values", {}, {withCredentials: true});
+        //if(!response1.data.success){
+              //toast.error("No Bin Usage record found for the last 7 days!");
+        //}else{
+            //setPieChartData(response1.data.data);
+        //}
 
       } catch (err) {
           console.error("Login error:", err.message);
