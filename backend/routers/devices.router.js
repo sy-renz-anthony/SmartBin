@@ -1,5 +1,5 @@
 import express from 'express';
-import {getAllDevices, registerNewDevice, updateDevice, searchDevice, deviceSelfCheck, isAllBinOk} from '../controllers/device.controller.js';
+import {getAllDevices, registerNewDevice, updateDevice, searchDevice, deviceSelfCheck, isAllBinOk, getOnlineStatusCount} from '../controllers/device.controller.js';
 import userAuthentication from '../functions/userAuthentication.js';
 
 const router =express.Router();
