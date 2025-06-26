@@ -10,6 +10,8 @@ import {BsFillTrashFill} from 'react-icons/bs'
 import PieChartDashboard from '../components/PieChartDashboard';
 import BarChartDashboard from '../components/BarChartDashboard';
 
+import assets from '../assets/assets';
+
 const Home = () => {
   const [pieChartData, setPieChartData] = useState([]);
   const [deviceStatusCount, setDeviceStatusCount] =useState([]);
@@ -45,7 +47,14 @@ const Home = () => {
         <h1 className='content-title'>DashBoard</h1>
         <hr />
         <div className="w-full h-auto  grid grid-cols-2 gap-2">
-          <PieChartDashboard data={pieChartData}/>
+          <div className="flex flex-col w-full h-full">
+            <PieChartDashboard data={pieChartData}/>
+            <div className="grid grid-cols-1 lg:flex lg:flex-row w-full h-fit gap-10 mt-10 mx-2 items-center justify-center">
+              <img src={assets.emptyBinPic} className="w-35 h-35" />
+              <h2 className="text-2xl text-violet-500 font-bold mr-3">All Bins are good!</h2>
+            </div>
+          </div>
+          
           <div className="flex flex-col w-full h-full">
             <BarChartDashboard data={deviceStatusCount} />
             <div className="grid grid-cols-1 lg:flex lg:flex-row w-full h-fit gap-10">

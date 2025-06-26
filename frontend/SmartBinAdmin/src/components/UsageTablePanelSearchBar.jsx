@@ -113,13 +113,13 @@ const UsageTablePanelSearchBar = ({apiResultListener}) => {
             <form action={handleSubmit} className="px-8 -mb-15 w-full" >
                 <div className="search-pane-row">
                     <div className="search-pane-element-field">
-                        <label className="text-gray-600 w-fit" htmlFor="keyword">
+                        <label className="text-gray-600 md:text-right w-full" htmlFor="keyword">
                         Device ID/Location:
                         </label>
                         <input
                         id="keyword"
                         type="text"
-                        className="max-w-100 mx-4 py-1 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        className="max-w-100 min-w-65 mx-4 py-1 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
                         value={keyword}
                         onChange={(e) => setKeyword(e.target.value)}
                         />

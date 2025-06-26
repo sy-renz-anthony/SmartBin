@@ -245,3 +245,31 @@ export const getOnlineStatusCount = async (req, res) =>{
         res.status(500).json({success: false, message: "Server Error"});
     }
 }
+
+export const isAllBinOk = async (req, res) =>{
+    try{
+        const result = await Device.aggregate([
+            {
+                $match: {
+                    $or:[
+                    {"isWetBinFull":true},
+                    {"isDryBinFull":true},
+                    {"isMetallicBinFull": true}
+                ]
+                }
+            }
+        ]);
+
+
+        if(result instanceof Array && result.length > 0){
+            res.status(200).json({success: true, isTrue: true});
+        }else{
+            res.status(200).json({success: true, isTrue: false});
+        }
+
+    }catch(error){
+        console.error("Error trying retrieve the Data if all devices are ok!");
+        console.error(error.stack);
+        res.status(500).json({success: false, message: "Server Error"});
+    }
+}

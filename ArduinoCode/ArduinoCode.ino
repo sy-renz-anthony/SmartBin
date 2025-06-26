@@ -32,7 +32,7 @@ Servo floorServo2;
 unsigned long lastDHTRead = 0;
 const unsigned long DHT_INTERVAL = 2000; // 2 seconds
 
-int mainServoAngle = 60; //current angle of mainServo;
+int mainServoAngle = 90; //current angle of mainServo;
 
 char STATE_IDLE = 'a',
      STATE_IDENTIFYING = 'b',
@@ -70,6 +70,10 @@ boolean isMetallicFull,
         isDryFull,
         isWetFull;
 
+int metallicFullCount,
+    dryFullCount,
+    wetFullCount;
+
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 void setup() {
@@ -84,7 +88,7 @@ void setup() {
   pinMode(INDUCTIVE_PIN, INPUT);
   pinMode(LED_PIN, OUTPUT);
 
-  mainServo.write(60);
+  mainServo.write(mainServoAngle);
   floorServo1.write(180);
   floorServo2.write(0);
   currentState = STATE_IDLE;
@@ -114,6 +118,9 @@ void setup() {
   isMetallicFull = false;
   isDryFull = false;
   isWetFull = false;
+  metallicFullCount=0;
+  dryFullCount=0;
+  wetFullCount=0;
 
   lcd.init();
   lcd.backlight();
@@ -149,7 +156,7 @@ char identifyBasedOnMoisture(int moisturePin){
 //------------------------------------- function to inform bin is full ------------------------------------------------------------
 void binIsFullError(char garbageType){
   Serial.print("tE");
-  Serial.print(garbageType);
+  Serial.println(garbageType);
   digitalWrite(LED_PIN, HIGH);
   tone(BUZZER_PIN, 1500);
   delay(500);
@@ -179,8 +186,26 @@ void binIsFullError(char garbageType){
   delay(500);
   digitalWrite(LED_PIN, LOW);
   noTone(BUZZER_PIN);
+
+  mainServo.write(60);
+  delay(500);
+  floorServo1.write(90);
+  floorServo2.write(90);
+
+  delay(1000);
+  int currentAngle1 = 90,
+  currentAngle2 = 90;
+  while(currentAngle1<180){
+    currentAngle1=currentAngle1+1;
+    floorServo1.write(currentAngle1);
+    currentAngle2=currentAngle2-1;
+    floorServo2.write(currentAngle2);
+    delay(5);
+  }
+  delay(100);
 }
 //---------------------------------------------------------------------------------------------------------------------------------
+
 
 void loop() {
   lcd.clear();
@@ -315,7 +340,7 @@ void loop() {
         delay(200);
         digitalWrite(LED_PIN, LOW);
         noTone(BUZZER_PIN);
-        mainServo.write(135);
+        mainServo.write(100);
         delay(500);
         floorServo1.write(90);
         floorServo2.write(90);
@@ -380,7 +405,7 @@ void loop() {
       }
       
     }
-    mainServo.write(60);
+    mainServo.write(mainServoAngle);
     garbageType = TYPE_DRY;
     currentDetectionPhase = DETECTIONPHASE_1;
     detectionCount = 0;
@@ -443,30 +468,91 @@ void loop() {
   }
 ///*
   long dist = readDistance(METALIC_ECHO_PIN);
+  /*
+  Serial.print("metallicFullCount: ");
+  Serial.print(metallicFullCount);
+  Serial.print(" - ");
+  Serial.print("Metallic distance: ");
+  Serial.print(dist);
+  Serial.println(" cm");//*/
   if(dist<=20){
-    isMetallicFull = true;
+    if(!isMetallicFull){
+      if(metallicFullCount<5){
+        metallicFullCount++;
+      }else{
+        isMetallicFull=true;
+        Serial.println("iFm");
+      }
+    }
   }else{
-    isMetallicFull=false;
+    if(isMetallicFull){
+      if(metallicFullCount>0){
+        metallicFullCount--;
+      }else{
+        isMetallicFull=false;
+        Serial.println("iRm");
+      }
+    }
   }
+  //*/
   delay(60);
 
   dist = readDistance(DRY_ECHO_PIN);
+  /*
+  Serial.print("dryFullCount: ");
+  Serial.print(dryFullCount);
+  Serial.print(" - ");
+  Serial.print("Dry distance: ");
+  Serial.print(dist);
+  Serial.println(" cm");//*/
   if(dist<=20){
-    isDryFull = true;
+    if(!isDryFull){
+      if(dryFullCount<5){
+        dryFullCount++;
+      }else{
+        isDryFull=true;
+        Serial.println("iFd");
+      }
+    }
   }else{
-    isDryFull=false;
-  }
+    if(isDryFull){
+      if(dryFullCount>0){
+        dryFullCount--;
+      }else{
+        isDryFull=false;
+        Serial.println("iRd");
+      }
+    }
+  }//*/
   delay(60);
 
   dist = readDistance(WET_ECHO_PIN);
   /*
+  Serial.print("wetFullCount: ");
+  Serial.print(wetFullCount);
+  Serial.print(" - ");
   Serial.print("Wet distance: ");
   Serial.print(dist);
-  Serial.println(" cm");*/
-  if(dist<=13){
-    isWetFull = true;
+  Serial.println(" cm");//*/
+  
+  if(dist<=20){
+    if(!isWetFull){
+      if(wetFullCount<5){
+        wetFullCount++;
+      }else{
+        isWetFull=true;
+        Serial.println("iFw");
+      }
+    }
   }else{
-    isWetFull=false;
+    if(isWetFull){
+      if(wetFullCount>0){
+        wetFullCount--;
+      }else{
+        isWetFull=false;
+        Serial.println("iRw");
+      }
+    }
   }
   delay(60);
 //*/

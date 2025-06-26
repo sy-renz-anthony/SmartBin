@@ -48,7 +48,7 @@
     }
 
     .search-pane-element-field{
-        @apply grid grid-cols-2 sm:grid-cols-[minmax(0,_15rem)_1fr] my-2 text-xl gap-2 items-center;
+        @apply grid grid-cols-1 md:grid-cols-2 my-2 text-xl gap-2 items-center;
     }
     /*.search-pane-element-checkbox{
         @apply grid grid-cols-3 min-w-90 max-w-110 my-2 text-xl gap-2 items-center;

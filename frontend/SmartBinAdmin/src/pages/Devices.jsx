@@ -4,6 +4,7 @@ import axiosInstance from '../axiosConfig';
 import { toast } from 'react-toastify';
 
 import {GoDotFill} from 'react-icons/go'
+import { FaExclamation } from "react-icons/fa6";
 
 import BasePage from '../components/BasePage';
 
@@ -64,7 +65,26 @@ const Devices= () => {
                             <div className="flex items-center"><GoDotFill size='30' className="text-green-500"/>
                               <span>Online</span>
                             </div>
-                          }</td>
+                          }
+                          {
+                            (device.isWetBinFull || device.isDryBinFull || device.isMetallicBinFull) && (
+                              <div className="flex items-center">
+                                <FaExclamation size='20' className="text-yellow-500"/>
+                                <span className="text-sm text-gray-600">
+                                  {device.isWetBinFull && (<>Wet</>)}
+                                  {(device.isWetBinFull && (device.isDryBinFull||device.isMetallicBinFull)) && (<>, </>)}
+                                  {device.isDryBinFull && (<>Dry</>)}
+                                  {(device.isMetallicBinFull&&(device.isWetBinFull||device.isDryBinFull)) && (<>, </>)}
+                                  {device.isMetallicBinFull && (<>Metallic</>)}
+
+                                  {((device.isWetBinFull && (!device.isDryBinFull && !device.isMetallicBinFull)) || (device.isDryBinFull && (!device.isWetBinFull && !device.isMetallicBinFull)) || (device.isMetallicBinFull && (!device.isWetBinFull && !device.isDryBinFull))) ? <> Bin is Full!</> : <> Bins are Full!</>
+                                  }
+                                 </span>
+                              </div>
+                            )
+                          }
+                          
+                          </td>
                         <td className="tableentry-general">
                           <Link to="/update-device" className="button-edit h-fit" state={{ "deviceInfo": device }}>
                             Update
