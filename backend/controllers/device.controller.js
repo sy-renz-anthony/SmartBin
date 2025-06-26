@@ -262,9 +262,9 @@ export const isAllBinOk = async (req, res) =>{
 
 
         if(result instanceof Array && result.length > 0){
-            res.status(200).json({success: true, isTrue: true});
+            res.status(200).json({success: true, isTrue: false, devicesNotOkCount: result.length});
         }else{
-            res.status(200).json({success: true, isTrue: false});
+            res.status(200).json({success: true, isTrue: true, devicesNotOkCount: 0 });
         }
 
     }catch(error){
