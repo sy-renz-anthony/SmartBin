@@ -8,5 +8,5 @@ public interface DeviceListener{
     public void garbageDetected(char garbageType);
     public void garbageErrorDetected(char garbageType);
     public void garbageBinFullError(char garbageType);
-    public void garbageBinEmptied();
+    public void garbageBinEmptied(char garbageType);
 } 

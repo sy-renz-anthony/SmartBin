@@ -33,7 +33,6 @@ public class ApiLink extends Thread implements Constants{
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             
-            System.out.println("Response Body: "+response.body());
             if(response.statusCode()!=200){
                 System.err.println("The POST request failed!");
                 return false;
@@ -42,15 +41,12 @@ public class ApiLink extends Thread implements Constants{
             return true;
         }catch(IOException e){
             System.err.println("An I/O error occured while trying to send POST request!");
-            e.printStackTrace();
             return false;
         }catch(InterruptedException e){
             System.err.println("POST request is taking to long to send!");
-            e.printStackTrace();
             return false;
         }catch(Exception e){
             System.err.println("An error occured during sending of POST request!");
-            e.printStackTrace();
             return false;
         }
     }

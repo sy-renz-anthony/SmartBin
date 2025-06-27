@@ -78,3 +78,16 @@
 .leaflet-routing-container {
   display: none !important;
 }
+
+.blinking-notOk {
+    animation: blink-color 2s infinite;
+}
+
+@keyframes blink-color {
+    0%, 100% {
+        color: #aa53ff;
+    }
+    50% {
+        color: #ff1111;
+    }
+}
