@@ -16,9 +16,8 @@ const Home = () => {
   const [pieChartData, setPieChartData] = useState([]);
   const [deviceStatusCount, setDeviceStatusCount] =useState([]);
   const [numberDevicesNotOk, setNumberDevicesNotOk] = useState(0);
-
-  useEffect(() => {
-    async function reloadData(){
+  
+  const reloadData = async()=>{
       try {
         const response1 = await axiosInstance.get("/usages/chart-values", {}, {withCredentials: true});
         if(!response1.data.success){
@@ -51,8 +50,12 @@ const Home = () => {
           console.error("Login error:", err.message);
       }
     }
-    
+
+  useEffect(() => {
     reloadData();
+    const interval = setInterval(reloadData, 30000);
+    return ()=>clearInterval(interval);
+    
   }, []);
 
   const pageContent=()=>{
