@@ -340,7 +340,7 @@ void loop() {
         delay(200);
         digitalWrite(LED_PIN, LOW);
         noTone(BUZZER_PIN);
-        mainServo.write(100);
+        mainServo.write(120);
         delay(500);
         floorServo1.write(90);
         floorServo2.write(90);
@@ -505,7 +505,7 @@ void loop() {
   Serial.print("Dry distance: ");
   Serial.print(dist);
   Serial.println(" cm");//*/
-  if(dist<=20){
+  if(dist<=30){
     if(!isDryFull){
       if(dryFullCount<5){
         dryFullCount++;

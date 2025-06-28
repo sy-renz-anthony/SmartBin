@@ -30,10 +30,10 @@ export const recordUsageEvent = async(req, res) =>{
             return res.status(200).json({success: false, message: "Device is Not registered!"});
         }
         
-        /*
+        
         if(!device.isOnline){
-            return res.status(401).json({success: false, message: "Device is Not Online!"});
-        }*/
+            return res.status(200).json({success: false, message: "Device is Not Online!"});
+        }
 
         session.startTransaction();
 
@@ -263,18 +263,30 @@ export const binFullError = async(req, res) =>{
             return res.status(200).json({success: false, message: "Device is Not registered!"});
         }
         
-        /*
+        
         if(!device.isOnline){
-            return res.status(401).json({success: false, message: "Device is Not Online!"});
-        }*/
+            return res.status(200).json({success: false, message: "Device is Not Online!"});
+        }
 
         session.startTransaction();
 
         if(garbageType === 'WET'){
+            if(device.isWetBinFull){
+                return res.status(200).json({success: false, message: "Device is Already flagged for Wet bin full!"});
+            }
+
             device.isWetBinFull = true;
         }else if(garbageType === 'DRY'){
+            if(device.isDryBinFull){
+                return res.status(200).json({success: false, message: "Device is Already flagged for Dry bin full!"});
+            }
+
             device.isDryBinFull = true;
         }else if(garbageType === 'METALLIC'){
+            if(device.isMetallicBinFull){
+                return res.status(200).json({success: false, message: "Device is Already flagged for Metallic bin full!"});
+            }
+
             device.isMetallicBinFull = true;
         }
 
@@ -320,11 +332,6 @@ export const binEmptiedEvent = async(req, res) =>{
             return res.status(200).json({success: false, message: "Device is Not registered!"});
         }
         
-        /*
-        if(!device.isOnline){
-            return res.status(401).json({success: false, message: "Device is Not Online!"});
-        }*/
-
         session.startTransaction();
 
         if(garbageType === 'WET'){
