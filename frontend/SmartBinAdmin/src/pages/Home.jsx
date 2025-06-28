@@ -45,7 +45,6 @@ const Home = () => {
           toast.error("An error occured while trying to check status of all bins!");
         }else{
             setNumberDevicesNotOk(response3.data.devicesNotOkCount);
-            console.log(JSON.stringify(response3.data));
         }
 
       } catch (err) {

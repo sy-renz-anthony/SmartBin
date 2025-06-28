@@ -48,19 +48,16 @@
     }
 
     .search-pane-element-field{
-        @apply grid grid-cols-1 md:grid-cols-2 my-2 text-xl gap-2 items-center;
+        @apply flex flex-row w-full my-2 text-xl gap-4 items-center;
     }
-    /*.search-pane-element-checkbox{
-        @apply grid grid-cols-3 min-w-90 max-w-110 my-2 text-xl gap-2 items-center;
-    }*/
     .search-pane-element-checkbox{
-        @apply flex flex-row min-w-90 my-2 text-xl gap-2 items-center;
+        @apply flex flex-row w-60 my-2 text-xl gap-2 items-center;
     }
     .search-pane-row{
-        @apply flex flex-col xl:flex-row gap-4 w-full;
+        @apply flex flex-col lg:flex-row gap-4 w-full;
     }
     .search-pane-row-flexible{
-        @apply flex flex-col lg:flex-row gap-4 max-w-150;
+        @apply flex flex-col w-full lg:flex-row gap-4 max-w-150;
     }
 }
 

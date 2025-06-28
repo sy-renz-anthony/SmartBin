@@ -112,14 +112,14 @@ const UsageTablePanelSearchBar = ({apiResultListener}) => {
         <>
             <form action={handleSubmit} className="px-8 -mb-15 w-full" >
                 <div className="search-pane-row">
-                    <div className="search-pane-element-field">
-                        <label className="text-gray-600 md:text-right w-full" htmlFor="keyword">
+                    <div className="flex flex-row my-2 text-xl gap-4 items-center">
+                        <label className="text-gray-600" htmlFor="keyword">
                         Device ID/Location:
                         </label>
                         <input
                         id="keyword"
                         type="text"
-                        className="max-w-100 min-w-65 mx-4 py-1 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        className="max-w-100 min-w-65 w-100 mx-4 py-1 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
                         value={keyword}
                         onChange={(e) => setKeyword(e.target.value)}
                         />
@@ -155,13 +155,13 @@ const UsageTablePanelSearchBar = ({apiResultListener}) => {
                 </div>
                 <div className="search-pane-row-flexible">
                     <div className="search-pane-element-field">
-                        <label className="text-gray-600 text-right" htmlFor="startDate">
+                        <label className="text-gray-600 md:text-right" htmlFor="startDate">
                         from:
                         </label>
                         <input
                         id="startDate"
                         type="date"
-                        className="w-50 mx-4 py-1 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-500"
+                        className="w-50 min-w-40 max-w-60 mx-4 py-1 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-500"
                         placeholder="YYYY-MM-DD"
                         
                         value={startDate}
@@ -169,13 +169,13 @@ const UsageTablePanelSearchBar = ({apiResultListener}) => {
                         />
                     </div>
                     <div className="search-pane-element-field">
-                        <label className="text-gray-600 text-right" htmlFor="endDate">
-                        to:
+                        <label className="text-gray-600 md:text-right" htmlFor="endDate">
+                        &nbsp;&nbsp;&nbsp;&nbsp;to:
                         </label>
                         <input
                         id="endDate"
                         type="date"
-                        className="w-50 mx-4 py-1 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-500"
+                        className="w-50 min-w-40 max-w-60 mx-4 py-1 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-500"
                         placeholder="YYYY-MM-DD"
                         value={endDate}
                         min={startDate}
