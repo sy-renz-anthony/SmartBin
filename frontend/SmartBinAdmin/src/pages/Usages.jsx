@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from "react-router-dom";
 import BasePage from '../components/BasePage';
 import UsageTablePanelSearchBar from '../components/UsageTablePanelSearchBar';
 import UsageTablePanelContents from '../components/UsageTablePanelContents';
@@ -10,7 +11,15 @@ const Usages = () => {
     return(
     <>
       <div className="content-pane">
-        <h1 className='content-title'>Search Records</h1>
+        <div className="w-full flex flex-row">
+          <h1 className='content-title'>Search Usage Records</h1>
+          <div className="h-auto mb-3 flex ml-auto items-end text-right">
+            <Link to="/events" className="text-sm text-blue-500 hover:underline">
+              search for events
+            </Link>
+          </div>
+        </div>
+        
         <hr />
         <UsageTablePanelSearchBar apiResultListener={setData}/>  
       </div>  

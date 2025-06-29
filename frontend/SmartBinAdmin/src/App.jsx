@@ -13,6 +13,7 @@ import AddDevice from './pages/AddDevice'
 import UpdateDevice from './pages/UpdateDevice'
 import BinMap from './pages/BinMap'
 import Usages from './pages/Usages'
+import Events from './pages/Events'
 import { ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-tooltip/dist/react-tooltip.css';
@@ -35,6 +36,7 @@ function App() {
         <Route path='/update-device' element={<ProtectedRoute> <UpdateDevice /> </ProtectedRoute>} />
         <Route path='/map' element={<ProtectedRoute> <BinMap /> </ProtectedRoute>} />
         <Route path='/usages' element={<ProtectedRoute> <Usages /> </ProtectedRoute>} />
+        <Route path='/events' element={<ProtectedRoute> <Events /> </ProtectedRoute>} />
       </Routes>
       <ToastContainer />
     </div>

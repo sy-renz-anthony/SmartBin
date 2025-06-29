@@ -1,9 +1,6 @@
-import Device from '../models/device.model.js';
 import EventRecord from '../models/eventRecord.model.js';
 import { isDateValid } from '../functions/functions.js';
 import moment from 'moment-timezone';
-
-import mongoose from "mongoose";
 
 export const retrieveEventRecord = async(req, res) =>{
     if(!req.body){
