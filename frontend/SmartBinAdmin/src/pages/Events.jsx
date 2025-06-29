@@ -1,9 +1,6 @@
 import { useState, useEffect, useRef} from 'react';
 import { Link } from "react-router-dom";
 import BasePage from '../components/BasePage';
-import UsageTablePanelSearchBar from '../components/UsageTablePanelSearchBar';
-import UsageTablePanelContents from '../components/UsageTablePanelContents';
-
 import axiosInstance from '../axiosConfig';
 import { toast } from 'react-toastify';
 
@@ -118,10 +115,6 @@ const Usages = () => {
         }
     }, [startDate]);
 
-
-    useEffect(()=>{
-        console.log(JSON.stringify(data));
-    }, [data]);
     const handleSubmit= async() =>{
         try {
             const searchParams={

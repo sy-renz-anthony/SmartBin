@@ -66,11 +66,12 @@ const Home = () => {
         <div className="w-full h-auto  grid grid-cols-2 gap-2">
           <div className="flex flex-col w-full h-full">
             <PieChartDashboard data={pieChartData}/>
-            <div className="grid grid-cols-1 lg:flex lg:flex-row w-full h-fit gap-10 mt-10 mx-2 items-center justify-center">
+            <div className="grid grid-cols-1 lg:flex lg:flex-row w-full h-fit gap-10 mt-10 mx-2 items-center justify-center text-center">
               {numberDevicesNotOk>0 ? 
                 <>
                   <img src={assets.fullBinPic} className="w-35 h-35" />
-                  <h2 className="text-2xl text-orange-500 font-bold mr-3 blinking-notOk">A Bin needs to be emptied!</h2>
+                  <h2 className="text-2xl text-orange-500 font-bold mr-3 blinking-notOk">
+                    {numberDevicesNotOk ==1 ? "A Bin needs to be emptied!" : "Serveral Bins need to be emptied!"}</h2>
                 </> :
                 <>
                   <img src={assets.emptyBinPic} className="w-35 h-35" />
