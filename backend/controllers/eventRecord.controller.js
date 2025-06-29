@@ -92,7 +92,7 @@ export const retrieveEventRecord = async(req, res) =>{
                 }
             }
             
-        }else if((idFilter.length<1) && garbageTypeFilter){
+        }else if((idFilter.length<1) && (garbageTypeFilter.length>0)){
             matchParams = {
                     $match: {
                         $or: garbageTypeFilter
@@ -109,7 +109,7 @@ export const retrieveEventRecord = async(req, res) =>{
                 endDateUTC = moment.tz(startDate, 'YYYY-MM-DD', 'Asia/Manila').endOf('day').toDate();
             }
 
-            if(garbageTypeFilter.length<1&&idFilter===null){
+            if(garbageTypeFilter.length<1&&idFilter.length<1){
                 matchParams = {
                     $match:{
                         "eventDate": {
@@ -125,7 +125,7 @@ export const retrieveEventRecord = async(req, res) =>{
                 };
             }
         }
-
+            console.log(JSON.stringify(matchParams));
             const eventRecords = await EventRecord.aggregate([
                 {
                     $lookup: {

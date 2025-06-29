@@ -134,7 +134,7 @@ const Usages = () => {
                 "startDate": startDate,
                 "endDate": endDate
             }
-                        
+
             const response = await axiosInstance.post("/events/search-record", searchParams, {withCredentials: true});
             if(!response.data.success){
                 toast.error(response.data.message);
@@ -154,10 +154,12 @@ const Usages = () => {
         setIsDry(false);
         setIsMetallic(false);
         setSelected([]);
+        setTypeSelected([]);
         setStartDate("");
         setEndDate("");
         setIsFullEvent(false);
         setIsEmptyEvent(false);
+        setData([]);
     }
 
   const pageContent=()=>{
@@ -299,8 +301,32 @@ const Usages = () => {
                 </div>
             </form>  
       </div>  
-      {data !== null && data !== undefined && data.length > 0 ? 
-      (<UsageTablePanelContents dataReference={data} />) : (null)}
+      {data !== null && data !== undefined && data.length > 0 ? (
+            <div className="content-pane">
+                <table className="table-general">
+                  <thead className="tablehead-general">
+                    <tr>
+                      <th className="tableheadentry-general">Date</th>
+                      <th className="tableheadentry-general">Device ID#</th>
+                      <th className="tableheadentry-general">Location Description</th>
+                      <th className="tableheadentry-general">Event Type</th>
+                      <th className="tableheadentry-general">Garbage Type</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {data.map((eventRecord) => (
+                      <tr key={eventRecord._id} className="tablerow-general">
+                        <td className="tableentry-general">{eventRecord.eventDate}</td>
+                        <td className="tableentry-general">{eventRecord.device.deviceID}</td>
+                        <td className="tableentry-general">{eventRecord.device.location}</td>
+                        <td className="tableentry-general">{eventRecord.eventType}</td>
+                        <td className="tableentry-general">{eventRecord.garbageType}</td>
+                      </tr>
+                    ))} 
+                  </tbody>
+                </table>
+            </div>
+        ) : (null)}
     </>
     );
   }
