@@ -6,6 +6,10 @@ const eventRecordSchema = new mongoose.Schema({
         ref: 'Device',
         required: true
     },
+    garbageType:{
+        type: String,
+        required: true
+    },
     eventType:{
         type: String,
         required: true
@@ -17,6 +21,6 @@ const eventRecordSchema = new mongoose.Schema({
     }
 });
 
-const EventRecord = mongoose.model('UsageRecord', eventRecordSchema);
+const EventRecord = mongoose.model('EventRecord', eventRecordSchema);
 
 export default EventRecord;

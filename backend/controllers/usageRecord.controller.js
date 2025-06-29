@@ -1,5 +1,6 @@
 import UsageRecord from '../models/usageRecord.model.js';
 import Device from '../models/device.model.js';
+import EventRecord from '../models/eventRecord.model.js';
 import { isDateValid } from '../functions/functions.js';
 import moment from 'moment-timezone';
 
@@ -291,6 +292,14 @@ export const binFullError = async(req, res) =>{
         }
 
         await Device.findByIdAndUpdate(device._id, device, {new: true, session});
+
+        const eventRecord = new EventRecord();
+        eventRecord.device = device._id;
+        eventRecord.eventType = "FULL";
+        eventRecord.garbageType = garbageType;
+
+        await eventRecord.save({session});
+
         await session.commitTransaction();
 
         res.status(200).json({success: true, message: "Updated Garbage Bin Status Successfully!"});
@@ -335,14 +344,31 @@ export const binEmptiedEvent = async(req, res) =>{
         session.startTransaction();
 
         if(garbageType === 'WET'){
+            if(!device.isWetBinFull){
+                return res.status(200).json({success: false, message: "Device Wet bin isn't full yet!"});
+            }
             device.isWetBinFull = false;
         }else if(garbageType === 'DRY'){
+            if(!device.isDryBinFull){
+                return res.status(200).json({success: false, message: "Device Dry bin isn't full yet!"});
+            }
             device.isDryBinFull = false;
         }else if(garbageType === 'METALLIC'){
+            if(!device.isMetallicBinFull){
+                return res.status(200).json({success: false, message: "Device Metallic bin isn't full yet!"});
+            }
             device.isMetallicBinFull = false;
         }
           
         await Device.findByIdAndUpdate(device._id, device, {new: true, session});
+
+        const eventRecord = new EventRecord();
+        eventRecord.device = device._id;
+        eventRecord.eventType = "EMPTIED";
+        eventRecord.garbageType = garbageType;
+
+        await eventRecord.save({session});
+
         await session.commitTransaction();
 
         res.status(200).json({success: true, message: "Updated Garbage Bin Status Successfully!"});

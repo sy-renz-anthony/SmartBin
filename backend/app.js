@@ -8,6 +8,7 @@ import { dbConnectionString } from './config/db.js';
 import deviceRouters from './routers/devices.router.js';
 import userRouters from './routers/user.router.js';
 import usageRouters from './routers/usageRecord.router.js';
+import eventRouters from './routers/eventRecord.router.js';
 
 import checkOfflineDevices from './functions/checkOfflineDevices.js';
 
@@ -32,7 +33,7 @@ app.use(cors({
 app.use("/api/devices", deviceRouters);
 app.use("/api/users", userRouters);
 app.use("/api/usages", usageRouters);
-
+app.use("/api/events", eventRouters);
 
 setInterval(checkOfflineDevices, 60000);
 
