@@ -4,8 +4,13 @@ import BasePage from '../components/BasePage';
 import axiosInstance from '../axiosConfig';
 import { toast } from 'react-toastify';
 
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+
 const options = ['Dry', 'Wet', 'Metallic'];
 const eventTypes = ['Full', 'Emptied'];
+
+const tableHeaders=[["Date", "Device ID#", "Location Description", "Event Type", "Garbage Type"]];
 
 const Usages = () => {
     const [data, setData] = useState([]);
@@ -153,6 +158,95 @@ const Usages = () => {
         setIsFullEvent(false);
         setIsEmptyEvent(false);
         setData([]);
+    }
+
+    const convertToPDF = () =>{
+            if(data.length<1){
+              return;
+            }
+        
+            const pdfDoc = new jsPDF();
+        
+            const pageWidth = pdfDoc.internal.pageSize.getWidth();
+            pdfDoc.text('Siaton SmartBin', pageWidth / 2, 20, { align: 'center' });
+        
+            pdfDoc.setFontSize(14);
+            pdfDoc.text("Event Report", 14, 40);
+            pdfDoc.setFontSize(10);
+            var yOffset = 50;
+            if(keyword !== ''){
+              pdfDoc.text("Device ID#/Location contains: '"+keyword+"'", 25, yOffset);
+              yOffset=yOffset+5;
+            }
+
+            if(typeSelected.length>0){
+              var stringEventType="Event Type: ";
+              for(let i=0; i<typeSelected.length; i++){
+                stringEventType=stringEventType+typeSelected[i];
+                if((i+1) < typeSelected.length){
+                  stringEventType=stringEventType+", "
+                }
+              }
+              pdfDoc.text(stringEventType, 25, yOffset);
+              yOffset=yOffset+5;
+            }else{
+              pdfDoc.text("Event Type: All", 25, yOffset);
+              yOffset=yOffset+5;
+            }
+    
+            if(selected.length>0){
+              var stringGarbageType="Garbage Type: ";
+              for(let i=0; i<selected.length; i++){
+                stringGarbageType=stringGarbageType+selected[i];
+                if((i+1) < selected.length){
+                  stringGarbageType=stringGarbageType+", "
+                }
+              }
+              pdfDoc.text(stringGarbageType, 25, yOffset);
+              yOffset=yOffset+5;
+            }else{
+              pdfDoc.text("Garbage Type: All", 25, yOffset);
+              yOffset=yOffset+5;
+            }
+    
+            if(startDate !== ''){
+              if(endDate === startDate){
+                pdfDoc.text("Date: "+startDate, 25, yOffset);
+              }else{
+                pdfDoc.text("Start Date: "+startDate, 25, yOffset);
+                yOffset=yOffset+5;
+                pdfDoc.text("End Date: "+endDate, 25, yOffset);
+              }
+              yOffset=yOffset+5;
+            }
+    
+            const dataContents = data.map((row) => [
+              row.eventDate,
+              row.device.deviceID,
+              row.device.location,
+              row.eventType,
+              row.garbageType
+            ]);
+        
+            autoTable(pdfDoc, {
+              head: tableHeaders,
+              body: dataContents,
+              startY: yOffset+5,
+              didDrawPage: (dataContents) => {
+                const pageHeight = pdfDoc.internal.pageSize.getHeight();
+                const pageNumber = pdfDoc.internal.getNumberOfPages();
+        
+                pdfDoc.setFontSize(10);
+                pdfDoc.text(
+                  `Page ${pageNumber}`,
+                  pageWidth / 2,
+                  pageHeight - 10,
+                  { align: 'center' }
+                );
+              },
+            });
+        
+            pdfDoc.save('smartbin-event-report.pdf');
     }
 
   const pageContent=()=>{
@@ -318,6 +412,14 @@ const Usages = () => {
                     ))} 
                   </tbody>
                 </table>
+                <br />
+                <div className="flex w-full items-center mt-5">
+                    <button type="submit" className="button-in-use ml-auto" onClick={(e)=>{ 
+                        e.preventDefault();
+                        convertToPDF();
+                    }}
+                    >Download</button>
+                </div>
             </div>
         ) : (null)}
     </>

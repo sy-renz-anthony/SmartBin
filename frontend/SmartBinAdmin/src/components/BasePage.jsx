@@ -3,6 +3,7 @@ import SideBar from '../components/SideBar';
 import Header from '../components/Header';
 import LogoutModal from './LogoutConfirmModal';
 import PasswordConfirmModal from './PasswordConfirmModal';
+import Footer from './Footer';
 
 const BasePage = ({pageTitle, setNextPage, pageContent, passwordModalReroute}) => {
   const [isLogoutModalVisible, setLogoutModalVisibility] = useState(false);
@@ -43,8 +44,9 @@ const BasePage = ({pageTitle, setNextPage, pageContent, passwordModalReroute}) =
       </div>
     
     <LogoutModal isOpen={isLogoutModalVisible} onClose={closeLogoutModalButtonEventHandler}/>
-    <PasswordConfirmModal isOpen={isPasswordModalVisible} onClose={closePasswordModalButtonEventHandler} confirmationEventHandler={passwordModalReroute}/>
+    <PasswordConfirmModal isOpen={isPasswordModalVisible} onClose={closePasswordModalButtonEventHandler} confirmationEventHandler={passwordModalReroute}/>  
     </div>
+    <Footer />
     </div>
   )
 }
