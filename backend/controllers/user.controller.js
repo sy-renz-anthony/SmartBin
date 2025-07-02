@@ -17,7 +17,7 @@ export const register = async(req, res) =>{
     const contactNum = req.body.contactNumber;
     const emailAdd = req.body.emailAddress;
     const add = req.body.address;
-    const sendSmsNotification = req.body.sendSmsNotification;
+    var sendSmsNotification = req.body.sendSmsNotification;
 
     if(!empID){
         return res.status(200).json({success: false, message: "Invalid Employee ID!"});
@@ -118,7 +118,7 @@ export const update = async(req, res) =>{
     const contactNum = req.body.contactNumber;
     const emailAdd = req.body.emailAddress;
     const add = req.body.address;
-    const sendSmsNotification = req.body.sendSmsNotification;
+    var sendSmsNotification = req.body.sendSmsNotification;
 
     if(!empID){
         return res.status(200).json({success: false, message: "Invalid Employee ID!"});
