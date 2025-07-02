@@ -35,6 +35,11 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    sendSmsNotification:{
+        type: Boolean,
+        required: true,
+        default: false
+    },
     resetOTP:{
         type: String,
         default: ""

@@ -17,6 +17,7 @@ export const register = async(req, res) =>{
     const contactNum = req.body.contactNumber;
     const emailAdd = req.body.emailAddress;
     const add = req.body.address;
+    const sendSmsNotification = req.body.sendSmsNotification;
 
     if(!empID){
         return res.status(200).json({success: false, message: "Invalid Employee ID!"});
@@ -43,6 +44,10 @@ export const register = async(req, res) =>{
     
     if(!add){
         return res.status(200).json({success: false, message: "Please provide the employee's address!"});
+    }
+
+    if(!typeof(sendSmsNotification) == Boolean || !sendSmsNotification){
+        sendSmsNotification=false;
     }
 
 
@@ -72,6 +77,7 @@ export const register = async(req, res) =>{
         user.contactNumber=contactNum;
         user.emailAddress=emailAdd;
         user.address=add;
+        user.sendSmsNotification = sendSmsNotification;
         
         await user.save({session});
 
@@ -112,7 +118,8 @@ export const update = async(req, res) =>{
     const contactNum = req.body.contactNumber;
     const emailAdd = req.body.emailAddress;
     const add = req.body.address;
-    
+    const sendSmsNotification = req.body.sendSmsNotification;
+
     if(!empID){
         return res.status(200).json({success: false, message: "Invalid Employee ID!"});
     }
@@ -135,6 +142,10 @@ export const update = async(req, res) =>{
     
     if(!add){
         return res.status(200).json({success: false, message: "Please provide the employee's address!"});
+    }
+
+    if(!typeof(sendSmsNotification) == Boolean){
+        return res.status(200).json({success: false, message: "Please confirm if the employee need to receive sms notification for full SmartBin devices!"});
     }
 
     if(!mongoose.Types.ObjectId.isValid(id)){
@@ -166,6 +177,8 @@ export const update = async(req, res) =>{
         onRecordUser.contactNumber=contactNum;
         onRecordUser.emailAddress=emailAdd;
         onRecordUser.address=add;
+        onRecordUser.sendSmsNotification=sendSmsNotification;
+
         
         const updatedUser =await User.findByIdAndUpdate(id, onRecordUser, {new:true, session});
 

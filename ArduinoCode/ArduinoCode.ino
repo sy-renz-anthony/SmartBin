@@ -19,7 +19,7 @@ Servo floorServo1;
 #define FLOOR_SERVO_PIN_2 8
 Servo floorServo2;
 
-#define LED_PIN 3
+#define LED_PIN A3
 
 #define BUZZER_PIN 13
 
@@ -468,7 +468,7 @@ void loop() {
   }
 ///*
   long dist = readDistance(METALIC_ECHO_PIN);
-  /*
+  ///*
   Serial.print("metallicFullCount: ");
   Serial.print(metallicFullCount);
   Serial.print(" - ");
@@ -498,14 +498,14 @@ void loop() {
   delay(60);
 
   dist = readDistance(DRY_ECHO_PIN);
-  /*
+  ///*
   Serial.print("dryFullCount: ");
   Serial.print(dryFullCount);
   Serial.print(" - ");
   Serial.print("Dry distance: ");
   Serial.print(dist);
   Serial.println(" cm");//*/
-  if(dist<=30){
+  if(dist<=20){
     if(!isDryFull){
       if(dryFullCount<5){
         dryFullCount++;
@@ -527,7 +527,7 @@ void loop() {
   delay(60);
 
   dist = readDistance(WET_ECHO_PIN);
-  /*
+  ///*
   Serial.print("wetFullCount: ");
   Serial.print(wetFullCount);
   Serial.print(" - ");
