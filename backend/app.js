@@ -1,6 +1,6 @@
 import express from 'express';
-import "dotenv/config";
-import dotenv from 'dotenv';
+import { config as dotenvConfig } from 'dotenv';
+import fs from 'fs';
 import cors from 'cors';
 import cookieParser from "cookie-parser";
 
@@ -12,7 +12,12 @@ import eventRouters from './routers/eventRecord.router.js';
 
 import checkOfflineDevices from './functions/checkOfflineDevices.js';
 
-dotenv.config();
+const secretPath =
+  fs.existsSync('/etc/secrets/.env')
+    ? '/etc/secrets/.env' // Render.com
+    : './etc/secrets/.env'; // Local
+
+dotenvConfig({ path: secretPath });
 
 const app=express();
 
