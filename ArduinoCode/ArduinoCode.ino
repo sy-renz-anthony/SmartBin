@@ -32,7 +32,7 @@ Servo floorServo2;
 unsigned long lastDHTRead = 0;
 const unsigned long DHT_INTERVAL = 2000; // 2 seconds
 
-int mainServoAngle = 90; //current angle of mainServo;
+int mainServoAngle = 100; //current angle of mainServo;
 
 char STATE_IDLE = 'a',
      STATE_IDENTIFYING = 'b',
@@ -122,6 +122,7 @@ void setup() {
   dryFullCount=0;
   wetFullCount=0;
 
+  mainServo.detach();
   lcd.init();
   lcd.backlight();
   lcd.print("Initializing...");
@@ -187,7 +188,7 @@ void binIsFullError(char garbageType){
   digitalWrite(LED_PIN, LOW);
   noTone(BUZZER_PIN);
 
-  mainServo.write(60);
+  mainServo.write(50);
   delay(500);
   floorServo1.write(90);
   floorServo2.write(90);
@@ -291,6 +292,7 @@ void loop() {
     
   }else if(currentState == STATE_DUMPING){
     lcd.setCursor(0, 0);
+    mainServo.attach(MAIN_SERVO_PIN);
     if(garbageType == TYPE_WET){
       if(isWetFull){
         lcd.print("Wet Bin Full");
@@ -417,7 +419,8 @@ void loop() {
     thirdReading= -1;
     dhtCount = 0;
     currentState = STATE_IDLE;
-    delay(200);
+    delay(1000);
+    mainServo.detach();
   }else if(currentState == STATE_ERROR){
     lcd.setCursor(0, 0);
     lcd.print("Error!");
@@ -468,14 +471,14 @@ void loop() {
   }
 ///*
   long dist = readDistance(METALIC_ECHO_PIN);
-  ///*
+  /*
   Serial.print("metallicFullCount: ");
   Serial.print(metallicFullCount);
   Serial.print(" - ");
   Serial.print("Metallic distance: ");
   Serial.print(dist);
   Serial.println(" cm");//*/
-  if(dist<=20){
+  if(dist<=10){
     if(!isMetallicFull){
       if(metallicFullCount<5){
         metallicFullCount++;
@@ -498,14 +501,15 @@ void loop() {
   delay(60);
 
   dist = readDistance(DRY_ECHO_PIN);
-  ///*
+  /*
   Serial.print("dryFullCount: ");
   Serial.print(dryFullCount);
   Serial.print(" - ");
   Serial.print("Dry distance: ");
   Serial.print(dist);
   Serial.println(" cm");//*/
-  if(dist<=20){
+  ///*
+  if(dist<=10){
     if(!isDryFull){
       if(dryFullCount<5){
         dryFullCount++;
@@ -527,7 +531,7 @@ void loop() {
   delay(60);
 
   dist = readDistance(WET_ECHO_PIN);
-  ///*
+  /*
   Serial.print("wetFullCount: ");
   Serial.print(wetFullCount);
   Serial.print(" - ");
@@ -535,7 +539,8 @@ void loop() {
   Serial.print(dist);
   Serial.println(" cm");//*/
   
-  if(dist<=20){
+  ///*
+  if(dist<=10){
     if(!isWetFull){
       if(wetFullCount<5){
         wetFullCount++;
@@ -553,9 +558,8 @@ void loop() {
         Serial.println("iRw");
       }
     }
-  }
+  }//*/
   delay(60);
-//*/
   if(Serial.available()){
     char requestChar = Serial.read();
     if(requestChar == REQUEST_INFO){

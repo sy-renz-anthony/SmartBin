@@ -149,6 +149,19 @@ const pageContent=()=>{
               }))}}
               required
             />
+            <label className="text-gray-600 mb-1 w-fit" htmlFor="sendSmsNotification">
+              Receive SMS Notification for Full SmartBins:
+            </label>
+          <input 
+            className="px-4 py-2 my-auto items-align-center h-10 w-10"
+            id="sendSmsNotification"
+            type="checkbox"
+            checked={data.sendSmsNotification}
+            onChange={(e) =>{setData(prevData=>({
+                ...prevData,
+                "sendSmsNotification": e.target.checked
+              }))}}
+          />
           </div>
           <div className="flex items-center justify-center w-full h-auto pt-10">
             <button

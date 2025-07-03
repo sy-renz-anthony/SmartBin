@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../axiosConfig';
 import { toast } from 'react-toastify';
@@ -12,7 +12,6 @@ const AddUser = () => {
 
   const handleSubmit= async(e) =>{
     try {
-        console.log(JSON.stringify(data));
         const response = await axiosInstance.post("/users/register", data, {withCredentials: true});
         if(!response.data.success){
             toast.error(response.data.message);
