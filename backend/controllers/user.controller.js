@@ -274,17 +274,19 @@ export const sendPasswordResetOTP = async (req, res) =>{
         return res.status(200).json({success: false, message: "Invalid email!"});
     }
 
+    const session = await mongoose.startSession();
     try{
         const userData = await User.findOne({emailAddress: email});
         if(!userData){
             res.status(200).json({success: false, message: "No Employee Account found with this email!"});
         }else{
+            session.startTransaction();
             const otp = String(Math.floor(100000 + Math.random() * 900000));
 
             userData.resetOTP = otp;
             userData.resetOTPExpire = Date.now() + 5 * 60 * 1000;
 
-            await User.findByIdAndUpdate(userData._id, userData);
+            await User.findByIdAndUpdate(userData._id, userData, {new:true, session});
 
             const mailContents = {
                 from: process.env.SENDER_EMAIL_ID,
@@ -295,11 +297,16 @@ export const sendPasswordResetOTP = async (req, res) =>{
     
             await transporter.sendMail(mailContents);
 
+            await session.commitTransaction();
             res.status(200).json({success: true, message: "Password Reset OTP codes sent successfully!"});
         }
 
     }catch(error){
+        await session.abortTransaction();
+        console.error("Error in creating a Password reset OTP codes for User Account! - "+error.message);
         res.status(500).json({success: false, message: error.message});
+    }finally{
+        await session.endSession();
     }
 
     return res;
