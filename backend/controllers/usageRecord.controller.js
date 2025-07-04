@@ -1,7 +1,7 @@
 import UsageRecord from '../models/usageRecord.model.js';
 import Device from '../models/device.model.js';
 import EventRecord from '../models/eventRecord.model.js';
-import { isDateValid } from '../functions/functions.js';
+import { isDateValid, sendBinFullNotificationSms } from '../functions/functions.js';
 import moment from 'moment-timezone';
 
 import mongoose from "mongoose";
@@ -301,6 +301,8 @@ export const binFullError = async(req, res) =>{
         await eventRecord.save({session});
 
         await session.commitTransaction();
+
+        //sendBinFullNotificationSms("+639701061974", device._id, device.location, garbageType);
 
         res.status(200).json({success: true, message: "Updated Garbage Bin Status Successfully!"});
     }catch(error){

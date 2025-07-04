@@ -88,7 +88,12 @@ export const register = async(req, res) =>{
             text: `Welcome to SmartBin v_0.1 User Admin Console. You have successfully registered your account with email: `+emailAdd+"\n\nA random password is generated for you: "+pwd+"\n\nPlease update this when you login.\n\nThank you."
         }
 
-        await transporter.sendMail(mailContents);
+        try{
+            await transporter.sendMail(mailContents);
+        }catch(error){
+            console.error("An error occured while trying to send email to user");
+        }
+        
         await session.commitTransaction();
 
         res.status(200).json({success: true, data: [user]});
