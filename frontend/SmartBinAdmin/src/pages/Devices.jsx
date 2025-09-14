@@ -67,17 +67,17 @@ const Devices= () => {
                             </div>
                           }
                           {
-                            (device.isWetBinFull || device.isDryBinFull || device.isMetallicBinFull) && (
+                            (device.isBiodegradableBinFull || device.isNonBiodegradableBinFull || device.isHazardousBinFull) && (
                               <div className="flex items-center">
                                 <FaExclamation size='20' className="text-yellow-500"/>
                                 <span className="text-sm text-gray-600">
-                                  {device.isWetBinFull && (<>Wet</>)}
-                                  {(device.isWetBinFull && (device.isDryBinFull||device.isMetallicBinFull)) && (<>, </>)}
-                                  {device.isDryBinFull && (<>Dry</>)}
-                                  {(device.isMetallicBinFull&&(device.isWetBinFull||device.isDryBinFull)) && (<>, </>)}
-                                  {device.isMetallicBinFull && (<>Metallic</>)}
+                                  {device.isBiodegradableBinFull && (<>Biodegradable</>)}
+                                  {(device.isBiodegradableBinFull && (device.isNonBiodegradableBinFull||device.isHazardousBinFull)) && (<>, </>)}
+                                  {device.isNonBiodegradableBinFull && (<>Non-Biodegradable</>)}
+                                  {(device.isHazardousBinFull&&(device.isBiodegradableBinFull||device.isNonBiodegradableBinFull)) && (<>, </>)}
+                                  {device.isHazardousBinFull && (<>Hazardous</>)}
 
-                                  {((device.isWetBinFull && (!device.isDryBinFull && !device.isMetallicBinFull)) || (device.isDryBinFull && (!device.isWetBinFull && !device.isMetallicBinFull)) || (device.isMetallicBinFull && (!device.isWetBinFull && !device.isDryBinFull))) ? <> Bin is Full!</> : <> Bins are Full!</>
+                                  {((device.isBiodegradableBinFull && (!device.isNonBiodegradableBinFull && !device.isHazardousBinFull)) || (device.isNonBiodegradableBinFull && (!device.isBiodegradableBinFull && !device.isHazardousBinFull)) || (device.isMetallicBinFull && (!device.isBiodegradableBinFull && !device.isNonBiodegradableBinFull))) ? <> Bin is Full!</> : <> Bins are Full!</>
                                   }
                                  </span>
                               </div>
