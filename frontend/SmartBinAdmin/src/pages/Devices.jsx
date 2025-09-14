@@ -77,7 +77,7 @@ const Devices= () => {
                                   {(device.isHazardousBinFull&&(device.isBiodegradableBinFull||device.isNonBiodegradableBinFull)) && (<>, </>)}
                                   {device.isHazardousBinFull && (<>Hazardous</>)}
 
-                                  {((device.isBiodegradableBinFull && (!device.isNonBiodegradableBinFull && !device.isHazardousBinFull)) || (device.isNonBiodegradableBinFull && (!device.isBiodegradableBinFull && !device.isHazardousBinFull)) || (device.isMetallicBinFull && (!device.isBiodegradableBinFull && !device.isNonBiodegradableBinFull))) ? <> Bin is Full!</> : <> Bins are Full!</>
+                                  {((device.isBiodegradableBinFull && (!device.isNonBiodegradableBinFull && !device.isHazardousBinFull)) || (device.isNonBiodegradableBinFull && (!device.isBiodegradableBinFull && !device.isHazardousBinFull)) || (device.isHazardousBinFull && (!device.isBiodegradableBinFull && !device.isNonBiodegradableBinFull))) ? <> Bin is Full!</> : <> Bins are Full!</>
                                   }
                                  </span>
                               </div>

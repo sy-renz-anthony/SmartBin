@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
-const options = ['Dry', 'Wet', 'Metallic'];
+const options = ['NonBiodegradable', 'Biodegradable', 'Hazardous'];
 const eventTypes = ['Full', 'Emptied'];
 
 const tableHeaders=[["Date", "Device ID#", "Location Description", "Event Type", "Garbage Type"]];
@@ -15,9 +15,9 @@ const tableHeaders=[["Date", "Device ID#", "Location Description", "Event Type",
 const Usages = () => {
     const [data, setData] = useState([]);
     const [keyword, setKeyword] = useState("");
-    const [isWet, setIsWet] = useState(false);
-    const [isDry, setIsDry] = useState(false);
-    const [isMetallic, setIsMetallic] = useState(false);
+    const [isBiodegradable, setIsBiodegradable] = useState(false);
+    const [isNonBiodegradable, setIsNonBiodegradable] = useState(false);
+    const [isHazardous, setIsHazardous] = useState(false);
     const [isFullEvent, setIsFullEvent] = useState(false);
     const [isEmptyEvent, setIsEmptyEvent] = useState(false);
     const [startDate, setStartDate] = useState("");
@@ -71,22 +71,22 @@ const Usages = () => {
 
 
     useEffect(() => {
-        if(selected.includes("Dry")){
-            setIsDry(true);
+        if(selected.includes("NonBiodegradable")){
+            setIsNonBiodegradable(true);
         }else{
-            setIsDry(false);
+            setIsNonBiodegradable(false);
         }    
 
-        if(selected.includes("Wet")){
-            setIsWet(true);
+        if(selected.includes("Biodegradable")){
+            setIsBiodegradable(true);
         }else{
-            setIsWet(false);
+            setIsBiodegradable(false);
         }
 
-        if(selected.includes("Metallic")){
-            setIsMetallic(true);
+        if(selected.includes("Hazardous")){
+            setIsHazardous(true);
         }else{
-            setIsMetallic(false);
+            setIsHazardous(false);
         }
     }, [selected]);
 
@@ -124,9 +124,9 @@ const Usages = () => {
         try {
             const searchParams={
                 "keyword": keyword,
-                "isWet": isWet,
-                "isDry": isDry,
-                "isMetallic": isMetallic,
+                "isBiodegradable": isBiodegradable,
+                "isNonBiodegradable": isNonBiodegradable,
+                "isHazardous": isHazardous,
                 "isFullEvent": isFullEvent,
                 "isEmptyEvent": isEmptyEvent,
                 "startDate": startDate,
@@ -148,9 +148,9 @@ const Usages = () => {
 
     const clearAll=()=>{
         setKeyword("");
-        setIsWet(false);
-        setIsDry(false);
-        setIsMetallic(false);
+        setIsBiodegradable(false);
+        setIsNonBiodegradable(false);
+        setIsHazardous(false);
         setSelected([]);
         setTypeSelected([]);
         setStartDate("");

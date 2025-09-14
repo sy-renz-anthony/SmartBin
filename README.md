@@ -3,7 +3,9 @@ Updating the Entire system for integration with AI. Changing the categories of m
 \
 \
 the URL for the backend is: https://smartbin-x0i7.onrender.com
+\
 the URL for the web app is: https://smartbin-admin.onrender.com
+\
 the URL for the AI model deployed as an API: https://renz-sy-waste-classification.hf.space/predict
 
 ## Backend NPM modules setup
@@ -30,9 +32,7 @@ SENDER_EMAIL_ID=<the email address used as sender for your smtp service, enclose
 * I am using various external services to build this app, you can use the same service provider I signed up for since they are free or you can use your own. I am using mongo DB for my database, you can visit them at: https://www.mongodb.com/ and signup for a free account. I want to stress out that although there is a local version of mongodb you can install on your machine, it is advisable to use the online mongo DB instead since I am using mongoose session on my code. they are similar to transactions in RDBMS and this feature requires replica sets. A functionality not automatically set up on mongodb local versions, unless you can set it up on your local machine yourself, you need to use the online mongo DB instead or else the code will not work. And don't forget to create a collection named "SmartBin". Also, I am using brevo as my smtp service provider for the email functionality. You can visit them at: https://www.brevo.com/ and signup for a free account. After setting it up they will provide you with the values needed to make the email functionality work such as SMTP_USERNAME, SMTP_PASSWORD, and the rest.
 
 ## Arduino Code additional Info
-{This will be updated later since we will no longer use sensors, we will rely on camera instead for use in AI model.}
 The code is written specifically for Arduino Uno R3 model. Please don't forget to download and install the additional libraries for the sensors and actuators to work.
 ### List of Libraries used:
 -Servo by Michael Margolis \
--DHT Sensor library by Adafruit \
 -LiquidCrystal I2C by Frank de Brabander
