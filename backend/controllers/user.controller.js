@@ -81,6 +81,7 @@ export const register = async(req, res) =>{
         
         await user.save({session});
 
+        const emailService = transporter();
         const mailContents = {
             from: process.env.SENDER_EMAIL_ID,
             to: emailAdd,
@@ -89,7 +90,7 @@ export const register = async(req, res) =>{
         }
 
         try{
-            await transporter.sendMail(mailContents);
+            await emailService.sendMail(mailContents);
         }catch(error){
             console.error("An error occured while trying to send email to user");
         }
@@ -288,6 +289,7 @@ export const sendPasswordResetOTP = async (req, res) =>{
 
             await User.findByIdAndUpdate(userData._id, userData, {new:true, session});
 
+            const emailService = transporter();
             const mailContents = {
                 from: process.env.SENDER_EMAIL_ID,
                 to: userData.emailAddress,
@@ -295,7 +297,7 @@ export const sendPasswordResetOTP = async (req, res) =>{
                 text: `Your SmartBin v_0.1 User Admin Console Password Reset OTP code is ${otp}. Please verify your account using this code to reset your password.`
             }
     
-            await transporter.sendMail(mailContents);
+            await emailService.sendMail(mailContents);
 
             await session.commitTransaction();
             res.status(200).json({success: true, message: "Password Reset OTP codes sent successfully!"});
