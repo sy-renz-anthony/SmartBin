@@ -35,7 +35,14 @@ const Login = () => {
 
 
   return (
-    <div className="w-screen h-screen grid grid-cols-2 bg-gray-100">
+    <div className="w-screen h-screen grid grid-row-2 sm:grid-cols-2 bg-gray-100">
+      <div className="shadow-lg">
+        <img src={assets.loginPic} className="w-full h-full" />
+        <div className="absolute top-0 right-0 bg-white py-1 px-2 text-right">
+          <Link to="http://www.freepik.com" className="text-sm text-blue-500 hover:underline">Designed by Freepik</Link>
+        </div>
+      </div>
+      
       <div className="flex flex-col gap-4 items-center justify-center bg-white h-full w-full">
           <div className="flex flex-row items-center gap-5">
             <h2 className="w-full text-3xl font-bold my-3 text-teal-800 text-center">
@@ -86,13 +93,6 @@ const Login = () => {
               </Link>
               </div>
         </form>
-      </div>
-      
-      <div className="shadow-lg">
-        <img src={assets.loginPic} className="w-full h-full" />
-        <div className="absolute top-0 right-0 bg-white py-1 px-2 text-right">
-          <Link to="http://www.freepik.com" className="text-sm text-blue-500 hover:underline">Designed by Freepik</Link>
-        </div>
       </div>
     </div>
   )

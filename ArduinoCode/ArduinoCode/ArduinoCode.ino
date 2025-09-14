@@ -57,6 +57,14 @@ int biodegradableFullCount,
     nonBiodegradableFullCount,
     hazardousFullCount;
 
+bool sentBiodegradableNotif,
+     sentNonBiodegradableNotif,
+     sentHazardousNotif;
+
+bool sentBiodegradableReset,
+     sentNonBiodegradableReset,
+     sentHazardousReset;
+
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 boolean isInitializing;
@@ -99,64 +107,86 @@ void checkBins(){
   /*
   Serial.print("biodegradable distance: ");
   Serial.print(dist);
-  Serial.println(" cm");*/
+  Serial.println(" cm");//*/
   if(dist<=10){
-    if(biodegradableFullCounter<10){
+    if(biodegradableFullCounter<4){
       biodegradableFullCounter++;
     }
   }else{
     if(biodegradableFullCounter>0){
       biodegradableFullCounter--;
+    }else{
+      if(sentBiodegradableNotif&&!sentBiodegradableReset){
+        Serial.print("iR");
+        Serial.println(TYPE_BIODEGRADABLE);
+        sentBiodegradableNotif=false;
+        sentBiodegradableReset=true;
+      }
     }
   }
   
-  if(biodegradableFullCounter > 6){
+  if(biodegradableFullCounter > 2){
     isBiodegradableFull=true;
   }else{
     isBiodegradableFull=false;
   }
-  delay(60);
+  delay(100);
   dist = readDistance(NONBIODEGRADABLE_ECHO_PIN);
   /*
   Serial.print("non-biodegradable distance: ");
   Serial.print(dist);
   Serial.println(" cm");*/
   if(dist<=10){
-    if(nonBiodegradableFullCounter<10){
+    if(nonBiodegradableFullCounter<4){
       nonBiodegradableFullCounter++;
     }
   }else{
     if(nonBiodegradableFullCounter>0){
       nonBiodegradableFullCounter--;
+    }else{
+      if(sentNonBiodegradableNotif&&!sentNonBiodegradableReset){
+        Serial.print("iR");
+        Serial.println(TYPE_NONBIODEGRADABLE);
+        sentNonBiodegradableNotif=false;
+        sentNonBiodegradableReset=true;
+      }
     }
   }
   
-  if(nonBiodegradableFullCounter > 6){
+  if(nonBiodegradableFullCounter > 2){
     isNonBiodegradableFull=true;
   }else{
     isNonBiodegradableFull=false;
   }
-  delay(60);
+  delay(100);
   dist = readDistance(HAZARDOUS_ECHO_PIN);
   /*
   Serial.print("hazardous distance: ");
   Serial.print(dist);
   Serial.println(" cm");//*/
   if(dist<=10){
-    if(hazardousFullCounter<10){
+    if(hazardousFullCounter<4){
       hazardousFullCounter++;
     }
   }else{
     if(hazardousFullCounter>0){
       hazardousFullCounter--;
+    }else{
+      if(sentHazardousNotif&&!sentHazardousReset){
+        Serial.print("iR");
+        Serial.println(TYPE_HAZARDOUS);
+        sentHazardousNotif=false;
+        sentHazardousReset=true;
+      }
     }
   }
-  delay(60);
+  delay(100);
   
-  if(hazardousFullCounter > 6){
+  if(hazardousFullCounter > 2){
     isHazardousFull=true;
   }else{
     isHazardousFull=false;
+
   }
 
   lcd.setCursor(0, 1);
@@ -168,12 +198,30 @@ void checkBins(){
     lcd.print("!");
     if(isBiodegradableFull){
       lcd.print("Bio,");
+      if(!sentBiodegradableNotif){
+        Serial.print("iF");
+        Serial.println(TYPE_BIODEGRADABLE);
+        sentBiodegradableNotif=true;
+        sentBiodegradableReset=false;
+      }
     }
     if(isNonBiodegradableFull){
       lcd.print("NonBio,");
+      if(!sentNonBiodegradableNotif){
+        Serial.print("iF");
+        Serial.println(TYPE_NONBIODEGRADABLE);
+        sentNonBiodegradableNotif=true;
+        sentNonBiodegradableReset=false;
+      }
     }
     if(isHazardousFull){
       lcd.print("Hzrd");
+      if(!sentHazardousNotif){
+        Serial.print("iF");
+        Serial.println(TYPE_HAZARDOUS);
+        sentHazardousNotif=true;
+        sentHazardousReset=false;
+      }
     }
   }
 }
@@ -354,25 +402,29 @@ void setup() {
   hazardousFullCounter=0;
   dist=0;
 
+  sentBiodegradableNotif=false;
+  sentNonBiodegradableNotif=false;
+  sentHazardousNotif=false;
+  sentBiodegradableReset=true;
+  sentNonBiodegradableReset=true;
+  sentHazardousReset=true;
+
   isInitializing=true;
   garbageType=TYPE_NULL;
   index=0;
 
-  /*
-  sim800.begin(9600);    // SIM800L serial
+  /*sim800.begin(9600);    // SIM800L serial
   delay(2000);
 
   
   Serial.println("Testing SIM800L...");
   sim800.println("AT");
   readSIM800Response();
-  sendSMS("+639701061974", "Hello from SIM800L!");
-  */
+  sendSMS("+639701061974", "Hello from SIM800L!");*/
 }
 
 
 void loop() {
-  // put your main code here, to run repeatedly:
   processMessage();
   if(isInitializing){
     return;
@@ -438,6 +490,8 @@ void loop() {
           noTone(BUZZER_PIN);
           delay(1000);
           moveMainServo(1);
+          Serial.print("tS");
+          Serial.println(garbageType);
         }
       }else if(garbageType == TYPE_NONBIODEGRADABLE){
         if(isNonBiodegradableFull){
@@ -453,6 +507,8 @@ void loop() {
           noTone(BUZZER_PIN);
           delay(1000);
           moveMainServo(2);
+          Serial.print("tS");
+          Serial.println(garbageType);
         }
       }else{
         if(isHazardousFull){
@@ -472,6 +528,8 @@ void loop() {
           noTone(BUZZER_PIN);
           delay(1000);
           moveMainServo(4);
+          Serial.print("tS");
+          Serial.println(garbageType);
         }
       }
 
@@ -511,5 +569,5 @@ void loop() {
   }
   
   checkBins();
-  delay(2000);
+  delay(1000);
 }
