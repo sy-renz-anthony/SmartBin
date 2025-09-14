@@ -252,9 +252,9 @@ export const isAllBinOk = async (req, res) =>{
             {
                 $match: {
                     $or:[
-                    {"isWetBinFull":true},
-                    {"isDryBinFull":true},
-                    {"isMetallicBinFull": true}
+                    {"isBiodegradableBinFull":true},
+                    {"isNonBiodegradableBinFull":true},
+                    {"isHazardousBinFull": true}
                 ]
                 }
             }

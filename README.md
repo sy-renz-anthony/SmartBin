@@ -1,6 +1,10 @@
 # SmartBin
-
-Trash Bin that automatically segregates wet, dry, and metallic materials. It also detects when the bins are full and can be monitored online through a MERN web app. I deployed the backend of this project to render.com and is now currently running, though it isn't really deployed appropriate for production still it is enough to play around with it's functionalities. the URL for the backend is: https://smartbin-x0i7.onrender.com
+Updating the Entire system for integration with AI. Changing the categories of materials. This Trash Bin that automatically segregates biodegradable, non-biodegradable and hazardous materials. It also detects when the bins are full and can be monitored online through a MERN web app. I deployed the backend of this project to render.com and is now currently running, though it isn't really deployed yet appropriately for production still it is enough to play around with it's functionalities. Since I am using an orange pi pc for this project and with it's limited hardware capabilities. I deployed the ai model in huggingface.com as a public API using python and docker container. Take note though that I didn't trained the model myself as I am in tight schedule so I just downloaded one at kaggle.com. If you want to know more about the model I used in here, the url will be: https://www.kaggle.com/models/wasifmahmood01/waste-classification-model
+\
+\
+the URL for the backend is: https://smartbin-x0i7.onrender.com
+the URL for the web app is: https://smartbin-admin.onrender.com
+the URL for the AI model deployed as an API: https://renz-sy-waste-classification.hf.space/predict
 
 ## Backend NPM modules setup
 ### Run this command in the directory of the backend
@@ -26,6 +30,7 @@ SENDER_EMAIL_ID=<the email address used as sender for your smtp service, enclose
 * I am using various external services to build this app, you can use the same service provider I signed up for since they are free or you can use your own. I am using mongo DB for my database, you can visit them at: https://www.mongodb.com/ and signup for a free account. I want to stress out that although there is a local version of mongodb you can install on your machine, it is advisable to use the online mongo DB instead since I am using mongoose session on my code. they are similar to transactions in RDBMS and this feature requires replica sets. A functionality not automatically set up on mongodb local versions, unless you can set it up on your local machine yourself, you need to use the online mongo DB instead or else the code will not work. And don't forget to create a collection named "SmartBin". Also, I am using brevo as my smtp service provider for the email functionality. You can visit them at: https://www.brevo.com/ and signup for a free account. After setting it up they will provide you with the values needed to make the email functionality work such as SMTP_USERNAME, SMTP_PASSWORD, and the rest.
 
 ## Arduino Code additional Info
+{This will be updated later since we will no longer use sensors, we will rely on camera instead for use in AI model.}
 The code is written specifically for Arduino Uno R3 model. Please don't forget to download and install the additional libraries for the sensors and actuators to work.
 ### List of Libraries used:
 -Servo by Michael Margolis \

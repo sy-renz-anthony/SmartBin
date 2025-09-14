@@ -19,17 +19,17 @@ const deviceSchema = new mongoose.Schema({
         },
         required: true
     },
-    isWetBinFull:{
+    isHazardousBinFull:{
         type: Boolean,
         required: true,
         default: false
     },
-    isDryBinFull:{
+    isBiodegradableBinFull:{
         type: Boolean,
         required: true,
         default: false
     },
-    isMetallicBinFull:{
+    isNonBiodegradableBinFull:{
         type: Boolean,
         required: true,
         default: false

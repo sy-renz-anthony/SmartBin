@@ -85,18 +85,3 @@ export const isDateValid = async (stringInput) =>{
     
     return true;
 }
-
-export const sendBinFullNotificationSms = async(contactNumber, deviceID, deviceLocation, garbageType) =>{
-    try{
-        const clientLink = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
-        const message = await clientLink.messages.create({
-            to: contactNumber,
-            body: "The device with ID: "+deviceID+" - "+deviceLocation+" have its "+garbageType+" bin full!",
-            from: process.env.TWILIO_REGISTERED_NUMBER
-        });
-
-        res.json({ sid: message.sid });
-    }catch(error){
-        console.error("Error in sending the SMS notification for informing the employee of a SmartBin device being full! - "+error.message);
-    }
-}

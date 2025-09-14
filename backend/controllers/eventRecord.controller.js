@@ -8,9 +8,9 @@ export const retrieveEventRecord = async(req, res) =>{
     }
 
     const deviceID = req.body.keyword;
-    const isWet = req.body.isWet;
-    const isDry = req.body.isDry;
-    const isMetallic = req.body.isMetallic;
+    const isBiodegradable = req.body.isBiodegradable;
+    const isNonBiodegradable = req.body.isNonBiodegradable;
+    const isHazardous = req.body.isHazardous;
     const isFullEvent = req.body.isFullEvent;
     const isEmptyEvent = req.body.isEmptyEvent;
     const startDate = req.body.startDate;
@@ -29,16 +29,16 @@ export const retrieveEventRecord = async(req, res) =>{
             ]});
     }
 
-    if(typeof isWet === 'boolean' && isWet){
-        garbageTypeFilter.push({"garbageType": {$regex: "WET", $options: "i"}});
+    if(typeof isBiodegradable === 'boolean' && isBiodegradable){
+        garbageTypeFilter.push({"garbageType": {$regex: "^BIODEGRADABLE$", $options: "i"}});
     }
 
-    if(typeof isDry === 'boolean' && isDry){
-        garbageTypeFilter.push({"garbageType": {$regex: "Dry", $options: "i"}});
+    if(typeof isNonBiodegradable === 'boolean' && isNonBiodegradable){
+        garbageTypeFilter.push({"garbageType": {$regex: "NON-BIODEGRADABLE", $options: "i"}});
     }
 
-    if(typeof isMetallic === 'boolean' && isMetallic){
-        garbageTypeFilter.push({"garbageType": {$regex: "METALLIC", $options: "i"}});
+    if(typeof isHazardous === 'boolean' && isHazardous){
+        garbageTypeFilter.push({"garbageType": {$regex: "HAZARDOUS", $options: "i"}});
     }
 
     if(typeof isFullEvent === 'boolean' && isFullEvent){
@@ -125,7 +125,6 @@ export const retrieveEventRecord = async(req, res) =>{
                 };
             }
         }
-            console.log(JSON.stringify(matchParams));
             const eventRecords = await EventRecord.aggregate([
                 {
                     $lookup: {

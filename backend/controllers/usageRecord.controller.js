@@ -1,7 +1,8 @@
 import UsageRecord from '../models/usageRecord.model.js';
 import Device from '../models/device.model.js';
 import EventRecord from '../models/eventRecord.model.js';
-import { isDateValid, sendBinFullNotificationSms } from '../functions/functions.js';
+import User from '../models/user.model.js';
+import { isDateValid } from '../functions/functions.js';
 import moment from 'moment-timezone';
 
 import mongoose from "mongoose";
@@ -20,7 +21,7 @@ export const recordUsageEvent = async(req, res) =>{
 
     if(!garbageType){
         return res.status(200).json({success: false, message: "Please provide the type of garbage the user thrown!"});
-    }else if(garbageType !== "WET" && garbageType !== "DRY" && garbageType !== "METALLIC"){
+    }else if(garbageType !== "BIODEGRADABLE" && garbageType !== "NON-BIODEGRADABLE" && garbageType !== "HAZARDOUS"){
         return res.status(200).json({success: false, message: "Garbage Type is invalid!"});
     }
 
@@ -66,9 +67,9 @@ export const retrieveUsageRecord = async(req, res) =>{
     }
 
     const deviceID = req.body.keyword;
-    const isWet = req.body.isWet;
-    const isDry = req.body.isDry;
-    const isMetallic = req.body.isMetallic;
+    const isBiodegradable = req.body.isBiodegradable;
+    const isNonBiodegradable = req.body.isNonBiodegradable;
+    const isHazardous = req.body.isHazardous;
     const startDate = req.body.startDate;
     const endDate = req.body.endDate;
 
@@ -84,16 +85,16 @@ export const retrieveUsageRecord = async(req, res) =>{
             ]};
     }
 
-    if(typeof isWet === 'boolean' && isWet){
-        garbageTypeFilter.push({"garbageType": {$regex: "WET", $options: "i"}});
+    if(typeof isBiodegradable === 'boolean' && isBiodegradable){
+        garbageTypeFilter.push({"garbageType": {$regex: "^BIODEGRADABLE$", $options: "i"}});
     }
 
-    if(typeof isDry === 'boolean' && isDry){
-        garbageTypeFilter.push({"garbageType": {$regex: "Dry", $options: "i"}});
+    if(typeof isNonBiodegradable === 'boolean' && isNonBiodegradable){
+        garbageTypeFilter.push({"garbageType": {$regex: "NON-BIODEGRADABLE", $options: "i"}});
     }
 
-    if(typeof isMetallic === 'boolean' && isMetallic){
-        garbageTypeFilter.push({"garbageType": {$regex: "METALLIC", $options: "i"}});
+    if(typeof isHazardous === 'boolean' && isHazardous){
+        garbageTypeFilter.push({"garbageType": {$regex: "HAZARDOUS", $options: "i"}});
     }
 
     if(startDate !==null && startDate !== undefined && startDate.length>0){
@@ -253,7 +254,7 @@ export const binFullError = async(req, res) =>{
 
     if(!garbageType){
         return res.status(200).json({success: false, message: "Please provide the Garbage Bin Type that overflown!"});
-    }else if(garbageType !== "WET" && garbageType !== "DRY" && garbageType !== "METALLIC"){
+    }else if(garbageType !== "BIODEGRADABLE" && garbageType !== "NON-BIODEGRADABLE" && garbageType !== "HAZARDOUS"){
         return res.status(200).json({success: false, message: "Garbage Bin Type is invalid!"});
     }
 
@@ -271,24 +272,24 @@ export const binFullError = async(req, res) =>{
 
         session.startTransaction();
 
-        if(garbageType === 'WET'){
-            if(device.isWetBinFull){
-                return res.status(200).json({success: false, message: "Device is Already flagged for Wet bin full!"});
+        if(garbageType === 'BIODEGRADABLE'){
+            if(device.isBiodegradableBinFull){
+                return res.status(200).json({success: false, message: "Device is Already flagged for Biodegradable bin full!"});
             }
 
-            device.isWetBinFull = true;
-        }else if(garbageType === 'DRY'){
-            if(device.isDryBinFull){
-                return res.status(200).json({success: false, message: "Device is Already flagged for Dry bin full!"});
+            device.isBiodegradableBinFull = true;
+        }else if(garbageType === 'NON-BIODEGRADABLE'){
+            if(device.isNonBiodegradableBinFull){
+                return res.status(200).json({success: false, message: "Device is Already flagged for Non-biodegradable bin full!"});
             }
 
-            device.isDryBinFull = true;
-        }else if(garbageType === 'METALLIC'){
-            if(device.isMetallicBinFull){
-                return res.status(200).json({success: false, message: "Device is Already flagged for Metallic bin full!"});
+            device.isNonBiodegradableBinFull = true;
+        }else if(garbageType === 'HAZARDOUS'){
+            if(device.isHazardousBinFull){
+                return res.status(200).json({success: false, message: "Device is Already flagged for Hazardous bin full!"});
             }
 
-            device.isMetallicBinFull = true;
+            device.isHazardousBinFull = true;
         }
 
         await Device.findByIdAndUpdate(device._id, device, {new: true, session});
@@ -302,8 +303,17 @@ export const binFullError = async(req, res) =>{
 
         await session.commitTransaction();
 
-        //sendBinFullNotificationSms("+639701061974", device._id, device.location, garbageType);
+        const users = await User.find({"sendSmsNotification": true});
+        users.map((user)=>{
+            
+            var to="+63"+user.contactNumber;
+            if(user.contactNumber.charAt(0) == '0'){
+                to="+63"+user.contactNumber.slice(1);
+            }    
+            console.log("sending message to: "+to);
+            //sendBinFullNotificationSms(to, device._id, device.location, garbageType);
 
+        });
         res.status(200).json({success: true, message: "Updated Garbage Bin Status Successfully!"});
     }catch(error){
         if(session.inTransaction()){
@@ -332,7 +342,7 @@ export const binEmptiedEvent = async(req, res) =>{
 
     if(!garbageType){
         return res.status(200).json({success: false, message: "Please provide the Garbage Bin Type that overflown!"});
-    }else if(garbageType !== "WET" && garbageType !== "DRY" && garbageType !== "METALLIC"){
+    }else if(garbageType !== "BIODEGRADABLE" && garbageType !== "NON-BIODEGRADABLE" && garbageType !== "HAZARDOUS"){
         return res.status(200).json({success: false, message: "Garbage Bin Type is invalid!"});
     }
 
@@ -345,21 +355,21 @@ export const binEmptiedEvent = async(req, res) =>{
         
         session.startTransaction();
 
-        if(garbageType === 'WET'){
-            if(!device.isWetBinFull){
-                return res.status(200).json({success: false, message: "Device Wet bin isn't full yet!"});
+        if(garbageType === 'BIODEGRADABLE'){
+            if(!device.isBiodegradableBinFull){
+                return res.status(200).json({success: false, message: "Device Biodegradable bin isn't full yet!"});
             }
-            device.isWetBinFull = false;
-        }else if(garbageType === 'DRY'){
-            if(!device.isDryBinFull){
-                return res.status(200).json({success: false, message: "Device Dry bin isn't full yet!"});
+            device.isBiodegradableBinFull = false;
+        }else if(garbageType === 'NON-BIODEGRADABLE'){
+            if(!device.isNonBiodegradableBinFull){
+                return res.status(200).json({success: false, message: "Device Non-biodegradable bin isn't full yet!"});
             }
-            device.isDryBinFull = false;
-        }else if(garbageType === 'METALLIC'){
-            if(!device.isMetallicBinFull){
-                return res.status(200).json({success: false, message: "Device Metallic bin isn't full yet!"});
+            device.isNonBiodegradableBinFull = false;
+        }else if(garbageType === 'HAZARDOUS'){
+            if(!device.isHazardousBinFull){
+                return res.status(200).json({success: false, message: "Device Hazardous bin isn't full yet!"});
             }
-            device.isMetallicBinFull = false;
+            device.isHazardousBinFull = false;
         }
           
         await Device.findByIdAndUpdate(device._id, device, {new: true, session});
