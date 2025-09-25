@@ -1,0 +1,5 @@
+To compile the source code:
+javac -cp ".:lib/*" -d bin AILink.java
+
+To run the .class files, first cd to the bin directory, then:
+java -cp ".:../lib/*" AILink

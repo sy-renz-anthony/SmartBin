@@ -420,7 +420,7 @@ void setup() {
   Serial.println("Testing SIM800L...");
   sim800.println("AT");
   readSIM800Response();
-  sendSMS("+639701061974", "Hello from SIM800L!");*/
+  sendSMS("+639701061974", "Hello from SIM800L!");//*/
 }
 
 
