@@ -32,7 +32,7 @@ export const sendNewPasswordEmail = async(receiverEmail, receiverName, password)
         sender: { email: process.env.SENDER_EMAIL_ID , name: 'SmartBin Admin Portal' },
         to: [{ email: receiverEmail, name: receiverName }],
         subject: "Welcome to SmartBin v_0.1 User Admin Portal",
-        htmlContent: `Welcome to SmartBin v_0.1 User Admin Portal. You have successfully registered your account with email: `+emailAdd+"\n\nA random password is generated for you: "+password+"\n\nPlease update this when you login.\n\nThank you."
+        htmlContent: `Welcome to SmartBin v_0.1 User Admin Portal. You have successfully registered your account with email: `+receiverEmail+"\n\nA random password is generated for you: "+password+"\n\nPlease update this when you login.\n\nThank you."
       },
       {
         headers: {
