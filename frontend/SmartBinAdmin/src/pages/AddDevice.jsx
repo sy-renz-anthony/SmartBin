@@ -120,7 +120,7 @@ const pageContent=()=>{
           <div className="flex items-center justify-center w-full h-auto pt-10">
             <button
               type="submit"
-              className="w-50 bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700 transition duration-200"
+              className="w-50 bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700 active:bg-blue-900 transition duration-200"
             >
               submit
             </button>

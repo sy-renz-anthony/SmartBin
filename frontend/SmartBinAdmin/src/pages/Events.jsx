@@ -370,7 +370,7 @@ const Usages = () => {
                     <div className="flex items-center justify-center w-full h-auto pt-2">
                         <button
                         type="button"
-                        className="w-50 bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700 transition duration-200"
+                        className="w-50 bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700 active:bg-blue-900 transition duration-200"
                         onClick={clearAll}
                         >
                         clear
@@ -379,7 +379,7 @@ const Usages = () => {
                     <div className="flex items-center justify-center w-full h-auto pt-2">
                         <button
                         type="submit"
-                        className="w-50 bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700 transition duration-200"
+                        className="w-50 bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700 active:bg-blue-900 transition duration-200"
                         >
                         search
                         </button>
@@ -414,7 +414,7 @@ const Usages = () => {
                 </table>
                 <br />
                 <div className="flex w-full items-center mt-5">
-                    <button type="submit" className="button-in-use ml-auto" onClick={(e)=>{ 
+                    <button type="submit" className="button-in-use ml-auto active:bg-blue-900" onClick={(e)=>{ 
                         e.preventDefault();
                         convertToPDF();
                     }}

@@ -7,16 +7,16 @@ import BasePage from '../components/BasePage';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
-const options = ['Dry', 'Wet', 'Metallic'];
+const options = ['Biodegradable', 'Non-Biodegradable', 'Hazardous'];
 const tableHeaders=[["Date", "Device ID#", "Location Description", "Garbage Type"]];
 
 const Usages = () => {
   const [data, setData] = useState([]);
 
     const [keyword, setKeyword] = useState("");
-    const [isWet, setIsWet] = useState(false);
-    const [isDry, setIsDry] = useState(false);
-    const [isMetallic, setIsMetallic] = useState(false);
+    const [isBiodegradable, setIsBiodegradable] = useState(false);
+    const [isNonBiodegradable, setIsNonBiodegradable] = useState(false);
+    const [isHazardous, setIsHazardous] = useState(false);
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
 
@@ -46,22 +46,22 @@ const Usages = () => {
 
 
     useEffect(() => {
-        if(selected.includes("Dry")){
-            setIsDry(true);
+        if(selected.includes("Non-Biodegradable")){
+            setIsNonBiodegradable(true);
         }else{
-            setIsDry(false);
+            setIsNonBiodegradable(false);
         }    
 
-        if(selected.includes("Wet")){
-            setIsWet(true);
+        if(selected.includes("Biodegradable")){
+            setIsBiodegradable(true);
         }else{
-            setIsWet(false);
+            setIsBiodegradable(false);
         }
 
-        if(selected.includes("Metallic")){
-            setIsMetallic(true);
+        if(selected.includes("Hazardous")){
+            setIsHazardous(true);
         }else{
-            setIsMetallic(false);
+            setIsHazardous(false);
         }
     }, [selected]);
 
@@ -85,9 +85,9 @@ const Usages = () => {
         try {
             const searchParams={
                 "keyword": keyword,
-                "isWet": isWet,
-                "isDry": isDry,
-                "isMetallic": isMetallic,
+                "isBiodegradable": isBiodegradable,
+                "isNonBiodegradable": isNonBiodegradable,
+                "isHazardous": isHazardous,
                 "startDate": startDate,
                 "endDate": endDate
             }
@@ -106,9 +106,9 @@ const Usages = () => {
 
     const clearAll=()=>{
         setKeyword("");
-        setIsWet(false);
-        setIsDry(false);
-        setIsMetallic(false);
+        setIsBiodegradable(false);
+        setIsNonBiodegradable(false);
+        setIsHazardous(false);
         setSelected([]);
         setStartDate("");
         setEndDate("");
@@ -280,7 +280,7 @@ const Usages = () => {
                     <div className="flex items-center justify-center w-full h-auto pt-2">
                         <button
                         type="button"
-                        className="w-50 bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700 transition duration-200"
+                        className="w-50 bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700 active:bg-blue-900 transition duration-200"
                         onClick={clearAll}
                         >
                         clear
@@ -289,7 +289,7 @@ const Usages = () => {
                     <div className="flex items-center justify-center w-full h-auto pt-2">
                         <button
                         type="submit"
-                        className="w-50 bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700 transition duration-200"
+                        className="w-50 bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700 active:bg-blue-900 transition duration-200"
                         >
                         search
                         </button>

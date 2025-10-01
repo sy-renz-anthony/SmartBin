@@ -41,7 +41,7 @@ export default function Modal({ isOpen, onClose}) {
           </button>
           <h1 className="mx-5 my-5 font-bold text-gray-800 text-lg transition-all duration-500 ease-linear">Are you sure you want to Logout?</h1>
           <hr />
-          <button className="relative top-3 w-20 self-center bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700 transition duration-200" onClick={(e)=>handleLogout(e)}>Yes</button>
+          <button className="relative top-3 w-20 self-center bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700 active:bg-blue-900 transition duration-200" onClick={(e)=>handleLogout(e)}>Yes</button>
         </div>
     </div>
   );

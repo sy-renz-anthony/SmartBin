@@ -60,7 +60,7 @@ export default function Modal({ isOpen, onClose, confirmationEventHandler}) {
               />
             </div>
             <div className="relative flex top-0 left-0 w-full h-auto justify-center">
-              <button className="w-20 bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700 transition duration-200" >Submit</button>
+              <button className="w-20 bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700 active:bg-blue-900 transition duration-200" >Submit</button>
             </div>
           </form>
           

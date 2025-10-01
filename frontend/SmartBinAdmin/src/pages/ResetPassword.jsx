@@ -90,7 +90,7 @@ const ResetPassword = () => {
             required
           />
         </div>
-        {!isCodeChecked ? <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700 transition duration-200">
+        {!isCodeChecked ? <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700 active:bg-blue-900 transition duration-200">
           Submit
         </button> : <div><br /> <hr /><br /><ConfirmNewPasswordPane submitNewPasswordFunction={submitNewPasswordFunction} /></div>}
       </form>

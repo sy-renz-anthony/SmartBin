@@ -52,14 +52,14 @@ const ResetPassword = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-          <button type="submit" className={`w-full bg-blue-600 text-white py-2 rounded-xl ${disableSubmit ? 'bg-gray-400 cursor-not-allowed' : 'hover:bg-blue-700 transition duration-200'}` }
+          <button type="submit" className={`w-full bg-blue-600 text-white py-2 rounded-xl ${disableSubmit ? 'bg-gray-400 cursor-not-allowed' : 'hover:bg-blue-700 active:bg-blue-900 transition duration-200'}` }
           disabled={disableSubmit}>
             Send Codes
           </button>
         </form>
 
           <div className="mt-10 text-right">
-            <Link to="/reset-password" className="text-sm text-blue-500 hover:underline">
+            <Link to="/reset-password" className="text-sm text-blue-500 hover:underline active:text-blue-700">
                 I already have my codes
             </Link>
           </div>

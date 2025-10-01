@@ -38,7 +38,7 @@ const Login = () => {
     <div className="w-screen h-screen grid grid-row-2 sm:grid-cols-2 bg-gray-100">
       <div className="shadow-lg">
         <img src={assets.loginPic} className="w-full h-full" />
-        <div className="absolute top-0 right-0 bg-white py-1 px-2 text-right">
+        <div className="absolute top-0 left-0 z-2 bg-white py-1 px-2 text-right">
           <Link to="http://www.freepik.com" className="text-sm text-blue-500 hover:underline">Designed by Freepik</Link>
         </div>
       </div>
@@ -83,12 +83,12 @@ const Login = () => {
           </div>
           <button
             type="submit"
-            className="w-full mt-5 bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700 transition duration-200"
+            className="w-full mt-5 bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700 active:bg-blue-900 transition duration-200"
           >
             Login
           </button>
               <div className="mt-10 text-right">
-              <Link to="/request-password-reset" className="text-sm text-blue-500 hover:underline">
+              <Link to="/request-password-reset" className="text-sm text-blue-500 hover:underline active:text-blue-700">
                   Reset my Password
               </Link>
               </div>

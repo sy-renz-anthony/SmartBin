@@ -33,7 +33,7 @@ const ConfirmNewPasswordPane = ({submitNewPasswordFunction}) => {
             required
           />
         </div>
-        <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700 transition duration-200" onClick={(e)=>submitNewPasswordFunction(newPassword, confirmNewPassword, e)}>
+        <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700 active:bg-blue-900 transition duration-200" onClick={(e)=>submitNewPasswordFunction(newPassword, confirmNewPassword, e)}>
           Reset Password
         </button>
       </>
