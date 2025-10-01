@@ -1,9 +1,9 @@
 import User from '../models/user.model.js';
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import transporter from "../config/nodemailer_config.js";
 import mongoose from "mongoose";
 import { isUserEmailExisting, isUserIDExisting } from '../functions/functions.js';
+import { sendPasswordResetOTPEmail, sendNewPasswordEmail } from '../functions/emailSender.js';
 
 export const register = async(req, res) =>{
     if(!req.body){
@@ -81,19 +81,8 @@ export const register = async(req, res) =>{
         
         await user.save({session});
 
-        const emailService = transporter();
-        const mailContents = {
-            from: process.env.SENDER_EMAIL_ID,
-            to: emailAdd,
-            subject: "Welcome to SmartBin v_0.1 User Admin Console",
-            text: `Welcome to SmartBin v_0.1 User Admin Console. You have successfully registered your account with email: `+emailAdd+"\n\nA random password is generated for you: "+pwd+"\n\nPlease update this when you login.\n\nThank you."
-        }
 
-        try{
-            await emailService.sendMail(mailContents);
-        }catch(error){
-            console.error("An error occured while trying to send email to user");
-        }
+        await sendNewPasswordEmail(emailAdd, fName+" "+lName, pwd);
         
         await session.commitTransaction();
 
@@ -289,15 +278,7 @@ export const sendPasswordResetOTP = async (req, res) =>{
 
             await User.findByIdAndUpdate(userData._id, userData, {new:true, session});
 
-            const emailService = transporter();
-            const mailContents = {
-                from: process.env.SENDER_EMAIL_ID,
-                to: userData.emailAddress,
-                subject: "SmartBin v_0.1 User Admin Console Password Reset verification OTP",
-                text: `Your SmartBin v_0.1 User Admin Console Password Reset OTP code is ${otp}. Please verify your account using this code to reset your password.`
-            }
-    
-            await emailService.sendMail(mailContents);
+            await sendPasswordResetOTPEmail(userData.emailAddress, userData.firstName+" "+userData.lastName, otp);
 
             await session.commitTransaction();
             res.status(200).json({success: true, message: "Password Reset OTP codes sent successfully!"});
