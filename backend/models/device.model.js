@@ -19,6 +19,30 @@ const deviceSchema = new mongoose.Schema({
         },
         required: true
     },
+    barangay:{
+        type: String,
+        required: true
+    },
+    municipality:{
+        type: String,
+        required: true
+    },
+    province:{
+        type: String,
+        required: true
+    },
+    region:{
+        type: String,
+        required: true
+    },
+    postcode:{
+        type: String,
+        required: true
+    },
+    countryCode:{
+        type: String,
+        required: true
+    },
     isHazardousBinFull:{
         type: Boolean,
         required: true,

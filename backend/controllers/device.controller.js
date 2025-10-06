@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import axios from 'axios';
 
 import Device from '../models/device.model.js';
 
@@ -90,11 +91,24 @@ export const registerNewDevice = async(req, res) =>{
             return res.status(200).json({success: false, message: "Device ID is already registered!"});
         }
 
+        const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}`;
+        const addData = await axios.get(url, {
+            headers: { "User-Agent": "SmartBin/1.0 (sy.renz.anthony@gmail.com)" },
+        });
+        
+        //console.log(JSON.stringify(addData.data.address));
+
         session.startTransaction();
         const newDevice = new Device();
         newDevice.deviceID = deviceID;
         newDevice.location = location;
         newDevice.coordinate = [latitude, longitude];
+        newDevice.barangay = addData.data.address.village || addData.data.address.quarter;
+        newDevice.municipality = addData.data.address.town || addData.data.address.city;
+        newDevice.province = addData.data.address.state;
+        newDevice.region = addData.data.address.region;
+        newDevice.postcode = addData.data.address.postcode;
+        newDevice.countryCode = addData.data.address.country_code;
 
         await newDevice.save({session});
         await session.commitTransaction();
@@ -153,10 +167,23 @@ export const updateDevice = async(req, res) =>{
             return res.status(200).json({success: false, message: "Device ID is already registered!"});
         }
 
+        const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}`;
+        const addData = await axios.get(url, {
+            headers: { "User-Agent": "SmartBin/1.0 (sy.renz.anthony@gmail.com)" },
+        });
+        
+        //console.log(JSON.stringify(addData.data.address));
+
         session.startTransaction();
         device.deviceID = deviceID;
         device.location = location;
         device.coordinate = [latitude, longitude];
+        device.barangay = addData.data.address.village || addData.data.address.quarter;
+        device.municipality = addData.data.address.town || addData.data.address.city;
+        device.province = addData.data.address.state;
+        device.region = addData.data.address.region;
+        device.postcode = addData.data.address.postcode;
+        device.countryCode = addData.data.address.country_code;
 
         const updatedDevice = await Device.findByIdAndUpdate(id, device, {new: true, session});
 

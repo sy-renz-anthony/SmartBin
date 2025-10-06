@@ -56,7 +56,7 @@ const Devices= () => {
                     (data.map((device) => (
                       <tr key={device._id} className="tablerow-general">
                         <td className="tableentry-general">{device.deviceID}</td>
-                        <td className="tableentry-general">{device.location}</td>
+                        <td className="tableentry-general">{device.location+" - "+device.barangay+", "+device.municipality+", "+device.province+" Region: "+device.region}</td>
                         <td className="tableentry-general mx-10">
                           {!device.isOnline ? 
                             <div className="flex items-center"><GoDotFill size='30' className="text-red-500"/>

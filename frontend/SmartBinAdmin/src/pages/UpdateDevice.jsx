@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axiosInstance from '../axiosConfig';
 import { toast } from 'react-toastify';
+import axios from 'axios';
 
 import BasePage from '../components/BasePage';
 
@@ -41,6 +42,7 @@ const ClickMarker = ({ setCoordinates, displayText }) => {
 const UpdateDevice = () => {
   const [data, setData]  = useState({});
   const [coordinates, setCoordinates] = useState(null);
+  const [displayAdd, setDisplayAdd] = useState(null);
   const navigate= useNavigate();
   const location = useLocation();
   
@@ -52,13 +54,28 @@ const UpdateDevice = () => {
   }, [location.state]);
 
   useEffect(() => {
+    const reloadDisplayAdd = async() =>{
+          const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${coordinates["lat"]}&lon=${coordinates["lng"]}`;
+              const addData = await axios.get(url, {
+              headers: { "User-Agent": "SmartBin/1.0 (sy.renz.anthony@gmail.com)" },
+          });
     
+          var strBrgy = addData.data.address.village || addData.data.address.quarter;
+          var strTown = addData.data.address.town || addData.data.address.city;
+          var strProvince = addData.data.address.state;
+          var strRegion = addData.data.address.region;
+    
+          setDisplayAdd(strBrgy+", "+strTown+", "+strProvince+" - Region: "+strRegion);
+    }
+
     if (coordinates !== null) {
       setData(prevData=>({
           ...prevData,
           "longitude": coordinates["lng"], 
           "latitude": coordinates["lat"]
       }));
+
+      reloadDisplayAdd();
     }
   }, [coordinates]);
 
@@ -115,6 +132,7 @@ const pageContent=()=>{
               required
             />
             <span className="content-label-identifier">Coordinates:</span><span>{coordinates === null ?"Please select a location from the map below to set the location of the Device" : "["+coordinates["lat"]+", "+coordinates["lng"]+"]" }</span>
+            <span>&nbsp;</span><span>{displayAdd && displayAdd }</span>
           </div>
           <div className="flex items-center justify-center w-full h-auto pt-10">
             <button
@@ -149,7 +167,7 @@ const pageContent=()=>{
 
   return (
     <>
-      <BasePage pageTitle="Add New Device" pageContent={pageContent}/>
+      <BasePage pageTitle="Update Device Info" pageContent={pageContent}/>
     </>
   )
 }
