@@ -1,6 +1,7 @@
 import UsageRecord from '../models/usageRecord.model.js';
 import Device from '../models/device.model.js';
 import EventRecord from '../models/eventRecord.model.js';
+import VolumeRecord from '../models/volumeRecord.model.js';
 import User from '../models/user.model.js';
 import { isDateValid } from '../functions/functions.js';
 import moment from 'moment-timezone';
@@ -310,9 +311,7 @@ export const binFullError = async(req, res) =>{
             if(user.contactNumber.charAt(0) == '0'){
                 to="+63"+user.contactNumber.slice(1);
             }    
-            console.log("sending message to: "+to);
-            //sendBinFullNotificationSms(to, device._id, device.location, garbageType);
-
+            
         });
         res.status(200).json({success: true, message: "Updated Garbage Bin Status Successfully!"});
     }catch(error){
@@ -355,21 +354,25 @@ export const binEmptiedEvent = async(req, res) =>{
         
         session.startTransaction();
 
+        var volume=0;
         if(garbageType === 'BIODEGRADABLE'){
             if(!device.isBiodegradableBinFull){
                 return res.status(200).json({success: false, message: "Device Biodegradable bin isn't full yet!"});
             }
             device.isBiodegradableBinFull = false;
+            volume=0.008775;
         }else if(garbageType === 'NON-BIODEGRADABLE'){
             if(!device.isNonBiodegradableBinFull){
                 return res.status(200).json({success: false, message: "Device Non-biodegradable bin isn't full yet!"});
             }
             device.isNonBiodegradableBinFull = false;
+            volume=0.011745;
         }else if(garbageType === 'HAZARDOUS'){
             if(!device.isHazardousBinFull){
                 return res.status(200).json({success: false, message: "Device Hazardous bin isn't full yet!"});
             }
             device.isHazardousBinFull = false;
+            volume=0.008811;
         }
           
         await Device.findByIdAndUpdate(device._id, device, {new: true, session});
@@ -380,6 +383,13 @@ export const binEmptiedEvent = async(req, res) =>{
         eventRecord.garbageType = garbageType;
 
         await eventRecord.save({session});
+
+        const volumeRecord = new VolumeRecord();
+        volumeRecord.device = device._id;
+        volumeRecord.garbageType = garbageType;
+        volumeRecord.volume = volume;
+
+        await volumeRecord.save({session});
 
         await session.commitTransaction();
 

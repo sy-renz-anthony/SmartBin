@@ -1,6 +1,5 @@
 import User from '../models/user.model.js';
 import Device from '../models/device.model.js';
-import twilio from 'twilio';
 
 export const isUserEmailExisting = async (email, idToExcempt) =>{
     try{
