@@ -14,7 +14,7 @@ the URL for the AI model deployed as an API: https://renz-sy-waste-classificatio
 -npm install nodemon -D
 
 ### About the .env file
-Since I deployed it already on render.com, I included my own .env file here despite the security issues that might happen later. Anyways, I am not expecting this to be used in a real production server but incase you would, please change the values inside of it and hide it from public to ensure the safety of your project. Update the .env file into your own account. Just follow this format: \
+I updated the system to use render's secret file instead of uploading the entire .env file for security purposes. Should you ever use the codes here please create your own .env file and place it inside the backend folder. Inside of the backend folder create a new folder named etc and inside of it create another folder and name it secrets, in total the .env file should be inside the directory "etc/secrets" inside of you backend folder. I structured in a way that it will be similar to render's secret file structure in order to minimize the modification to the code whenever deployed either local or online.  To you create the .env file into your own account. Just follow this format: \
 \
 \
 MONGO_URI= <*URL of your mongodb collection>/SmartBin \
@@ -26,6 +26,7 @@ JWT_SECRET=<10 character string used to encrypt jwt token, enclose it with '    
 \
 SENDER_EMAIL_ID=<the email address used as sender for your email service, enclose it with '     '> 
 BREVO_EMAIL_API_ENDPOINT=<the url endpoint of brevo api, enclose it with '     '> 
+BREVO_API_KEY=<the API key provided by brevo for your account used to verify your identity for their email service, enclose it with '     '>
 
 * I am using various external services to build this app, you can use the same service provider I signed up for since they are free or you can use your own. I am using mongo DB for my database, you can visit them at: https://www.mongodb.com/ and sign-up for a free account. I want to stress out that although there is a local version of mongodb you can install on your machine, it is advisable to use the online mongo DB instead since I am using mongoose session on my code. they are similar to transactions in RDBMS and this feature requires replica sets. A functionality not automatically set up on mongodb local versions, unless you can set it up on your local machine yourself, you need to use the online mongo DB instead or else the code will not work. And don't forget to create a collection named "SmartBin". Also, I am using brevo as my email service provider for the email functionality. Since they are permanently disabling the port used for the smtp service because of security reasons, I migrated the system to use the brevo api service. You can visit them at: https://www.brevo.com/ and sign-up for a free account. After setting it up they will provide you with the values needed to make the email functionality work such as SMTP_USERNAME, SMTP_PASSWORD, and the rest.
 

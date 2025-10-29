@@ -9,6 +9,7 @@ import deviceRouters from './routers/devices.router.js';
 import userRouters from './routers/user.router.js';
 import usageRouters from './routers/usageRecord.router.js';
 import eventRouters from './routers/eventRecord.router.js';
+import volumeRecordRouters from './routers/volumeRecord.router.js';
 
 import checkOfflineDevices from './functions/checkOfflineDevices.js';
 
@@ -39,6 +40,7 @@ app.use("/api/devices", deviceRouters);
 app.use("/api/users", userRouters);
 app.use("/api/usages", usageRouters);
 app.use("/api/events", eventRouters);
+app.use("/api/volume-records", volumeRecordRouters);
 
 setInterval(checkOfflineDevices, 60000);
 
