@@ -7,30 +7,23 @@ import BasePage from '../components/BasePage';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
-const options = ['Biodegradable', 'Non-Biodegradable', 'Hazardous'];
+const options = ['Barangay', 'Municipality', 'Province', 'Region'];
 const tableHeaders=[["Date", "Device ID#", "Location Description", "Garbage Type"]];
 
-const Usages = () => {
+const Volumes = () => {
   const [data, setData] = useState([]);
 
     const [keyword, setKeyword] = useState("");
-    const [isBiodegradable, setIsBiodegradable] = useState(false);
-    const [isNonBiodegradable, setIsNonBiodegradable] = useState(false);
-    const [isHazardous, setIsHazardous] = useState(false);
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
 
-    const [selected, setSelected] = useState([]);
+    const [selected, setSelected] = useState(options[0]);
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef();
 
     
     const toggleOption = (option) => {
-        setSelected((prev) =>
-        prev.includes(option)
-            ? prev.filter((item) => item !== option)
-            : ([...prev, option])
-        );
+        setSelected(option);
     };
 
     const handleClickOutside = (e) => {
@@ -44,26 +37,6 @@ const Usages = () => {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
-
-    useEffect(() => {
-        if(selected.includes("Non-Biodegradable")){
-            setIsNonBiodegradable(true);
-        }else{
-            setIsNonBiodegradable(false);
-        }    
-
-        if(selected.includes("Biodegradable")){
-            setIsBiodegradable(true);
-        }else{
-            setIsBiodegradable(false);
-        }
-
-        if(selected.includes("Hazardous")){
-            setIsHazardous(true);
-        }else{
-            setIsHazardous(false);
-        }
-    }, [selected]);
 
     useEffect(()=>{
         if(startDate.length<1)
@@ -84,21 +57,36 @@ const Usages = () => {
     const handleSubmit= async() =>{
         try {
             const searchParams={
-                "keyword": keyword,
-                "isBiodegradable": isBiodegradable,
-                "isNonBiodegradable": isNonBiodegradable,
-                "isHazardous": isHazardous,
                 "startDate": startDate,
                 "endDate": endDate
             }
-            const response = await axiosInstance.post("/usages/search-record", searchParams, {withCredentials: true});
+
+            if(selected == "Barangay"){
+              searchParams["barangay"] = keyword;
+            }else if(selected == "Municipality"){
+              searchParams["municipality"] = keyword;
+            }else if(selected == "Province"){
+              searchParams["province"] = keyword;
+            }else if(selected == "Region"){
+              searchParams["region"] = keyword;
+            }
+            
+            if((!startDate || startDate.length < 1) && (endDate.length > 0)){
+              toast.error("Cannot have an end date without a start date");
+              return;
+            }
+
+            console.log(JSON.stringify(searchParams));
+            
+            const response = await axiosInstance.post("volume-records/search-record/group-by/location", searchParams, {withCredentials: true});
             if(!response.data.success){
                 toast.error(response.data.message);
                 setData([]);
             }else{
                 setData(response.data.data);
+                console.log(JSON.stringify(response.data.data));
             }
-
+            
         } catch (err) {
         console.error("Data retrieval error:", err.message);
         }
@@ -106,10 +94,7 @@ const Usages = () => {
 
     const clearAll=()=>{
         setKeyword("");
-        setIsBiodegradable(false);
-        setIsNonBiodegradable(false);
-        setIsHazardous(false);
-        setSelected([]);
+        setSelected("");
         setStartDate("");
         setEndDate("");
         setData([]);
@@ -193,15 +178,15 @@ const Usages = () => {
     <>
       <div className="content-pane">
         <div className="w-full flex flex-row">
-          <h1 className='content-title'>Search Usage Records</h1>
+          <h1 className='content-title'>Search Volume Records</h1>
           <div className="h-auto mb-3 flex ml-auto items-end text-right">
-            <Link to="/usages" className="text-sm text-white px-3 py-3 rounded-md bg-green-500">
+            <Link to="/usages" className="text-sm text-blue-500 hover:underline mx-3 my-3">
               usages
             </Link>
             <Link to="/events" className="text-sm text-blue-500 hover:underline mx-3 my-3">
               events
             </Link>
-            <Link to="/volumes" className="text-sm text-blue-500 hover:underline mx-3 my-3">
+            <Link to="/volumes" className="text-sm text-white px-3 py-3 rounded-md bg-green-500">
               volume
             </Link>
           </div>
@@ -213,7 +198,7 @@ const Usages = () => {
                 <div className="search-pane-row">
                     <div className="flex flex-row my-2 text-xl gap-4 items-center">
                         <label className="text-gray-600" htmlFor="keyword">
-                        Device ID/Location:
+                        Location Name:
                         </label>
                         <input
                         id="keyword"
@@ -226,12 +211,12 @@ const Usages = () => {
                     </div>
                     <div className="search-pane-element-checkbox">
                         <div className="w-64 p-4" ref={dropdownRef}>
-                        <label className="text-gray-600 w-fit">Garbage Type:</label>
+                        <label className="text-gray-600 w-fit">Group by:</label>
                         <div
                             className="border border-gray-300 rounded p-2 cursor-pointer bg-white"
                             onClick={() => setIsOpen(!isOpen)}
                         >
-                        {selected.length > 0 ? selected.join(', ') : 'All'}
+                        {(selected !== null && selected.length > 0) ? selected : '-----'}
                         </div>
 
                         {isOpen && (
@@ -241,7 +226,7 @@ const Usages = () => {
                                 key={option}
                                 onClick={() => toggleOption(option)}
                                 className={`px-4 py-2 cursor-pointer hover:bg-blue-100 ${
-                                    selected.includes(option) ? 'bg-blue-200' : ''
+                                    selected == option ? 'bg-blue-200' : ''
                                 }`}
                                 >
                                 {option}
@@ -313,19 +298,19 @@ const Usages = () => {
                 <table className="table-general">
                   <thead className="tablehead-general">
                     <tr>
-                      <th className="tableheadentry-general">Date</th>
-                      <th className="tableheadentry-general">Device ID#</th>
-                      <th className="tableheadentry-general">Location Description</th>
-                      <th className="tableheadentry-general">Garbage Type</th>
+                      <th className="tableheadentry-general">{selected}</th>
+                      <th className="tableheadentry-general">Biodegradable</th>
+                      <th className="tableheadentry-general">Non-Biodegradable</th>
+                      <th className="tableheadentry-general">Hazardous</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {data.map((usageRecord) => (
-                      <tr key={usageRecord._id} className="tablerow-general">
-                        <td className="tableentry-general">{usageRecord.eventDate}</td>
-                        <td className="tableentry-general">{usageRecord.device.deviceID}</td>
-                        <td className="tableentry-general">{usageRecord.device.location}</td>
-                        <td className="tableentry-general">{usageRecord.garbageType}</td>
+                    {data.map((volumeRecord) => (
+                      <tr key={volumeRecord._id} className="tablerow-general">
+                        <td className="tableentry-general">{volumeRecord[selected.toLowerCase()]}</td>
+                        <td className="tableentry-general">{volumeRecord.sum.BIODEGRADABLE != null ? (volumeRecord.sum.BIODEGRADABLE): 0}</td>
+                        <td className="tableentry-general">{volumeRecord.sum["NON-BIODEGRADABLE"] != null ? (volumeRecord.sum["NON-BIODEGRADABLE"]) : 0}</td>
+                        <td className="tableentry-general">{volumeRecord.sum.HAZARDOUS != null ? (volumeRecord.sum.HAZARDOUS) :0}</td>
                       </tr>
                     ))} 
                   </tbody>
@@ -351,4 +336,4 @@ const Usages = () => {
   )
 }
 
-export default Usages
+export default Volumes

@@ -256,8 +256,14 @@ const Usages = () => {
         <div className="w-full flex flex-row">
           <h1 className='content-title'>Search Event Records</h1>
           <div className="h-auto mb-3 flex ml-auto items-end text-right">
-            <Link to="/usages" className="text-sm text-blue-500 hover:underline">
-              search for usages
+            <Link to="/usages" className="text-sm text-blue-500 hover:underline mx-3 my-3">
+              usages
+            </Link>
+            <Link to="/events" className="text-sm text-white px-3 py-3 rounded-md bg-green-500">
+              events
+            </Link>
+            <Link to="/volumes" className="text-sm text-blue-500 hover:underline mx-3 my-3">
+              volume
             </Link>
           </div>
         </div>

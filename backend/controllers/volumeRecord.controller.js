@@ -294,7 +294,6 @@ export const retrieveVolumeRecordGroupGarbageTypeLocation = async(req, res) =>{
         return res.status(200).json({success: false, message: "Invalid values!"});
     }
 
-    const deviceID = req.body.keyword;
     const startDate = req.body.startDate;
     const endDate = req.body.endDate;
 
@@ -303,16 +302,9 @@ export const retrieveVolumeRecordGroupGarbageTypeLocation = async(req, res) =>{
     const province = req.body.province;
     const region = req.body.region;
 
-    let idFilter = null;
     let startDateUTC,
         endDateUTC;
 
-        if(deviceID != null && deviceID.toString().length >0){
-            idFilter={"$or":[
-                {"device.deviceID": {$regex: deviceID.toString(), $options: "i"}},
-                {"device.location": {$regex: deviceID.toString(), $options: "i"}}
-            ]};
-        }
     
         if(startDate !==null && startDate !== undefined && startDate.length>0){
             if(!await isDateValid(startDate)){
@@ -324,13 +316,11 @@ export const retrieveVolumeRecordGroupGarbageTypeLocation = async(req, res) =>{
             return res.status(200).json({success: false, message: "Cannot have an End date without a Start date!"});
         }
     
-        if(!idFilter && !startDate){
+        if(!barangay && !municipality && !province && !region && !startDate){
             return res.status(200).json({success: false, message: "Invalid values!"});
         }
         
-        if((!barangay || barangay.length < 1) && (!municipality || municipality.length <1) && (!province || province.length <1) && (!region || region.length <1)){
-            return res.status(200).json({success: false, message: "Invalid location!"});
-        }
+        
 
         var locationFilter = "";
         var locationFilterObj = {};
@@ -346,8 +336,6 @@ export const retrieveVolumeRecordGroupGarbageTypeLocation = async(req, res) =>{
         }else if(region != null){
             locationFilter = "region";
             locationFilterObj = [{"device.region": {$regex: region, $options: "i"}}];
-        }else{
-            return res.status(200).json({success: false, message: "Invalid location!"});
         }
 
         const firstGroup = {
@@ -365,18 +353,7 @@ export const retrieveVolumeRecordGroupGarbageTypeLocation = async(req, res) =>{
         try{
     
             var matchParams = {};
-             if(idFilter && (locationFilter.length > 0)){
-                matchParams = {
-                        $match: {
-                            $and: [idFilter],
-                            $or: locationFilterObj
-                        }
-                    };
-            }else if(idFilter && (locationFilter.length<1)){
-                matchParams = {
-                        $match: idFilter
-                    }
-            }else if(!idFilter && locationFilter){
+            if(locationFilter.length > 0){
                 matchParams = {
                         $match: {
                             $or: locationFilterObj
@@ -393,7 +370,7 @@ export const retrieveVolumeRecordGroupGarbageTypeLocation = async(req, res) =>{
                     endDateUTC = moment.tz(startDate, 'YYYY-MM-DD', 'Asia/Manila').endOf('day').toDate();
                 }
     
-                if(locationFilter.length<1&&idFilter===null){
+                if(locationFilter.length<1){
                     matchParams = {
                         $match:{
                             "dateTaken": {
@@ -409,7 +386,8 @@ export const retrieveVolumeRecordGroupGarbageTypeLocation = async(req, res) =>{
                     };
                 }
             }
-    
+
+                console.log(JSON.stringify(matchParams));
                 const volumeRecords = await VolumeRecord.aggregate([
                     {
                         $lookup: {
@@ -423,7 +401,8 @@ export const retrieveVolumeRecordGroupGarbageTypeLocation = async(req, res) =>{
                         device:{$first:"$device"} 
                         }
                     },
-                    matchParams,{
+                    matchParams,
+                    {
                         $project:{
                             _id: 1,
                             garbageType: 1,
@@ -464,12 +443,7 @@ export const retrieveVolumeRecordGroupGarbageTypeLocation = async(req, res) =>{
                         }
                     },
                     {
-                        $project: 
-                            //_id: 0,
-                            //secondGroup,
-                            //sum: { $arrayToObject: "$sum" }
-                            secondGroup
-                        
+                        $project: secondGroup
                     }
                 ]);
                 
