@@ -583,3 +583,19 @@ export const validateMyPassword = async(req, res) =>{
 
     return res;
 }
+
+export const getAllUserNumberToSendSMS = async(req, res) =>{
+    try{
+        const users = await User.find({"sendSmsNotification": true}, {"contactNumber": 1});
+        if(!users instanceof Array || users.length === 0){
+            res.status(200).json({success: false, message: "No Users to send sms notification!"});
+        }else{
+            res.status(200).json({success: true, data: users});
+        }    
+    }catch(error){
+        console.error("Error trying to retrieve the list of all devices from Database!");
+        res.status(500).json({success: false, message: "Server Error"});
+    }
+    
+    return res;
+}
