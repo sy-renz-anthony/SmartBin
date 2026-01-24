@@ -286,9 +286,6 @@ export const retrieveVolumeRecordGroupGarbageType = async(req, res) =>{
             return res;
 }
 
-
-
-//-------------------------------------- under development -----------------------------------------------
 export const retrieveVolumeRecordGroupGarbageTypeLocation = async(req, res) =>{
     if(!req.body){
         return res.status(200).json({success: false, message: "Invalid values!"});
@@ -387,7 +384,6 @@ export const retrieveVolumeRecordGroupGarbageTypeLocation = async(req, res) =>{
                 }
             }
 
-                console.log(JSON.stringify(matchParams));
                 const volumeRecords = await VolumeRecord.aggregate([
                     {
                         $lookup: {

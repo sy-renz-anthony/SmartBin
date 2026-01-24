@@ -76,7 +76,6 @@ const Volumes = () => {
               return;
             }
 
-            console.log(JSON.stringify(searchParams));
             
             const response = await axiosInstance.post("volume-records/search-record/group-by/location", searchParams, {withCredentials: true});
             if(!response.data.success){
@@ -84,7 +83,6 @@ const Volumes = () => {
                 setData([]);
             }else{
                 setData(response.data.data);
-                console.log(JSON.stringify(response.data.data));
             }
             
         } catch (err) {
@@ -298,7 +296,7 @@ const Volumes = () => {
                 <table className="table-general">
                   <thead className="tablehead-general">
                     <tr>
-                      <th className="tableheadentry-general">{selected}</th>
+                      <th className="tableheadentry-general">{Object.keys(data[0])[0]}</th>
                       <th className="tableheadentry-general">Biodegradable</th>
                       <th className="tableheadentry-general">Non-Biodegradable</th>
                       <th className="tableheadentry-general">Hazardous</th>
@@ -306,8 +304,8 @@ const Volumes = () => {
                   </thead>
                   <tbody>
                     {data.map((volumeRecord) => (
-                      <tr key={volumeRecord._id} className="tablerow-general">
-                        <td className="tableentry-general">{volumeRecord[selected.toLowerCase()]}</td>
+                      <tr key={volumeRecord[(Object.keys(data[0])[0]).toLowerCase()]} className="tablerow-general">
+                        <td className="tableentry-general">{volumeRecord[(Object.keys(data[0])[0]).toLowerCase()]}</td>
                         <td className="tableentry-general">{volumeRecord.sum.BIODEGRADABLE != null ? (volumeRecord.sum.BIODEGRADABLE): 0}</td>
                         <td className="tableentry-general">{volumeRecord.sum["NON-BIODEGRADABLE"] != null ? (volumeRecord.sum["NON-BIODEGRADABLE"]) : 0}</td>
                         <td className="tableentry-general">{volumeRecord.sum.HAZARDOUS != null ? (volumeRecord.sum.HAZARDOUS) :0}</td>
