@@ -8,7 +8,6 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
 const options = ['Barangay', 'Municipality', 'Province', 'Region'];
-const tableHeaders=[["Date", "Device ID#", "Location Description", "Garbage Type"]];
 
 const Volumes = () => {
   const [data, setData] = useState([]);
@@ -20,6 +19,8 @@ const Volumes = () => {
     const [selected, setSelected] = useState(options[0]);
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef();
+
+    let tableHeaders=[[selected, "BIODEGRADABLE", "NON-BIODEGRADABLE", "HAZARDOUS"]];
 
     
     const toggleOption = (option) => {
@@ -83,6 +84,7 @@ const Volumes = () => {
                 setData([]);
             }else{
                 setData(response.data.data);
+                console.log(JSON.stringify(response.data.data));
             }
             
         } catch (err) {
@@ -109,28 +111,17 @@ const Volumes = () => {
         pdfDoc.text('Siaton SmartBin', pageWidth / 2, 20, { align: 'center' });
     
         pdfDoc.setFontSize(14);
-        pdfDoc.text("Usage Report", 14, 40);
+        pdfDoc.text("Volume Report", 14, 40);
         pdfDoc.setFontSize(10);
         var yOffset = 50;
         if(keyword !== ''){
-          pdfDoc.text("Device ID#/Location contains: '"+keyword+"'", 25, yOffset);
+          pdfDoc.text("Location contains: '"+keyword+"'", 25, yOffset);
           yOffset=yOffset+5;
         }
-
-        if(selected.length>0){
-          var stringGarbageType="Garbage Type: ";
-          for(let i=0; i<selected.length; i++){
-            stringGarbageType=stringGarbageType+selected[i];
-            if((i+1) < selected.length){
-              stringGarbageType=stringGarbageType+", "
-            }
-          }
-          pdfDoc.text(stringGarbageType, 25, yOffset);
-          yOffset=yOffset+5;
-        }else{
-          pdfDoc.text("Garbage Type: All", 25, yOffset);
-          yOffset=yOffset+5;
-        }
+        
+        pdfDoc.text("Group by: "+selected, 25, yOffset);
+        yOffset=yOffset+5;
+        
 
         if(startDate !== ''){
           if(endDate === startDate){
@@ -144,10 +135,10 @@ const Volumes = () => {
         }
 
         const dataContents = data.map((row) => [
-          row.eventDate,
-          row.device.deviceID,
-          row.device.location,
-          row.garbageType
+          row[(Object.keys(data[0])[0]).toLowerCase()],
+          row.sum["BIODEGRADABLE"],
+          row.sum["NON-BIODEGRADABLE"],
+          row.sum["HAZARDOUS"]
         ]);
     
         autoTable(pdfDoc, {
@@ -168,7 +159,7 @@ const Volumes = () => {
           },
         });
     
-        pdfDoc.save('smartbin-usage-report.pdf');
+        pdfDoc.save('smartbin-volume-report.pdf');
       }
 
   const pageContent=()=>{
@@ -290,7 +281,7 @@ const Volumes = () => {
 {/*----------------------------------------------------------------------------------------------------------*/}
       </div>  
       {data !== null && data !== undefined && data.length > 0 ? 
-      (
+      (  
         <div className="content-pane flex flex-col">
           <div id='pdf-content'>
                 <table className="table-general">

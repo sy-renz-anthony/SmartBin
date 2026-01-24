@@ -18,6 +18,7 @@ const Home = () => {
   const [numberDevicesNotOk, setNumberDevicesNotOk] = useState(0);
   
   const reloadData = async()=>{
+      toast.dismiss();
       try {
         const response1 = await axiosInstance.get("/usages/chart-values", {}, {withCredentials: true});
         if(!response1.data.success){
