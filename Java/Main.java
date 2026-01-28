@@ -6,6 +6,11 @@ public class Main{
         DeviceReader deviceReader = new DeviceReader();
         ApiLink apiLink = new ApiLink();
 		CameraLink camera = CameraLink.getSingleInstance();
+		NetworkLink networkLink = NetworkLink.getSingleInstance();
+		
+		try{
+			Thread.sleep(1000);
+		}catch(InterruptedException e){}
 
         apiLink.start();
         deviceReader.setDeviceListener(new DeviceListener(){
@@ -55,6 +60,22 @@ public class Main{
                 System.out.println("an error occured at bin: "+garbageType);
             }
             public void garbageBinFullError(char garbageType){
+				System.out.println("Check!");
+				String[] contactNumbers = apiLink.retrieveContactNumberForSmsNotification("/users/for-sms");
+                if(contactNumbers != null){
+					String bin="";
+					for(int i=0;i<contactNumbers.length;i++){
+						System.out.println("["+i+"]: "+contactNumbers[i]);	
+						if(garbageType == Constants.TYPE_BIODEGRADABLE){
+							bin="Biodegradable";
+						}else if(garbageType == Constants.TYPE_NONBIODEGRADABLE){
+							bin="Non-Biodegradable";
+						}else if(garbageType == Constants.TYPE_HAZARDOUS){
+							bin="Hazardous";
+						}
+						System.out.println("result: "+NetworkLink.getSingleInstance().sendTextMessage("+63"+contactNumbers[i].substring(1), "SmartBin Notification\nThe "+bin+" Bin of SmartBin device with ID#: "+Constants.DEVICE_ID+" is full."));
+					}
+				}
                 
                 String jsonPost = Constants.JSON_FULL_ERROR;
                 if(garbageType == Constants.TYPE_BIODEGRADABLE){

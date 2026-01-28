@@ -60,18 +60,18 @@ export default function OTPRequestScreen() {
     return(
         <SafeAreaView className="flex-1 bg-white items-center justify-start">
             {isLoading && loadingOverlay()}
-            <View className="flex flex-col gap-5 my-auto h-fit fititems-center justify-center rounded-lg shadow px-10 py-10 mx-10">
-                <Text className="text-2xl text-center color-black font-bold mb-5">Request Password Reset OTP</Text>
-                <Text className="text-gray-500 font-normal">Please Input your email address to get your password reset codes.</Text>
+            <View className="flex flex-col gap-5 border  rounded-3xl border-gray-400 my-auto h-fit fititems-center justify-center  px-10 py-10 mx-10">
+                <Text className="text-2xl text-center color-black font-bold mb-5">Recover my Password</Text>
+                <Text className="text-gray-500 font-normal">Please input your email and we will send a password reset codes to it.</Text>
                 <View className="flex-row mb-4">
                     <View className="border border-gray-300 rounded-tl-lg rounded-bl-lg justify-center items-center px-2">
-                    <MaterialIcons name={"email"} size={28} color="green" />
+                    <MaterialIcons name={"email"} size={28} color="purple" />
                     </View>
                     <View className="flex-1 border border-gray-300 border-l-0 rounded-lg px-4 py-1">
                     <TextInput
                         value={email}
                         onChangeText={setEmail}
-                        placeholder="email"
+                        placeholder="Enter your email"
                         keyboardType="email-address"
                         autoCapitalize="none"
                         className="text-gray-800"
@@ -88,11 +88,10 @@ export default function OTPRequestScreen() {
                 </TouchableOpacity>
 
                 <View className="flex flex-col relative self-end items-end mt-10">
-                    <Text className="text-gray-600">Already have OTP codes? </Text>
                     <Link href="/OTPPasswordResetScreen" asChild>
                         <TouchableOpacity>
-                            <Text className="text-blue-600 font-semibold">
-                                Input My Codes
+                            <Text className="text-blue-500">
+                                I already have my codes
                             </Text>
                         </TouchableOpacity>
                     </Link>

@@ -10,13 +10,13 @@ import {
 } from "react-native";
 import loadingOverlay from "./components/LoadingOverlay.jsx";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons, FontAwesome6 } from "@expo/vector-icons";
 import { Link, router } from "expo-router";
 import axiosInstance from "../axiosConfig.js";
 import Toast from "react-native-toast-message";
 
 export default function OTPRequestScreen() {
-    const [email, setEmail] = useState("");
+    const [employeeID, setEmployeeID] = useState("");
     const [otpCode, setOTPcode] = useState("");
     const [isValidated, setIsValidated] = useState(false);
     const [newPassword, setNewPassword] = useState("");
@@ -26,11 +26,11 @@ export default function OTPRequestScreen() {
 
     const handleValidate = async()=>{
         setIsLoading(true);
-        if(!email||email.length<1){
+        if(!employeeID||employeeID.length<1){
             Toast.show({
                 type: 'error',
-                text1: '❌ Invalid Email Address!',
-                text2: 'Please Input your Email Address'
+                text1: '❌ Invalid Employee ID!',
+                text2: 'Please Input your Employee ID'
             });
             setIsLoading(false);
             return;
@@ -47,7 +47,7 @@ export default function OTPRequestScreen() {
         }
         try{
         const data={
-            "emailAddress": email,
+            "employeeID": employeeID,
             "otp": otpCode
         }
         const response = await axiosInstance.post("/user/verify-otp-codes", data, {withCredentials: true});
@@ -117,7 +117,7 @@ export default function OTPRequestScreen() {
 
         try{
         const data={
-            "emailAddress": email,
+            "employeeID": employeeID,
             "otp": otpCode,
             "password": newPassword,
             "confirmPassword": confirmNewPassword
@@ -153,19 +153,18 @@ export default function OTPRequestScreen() {
     return(
         <SafeAreaView className="flex-1 bg-white items-center justify-start">
             {isLoading && loadingOverlay()}
-            <View className="flex flex-col gap-5 my-auto h-fit fititems-center justify-center rounded-lg shadow px-10 py-10 mx-10">
-                <Text className="text-2xl text-center color-black font-bold mb-5">Reset Password</Text>
-                <Text className="text-gray-500 font-normal">Please Input your email address and your OTP codes to reset your password.</Text>
+            <View className="flex flex-col gap-5 my-auto h-fit fititems-center justify-center border border-gray-400 rounded-3xl px-10 py-10 mx-10">
+                <Text className="text-2xl text-center color-black font-bold mb-5">Verify Password Reset OTP Codes</Text>
                 <View className="flex-row">
                     <View className="border border-gray-300 rounded-tl-lg rounded-bl-lg justify-center items-center px-2">
-                    <MaterialIcons name={"email"} size={28} color="green" />
+                    <FontAwesome6 name={"id-card-clip"} size={28} color="purple" />
                     </View>
                     <View className="flex-1 border border-gray-300 border-l-0 rounded-lg px-4 py-1">
                     <TextInput
-                        value={email}
-                        onChangeText={setEmail}
-                        placeholder="email"
-                        keyboardType="email-address"
+                        value={employeeID}
+                        onChangeText={setEmployeeID}
+                        placeholder="Employee ID#"
+                        keyboardType="default"
                         autoCapitalize="none"
                         className="text-gray-800"
                         editable={!isValidated}
@@ -174,13 +173,13 @@ export default function OTPRequestScreen() {
                 </View>
                 <View className="flex-row mb-4">
                     <View className="border border-gray-300 rounded-tl-lg rounded-bl-lg justify-center items-center px-2">
-                    <MaterialIcons name={"password"} size={28} color="green" />
+                    <MaterialIcons name={"password"} size={28} color="purple" />
                     </View>
                     <View className="flex-1 border border-gray-300 border-l-0 rounded-lg px-4 py-1">
                     <TextInput
                         value={otpCode}
                         onChangeText={setOTPcode}
-                        placeholder="OTP codes"
+                        placeholder="OTP Code"
                         keyboardType="default"
                         autoCapitalize="none"
                         className="text-gray-800"
@@ -195,14 +194,14 @@ export default function OTPRequestScreen() {
                         className="bg-blue-600 w-fit px-5 py-4 rounded-lg"
                     >
                         <Text className="text-white text-center font-semibold text-lg">
-                            Validate
+                            Submit
                         </Text>
                     </TouchableOpacity>    
                 ): (
                     <>
                     <View className="flex-row mb-4">
                         <View className="border border-gray-300 rounded-tl-lg rounded-bl-lg justify-center items-center px-2">
-                        <MaterialIcons name={"lock"} size={28} color="green" />
+                        <MaterialIcons name={"lock"} size={28} color="purple" />
                         </View>
                         <View className="flex-1 border border-gray-300 border-l-0 rounded-lg px-4 py-1">
                         <TextInput
@@ -219,7 +218,7 @@ export default function OTPRequestScreen() {
                     </View>
                     <View className="flex-row mb-4">
                         <View className="border border-gray-300 rounded-tl-lg rounded-bl-lg justify-center items-center px-2">
-                        <MaterialIcons name={"lock-outline"} size={28} color="green" />
+                        <MaterialIcons name={"lock-outline"} size={28} color="purple" />
                         </View>
                         <View className="flex-1 border border-gray-300 border-l-0 rounded-lg px-4 py-1">
                         <TextInput
@@ -248,7 +247,7 @@ export default function OTPRequestScreen() {
                 <View className="flex flex-col relative self-end items-end mt-10">
                     <Link href="/" asChild>
                         <TouchableOpacity>
-                            <Text className="text-blue-600 font-semibold">
+                            <Text className="text-blue-500">
                                 Login
                             </Text>
                         </TouchableOpacity>
