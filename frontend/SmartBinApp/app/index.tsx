@@ -56,13 +56,14 @@ export default function LoginScreen() {
             "employeeID": employeeID,
             "password": password
         }
-        const response = await axiosInstance.post("/user/login", data, {withCredentials: true});
+        const response = await axiosInstance.post("/users/login", data, {withCredentials: true});
             if(!response.data.success){
                 Toast.show({
                 type: 'error',
                 text1: '❌ Error while trying to login!',
                 text2: response.data.message
                 });
+            
             }else{
                 Toast.show({
                 type: 'success',
@@ -89,7 +90,7 @@ export default function LoginScreen() {
       <ImageBackground
         source={assets.loginPic}
         resizeMode="cover"
-        className="flex-1"
+        className="absolute top-0 left-0 w-screen h-screen-safe"
       >
       {isLoading && loadingOverlay()}
       <KeyboardAvoidingView

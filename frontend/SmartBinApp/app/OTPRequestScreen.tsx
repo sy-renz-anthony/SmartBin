@@ -31,7 +31,7 @@ export default function OTPRequestScreen() {
         const data={
             "emailAddress": email
         }
-        const response = await axiosInstance.post("/user/request-password-reset-otp", data, {withCredentials: true});
+        const response = await axiosInstance.post("/users/password-reset-otp", data, {withCredentials: true});
             if(!response.data.success){
                 Toast.show({
                 type: 'error',

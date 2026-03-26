@@ -6,48 +6,55 @@ import {
   ScrollView,
   TextInput
 } from "react-native";
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons, FontAwesome6 } from '@expo/vector-icons';
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Link, router, Redirect } from "expo-router";
 import loadingOverlay from "./components/LoadingOverlay";
 import axiosInstance from "@/axiosConfig";
 import Toast from "react-native-toast-message";
+import Checkbox from "expo-checkbox";
 
 const ProfileTab =()=>{
     const [isLoading, setIsLoading] = useState(false);
+    const [employeeID, setEmployeeID] = useState("");
     const [email, setEmail] = useState("");
     const [firstName, setFirstName] = useState("");
     const [middleName, setMiddleName] = useState("");
     const [lastName, setLastName] = useState("");
     const [contact, setContact] = useState("");
     const [address, setAddress] = useState("");
+    const [sendSmsNotification, setSendSmsNotification] = useState(false);
 
     useEffect(()=>{
         setIsLoading(true);
         const reloadData = async()=>{
             try{
-                const response = await axiosInstance.get("/user/my-info", {withCredentials: true});
+                const response = await axiosInstance.get("/users/my-info", {withCredentials: true});
                 if(!response.data.success){
                     Toast.show({
                         type: 'error',
                         text1: '❌ Error while retrieving your User Account!',
                         text2: response.data.message
                     });
+                    setEmployeeID("");
                     setFirstName("");
                     setMiddleName("");
                     setLastName("");
                     setContact("");
                     setAddress("");
                     setEmail("");
+                    setSendSmsNotification(false);
                 }else{
                     const data = response.data.data[0];
                     data._id="";
+                    setEmployeeID(data.employeeID);
                     setFirstName(data.firstName);
                     setMiddleName(data.middleName);
                     setLastName(data.lastName);
                     setContact(data.contactNumber);
                     setAddress(data.address);
                     setEmail(data.emailAddress);
+                    setSendSmsNotification(data.sendSmsNotification);
                 }
             }catch(error){
                 console.log("Error while retrieving your User Account! - "+error.message);
@@ -56,13 +63,15 @@ const ProfileTab =()=>{
                     text1: '❌ Error while retrieving your User Account!',
                     text2: error.message
                 });
+                setEmployeeID("");
                 setFirstName("");
                 setMiddleName("");
                 setLastName("");
                 setContact("");
                 setAddress("");
                 setEmail("");
-            }    
+                setSendSmsNotification(false);
+            }
         }
         
         reloadData();
@@ -129,14 +138,16 @@ const ProfileTab =()=>{
 
         try{
         const data={
+            "employeeID": employeeID,
             "emailAddress": email,
             "lastName": lastName,
             "middleName": middleName,
             "firstName": firstName,
             "contactNumber": contact,
-            "address": address
+            "address": address,
+            "sendSmsNotification": sendSmsNotification
         }
-        const response = await axiosInstance.put("/user/update", data, {withCredentials: true});
+        const response = await axiosInstance.put("/users/update", data, {withCredentials: true});
             if(!response.data.success){
                 Toast.show({
                 type: 'error',
@@ -173,36 +184,32 @@ const ProfileTab =()=>{
             >
                 
                 <View className="p-4 bg-white shadow-sm border-b border-gray-100 pt-10">
-                    <Text className="text-3xl font-extrabold text-green-700">Profile</Text>
-                    <Text className="text-base text-gray-500">view and/or update your personal Profile</Text>
+                    <Text className="text-3xl font-extrabold text-teal-900">My Account</Text>
                 </View>
 
                 <View className="px-7 py-10 mx-5 my-5 bg-white shadow-sm border-b border-gray-100 rounded-lg">
-                    
-                    <View className="my-8 gap-3">
-                        <Text className="border border-gray-300 px-5 py-3">Your email address will be used as your User name for logging in</Text>
-                        <View className="flex-row mb-4">
-                            <View className="border border-gray-300 rounded-tl-lg rounded-bl-lg justify-center items-center px-2">
-                                <MaterialIcons name={"email"} size={28} color="green" />
-                            </View>
-                            <View className="flex-1 border border-gray-300 border-l-0 rounded-lg px-4 py-1">
-                                <TextInput
-                                    value={email}
-                                    onChangeText={setEmail}
-                                    placeholder="Email Address"
-                                    keyboardType="email-address"
-                                    autoCapitalize="none"
-                                    className="text-gray-800"
-                                />
-                            </View>
-                        </View>
-                    </View>
-                    <Text className="text-xl font-bold text-center text-gray-800 mb-5">
-                        Your Personal Info
+                    <Text className="text-xl font-bold text-gray-800 border-b border-b-gray-800 mb-5">
+                        Update My Personal Info
                     </Text>
                     <View className="flex-row mb-4">
                         <View className="border border-gray-300 rounded-tl-lg rounded-bl-lg justify-center items-center px-2">
-                            <MaterialIcons name={"person"} size={28} color="green" />
+                            <FontAwesome6 name={"id-card-clip"} size={28} color="purple" />
+                        </View>
+                        <View className="flex-1 border border-gray-300 border-l-0 rounded-lg px-4 py-1">
+                            <TextInput
+                                value={employeeID}
+                                onChangeText={setEmployeeID}
+                                placeholder="Employee ID#"
+                                keyboardType="default"
+                                autoCapitalize="none"
+                                className="text-gray-400"
+                                editable={false}
+                            />
+                        </View>
+                    </View>
+                    <View className="flex-row mb-4">
+                        <View className="border border-gray-300 rounded-tl-lg rounded-bl-lg justify-center items-center px-2">
+                            <MaterialIcons name={"person"} size={28} color="purple" />
                         </View>
                         <View className="flex-1 border border-gray-300 border-l-0 rounded-lg px-4 py-1">
                             <TextInput
@@ -217,7 +224,7 @@ const ProfileTab =()=>{
                     </View>
                     <View className="flex-row mb-4">
                         <View className="border border-gray-300 rounded-tl-lg rounded-bl-lg justify-center items-center px-2">
-                            <MaterialIcons name={"person-outline"} size={28} color="green" />
+                            <MaterialIcons name={"person-outline"} size={28} color="purple" />
                         </View>
                         <View className="flex-1 border border-gray-300 border-l-0 rounded-lg px-4 py-1">
                             <TextInput
@@ -232,7 +239,7 @@ const ProfileTab =()=>{
                     </View>
                     <View className="flex-row mb-4">
                         <View className="border border-gray-300 rounded-tl-lg rounded-bl-lg justify-center items-center px-2">
-                            <MaterialIcons name={"person-outline"} size={28} color="green" />
+                            <MaterialIcons name={"person-outline"} size={28} color="purple" />
                         </View>
                         <View className="flex-1 border border-gray-300 border-l-0 rounded-lg px-4 py-1">
                             <TextInput
@@ -247,7 +254,7 @@ const ProfileTab =()=>{
                     </View>
                     <View className="flex-row mb-4">
                         <View className="border border-gray-300 rounded-tl-lg rounded-bl-lg justify-center items-center px-2">
-                            <MaterialIcons name={"phone"} size={28} color="green" />
+                            <MaterialIcons name={"phone"} size={28} color="purple" />
                         </View>
                         <View className="flex-1 border border-gray-300 border-l-0 rounded-lg px-4 py-1">
                             <TextInput
@@ -261,30 +268,55 @@ const ProfileTab =()=>{
                             />
                         </View>
                     </View>
-
-                              <View className="my-8">
-                                <Text className="text-xl font-bold text-center text-gray-800 mb-5">
-                                  Your Address
-                                </Text>
-                                <View className="flex-row mb-4">
-                                  <View className="border border-gray-300 rounded-tl-lg rounded-bl-lg justify-center items-center px-2">
-                                    <MaterialIcons name="home" size={28} color="green" />
-                                  </View>
-                                  <View className="flex-1 border border-gray-300 border-l-0 rounded-lg px-4 py-1">
-                                    <TextInput
-                                      multiline
-                                      numberOfLines={4}
-                                      value={address}
-                                      onChangeText={setAddress}
-                                      placeholder="Street / Block / House No. , Barangay, Municipality, Province"
-                                      autoCapitalize="none"
-                                      className="text-gray-800"
-                                      textAlignVertical="top"
-                                    />
-                                  </View>
-                                </View>
-                              </View>
+                    <View className="flex-row mb-4">
+                        <View className="border border-gray-300 rounded-tl-lg rounded-bl-lg justify-center items-center px-2">
+                            <MaterialIcons name={"email"} size={28} color="purple" />
+                        </View>
+                        <View className="flex-1 border border-gray-300 border-l-0 rounded-lg px-4 py-1">
+                            <TextInput
+                                value={email}
+                                onChangeText={setEmail}
+                                placeholder="Email Address"
+                                keyboardType="email-address"
+                                autoCapitalize="none"
+                                className="text-gray-800"
+                            />
+                        </View>
+                    </View>
                     
+                              
+                                
+                    <View className="flex-row mb-4">
+                        <View className="border border-gray-300 rounded-tl-lg rounded-bl-lg justify-center items-center px-2">
+                            <MaterialIcons name="home" size={28} color="purple" />
+                        </View>
+                        <View className="flex-1 border border-gray-300 border-l-0 rounded-lg px-4 py-1">
+                            <TextInput
+                                multiline
+                                numberOfLines={4}
+                                value={address}
+                                onChangeText={setAddress}
+                                placeholder="Street / Block / House No. , Barangay, Municipality, Province"
+                                autoCapitalize="none"
+                                className="text-gray-800"
+                                textAlignVertical="top"
+                            />
+                        </View>
+                    </View>
+                            
+                    <View className="flex-row gap-2 mb-10">
+                        <Text className="flex-1 justify-center">
+                            Receive SMS Notification for Full SmartBins:
+                        </Text>
+                        <View className="flex-1 items-left justify-center ml-5">
+                            <Checkbox
+                                value={sendSmsNotification}
+                                onValueChange={setSendSmsNotification}
+                                className="h-10 w-10 rounded border border-gray-400"
+                                color={sendSmsNotification ? "#22c55e" : undefined}
+                            />
+                        </View>
+                    </View>
 
                     <TouchableOpacity
                                 onPress={handleSubmit}

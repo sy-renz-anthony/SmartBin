@@ -7,7 +7,7 @@ import {
   TextInput,
   Modal
 } from "react-native";
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Link, router, Redirect } from "expo-router";
 import loadingOverlay from "../components/LoadingOverlay";
@@ -18,6 +18,7 @@ import { useAuth } from "../../context/AuthContext";
 const ProfileTab =()=>{
     const [isLoading, setIsLoading] = useState(false);
     const [personalData, setPersonalData] = useState({
+        employeeID: "",
         firstName: "",
         lastName: "",
         middleName: "",
@@ -35,7 +36,7 @@ const ProfileTab =()=>{
         setIsLoading(true);
         const reloadData = async()=>{
             try{
-                const response = await axiosInstance.get("/user/my-info", {withCredentials: true});
+                const response = await axiosInstance.get("/users/my-info", {withCredentials: true});
                 if(!response.data.success){
                     Toast.show({
                         type: 'error',
@@ -43,6 +44,7 @@ const ProfileTab =()=>{
                         text2: response.data.message
                     });
                     setPersonalData({
+                        employeeID: "",
                         firstName: "",
                         lastName: "",
                         middleName: "",
@@ -63,6 +65,7 @@ const ProfileTab =()=>{
                     text2: error.message
                 });
                 setPersonalData({
+                    employeeID: "",
                     firstName: "",
                     lastName: "",
                     middleName: "",
@@ -102,7 +105,7 @@ const ProfileTab =()=>{
         setIsLoading(true);
         try{
             const data={"password": password};
-            const response = await axiosInstance.post("/user/validate-my-password", data,  {withCredentials: true});
+            const response = await axiosInstance.post("/users/validate-my-password", data,  {withCredentials: true});
             if(!response.data.success){
                 Toast.show({
                     type: 'error',
@@ -145,11 +148,15 @@ const ProfileTab =()=>{
             >
                 
                 <View className="p-4 bg-white shadow-sm border-b border-gray-100 pt-10">
-                    <Text className="text-3xl font-extrabold text-green-700">Profile</Text>
-                    <Text className="text-base text-gray-500">view and/or update your personal Profile</Text>
+                    <Text className="text-3xl font-extrabold text-teal-900">My Account</Text>
                 </View>
 
                 <View className="px-7 py-10 mx-5 my-5 bg-white shadow-sm border-b border-gray-100 rounded-lg">
+                    <Text className="text-2xl font-extrabold border-b border-b-gray-800 mb-5">Personal Info</Text>
+                    <View className="flex flex-row w-full h-auto gap-4 my-2">
+                        <Text className="text-black font-bold text-xl">Employee ID#:</Text>
+                        <Text className="text-gray-700 text-lg">{personalData.employeeID}</Text>
+                    </View>
                     <View className="flex flex-row w-full h-auto gap-4 my-2">
                         <Text className="text-black font-bold text-xl">Email:</Text>
                         <Text className="text-gray-700 text-lg">{personalData.emailAddress}</Text>
@@ -185,6 +192,15 @@ const ProfileTab =()=>{
                             <MaterialIcons name={"lock"} size={28} color="white" />
                             <Text className="text-white text-center font-semibold text-lg">
                                 Change Password
+                            </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={()=>{ router.push("/SignupScreen"); }}
+                            className="flex flex-row mt-5 gap-2 bg-blue-600 py-4 px-8 rounded-lg mx-6"
+                        >
+                            <FontAwesome5 name={"user-plus"} size={28} color="white" />
+                            <Text className="ml-5 text-white text-center font-semibold text-lg">
+                                Add User
                             </Text>
                         </TouchableOpacity>
                     </View>
@@ -240,11 +256,11 @@ const ProfileTab =()=>{
             >
                 <View className="flex-1 justify-center items-center bg-black/40">
                 <View className="bg-white rounded-lg p-6 w-80">
-                    <Text className="text-lg font-bold text-center mb-4">Verify Password</Text>
-                    <Text className="text-center mb-6">Please Input your Password before continuing</Text>
+                    <Text className="text-lg font-bold text-center mb-4">Confirm Password</Text>
+                    <Text className=" mb-6">Please enter your password to continue</Text>
                     <View className="flex-row mb-10">
                         <View className="border border-gray-300 rounded-tl-lg rounded-bl-lg justify-center items-center px-2">
-                            <MaterialIcons name={"lock"} size={28} color="green" />
+                            <MaterialIcons name={"lock"} size={28} color="purple" />
                         </View>
                         <View className="flex-1 border border-gray-300 border-l-0 rounded-lg px-4 py-1">
                             <TextInput

@@ -62,7 +62,7 @@ const ProfileTab =()=>{
             "password": newPassword,
             "confirmPassword": confirmNewPassword
         }
-        const response = await axiosInstance.post("/user/change-password", data, {withCredentials: true});
+        const response = await axiosInstance.post("/users/change-password", data, {withCredentials: true});
             if(!response.data.success){
                 Toast.show({
                 type: 'error',
@@ -99,14 +99,16 @@ const ProfileTab =()=>{
             >
                 
                 <View className="p-4 bg-white shadow-sm border-b border-gray-100 pt-10">
-                    <Text className="text-3xl font-extrabold text-green-700">Profile</Text>
-                    <Text className="text-base text-gray-500">view and/or update your personal Profile</Text>
+                    <Text className="text-3xl font-extrabold text-teal-800">My Account</Text>
                 </View>
 
                 <View className="px-7 py-10 mx-5 my-5 bg-white shadow-sm border-b border-gray-100 rounded-lg">
+                    <Text className="text-xl font-bold text-gray-800 border-b border-b-gray-800 mb-5">
+                        Change Password
+                    </Text>
                     <View className="flex-row mb-4">
                         <View className="border border-gray-300 rounded-tl-lg rounded-bl-lg justify-center items-center px-2">
-                            <MaterialIcons name={"lock"} size={28} color="green" />
+                            <MaterialIcons name={"lock"} size={28} color="purple" />
                         </View>
                         <View className="flex-1 border border-gray-300 border-l-0 rounded-lg px-4 py-1">
                             <TextInput
@@ -122,7 +124,7 @@ const ProfileTab =()=>{
                     </View>
                     <View className="flex-row mb-4">
                         <View className="border border-gray-300 rounded-tl-lg rounded-bl-lg justify-center items-center px-2">
-                            <MaterialIcons name={"lock-outline"} size={28} color="green" />
+                            <MaterialIcons name={"lock-outline"} size={28} color="purple" />
                         </View>
                         <View className="flex-1 border border-gray-300 border-l-0 rounded-lg px-4 py-1">
                             <TextInput

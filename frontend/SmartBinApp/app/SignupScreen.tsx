@@ -10,10 +10,11 @@ import {
 } from "react-native";
 import loadingOverlay from "./components/LoadingOverlay.jsx";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons, FontAwesome6 } from "@expo/vector-icons";
 import { Link, router } from "expo-router";
 import axiosInstance from "../axiosConfig.js";
 import Toast from "react-native-toast-message";
+import Checkbox from "expo-checkbox";
 
 
 const InputWithIcon = ({ icon, placeholder, value, setValue, secure = false, keyboardType = "default" }) => (
@@ -36,13 +37,14 @@ const InputWithIcon = ({ icon, placeholder, value, setValue, secure = false, key
 );
 
 export default function SignupScreen() {
+  const [employeeID, setEmployeeID] = useState("");
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
   const [middleName, setMiddleName] = useState("");
   const [lastName, setLastName] = useState("");
   const [contact, setContact] = useState("");
   const [address, setAddress] = useState("");
-
+  const [sendSmsNotification, setSendSmsNotification] = useState(false);
   
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -57,42 +59,6 @@ export default function SignupScreen() {
         type: 'error',
         text1: '❌ Invalid Address!',
         text2: 'Please Input your Address!'
-      });
-      setIsLoading(false);
-      return;
-    }
-
-    if(!confirmPassword || confirmPassword.length<1){
-      Toast.show({
-        type: 'error',
-        text1: '❌ Invalid Password Confirmation!',
-        text2: 'Please Confirm your Password'
-      });
-      setIsLoading(false);
-      return;
-    }
-    if(password !== confirmPassword ){
-      Toast.show({
-        type: 'error',
-        text1: '❌ Invalid Password!',
-        text2: 'Password mismatched! please confirm your password again'
-      });
-      setIsLoading(false);
-      return;
-    }
-    if(!password || password.length<1){
-      Toast.show({
-        type: 'error',
-        text1: '❌ Invalid Password!',
-        text2: 'Please input your Password'
-      });
-      setIsLoading(false);
-      return;
-    }else if(password.length<8){
-      Toast.show({
-        type: 'error',
-        text1: '❌ Invalid Password!',
-        text2: 'Password should be atleast 8 characters long'
       });
       setIsLoading(false);
       return;
@@ -145,16 +111,16 @@ export default function SignupScreen() {
 
     try{
       const data={
+        "employeeID": employeeID,
         "emailAddress": email,
         "firstName": firstName,
         "middleName": middleName,
         "lastName": lastName,
         "contactNumber": contact,
         "address": address,
-        "password": password,
-        "confirmPassword": confirmPassword
+        "sendSmsNotification": sendSmsNotification
       }
-      const response = await axiosInstance.post("/user/register", data, {withCredentials: true});
+      const response = await axiosInstance.post("/users/register", data, {withCredentials: true});
         if(!response.data.success){
             Toast.show({
               type: 'error',
@@ -190,82 +156,161 @@ export default function SignupScreen() {
       >
         <ScrollView
           showsVerticalScrollIndicator={false}
-          className="px-6"
         >
           
-          <View className="my-8">
-            <Text className="text-3xl font-bold text-center text-gray-800">
-              Create Account
-            </Text>
-            <Text className="text-center text-gray-500 mt-2">
-              Arduino based Smart Irrigation System
-            </Text>
-          </View>
-          <View className="my-8 gap-3">
-            <Text className="border border-gray-300 px-5 py-3">Your email address will be used as your User name for logging in</Text>
-            <InputWithIcon icon="email" placeholder="Email Address" value={email} setValue={setEmail} keyboardType="email-address" />
-          </View>
-            <Text className="text-xl font-bold text-center text-gray-800 mb-5">
-              Your Personal Info
-            </Text>
-          <InputWithIcon icon="person" placeholder="First Name" value={firstName} setValue={setFirstName} />
-          <InputWithIcon icon="person-outline" placeholder="Middle Name" value={middleName} setValue={setMiddleName} />
-          <InputWithIcon icon="person" placeholder="Last Name" value={lastName} setValue={setLastName} />
-          <InputWithIcon icon="phone" placeholder="Contact Number" value={contact} setValue={setContact} keyboardType="phone-pad" />
-          
-          <View className="my-8">
-            <Text className="text-xl font-bold text-center text-gray-800 mb-5">
-              Your Address
-            </Text>
-            <View className="flex-row mb-4">
-              <View className="border border-gray-300 rounded-tl-lg rounded-bl-lg justify-center items-center px-2">
-                <MaterialIcons name="home" size={28} color="green" />
-              </View>
-              <View className="flex-1 border border-gray-300 border-l-0 rounded-lg px-4 py-1">
-                <TextInput
-                  multiline
-                  numberOfLines={4}
-                  value={address}
-                  onChangeText={setAddress}
-                  placeholder="Street / Block / House No. , Barangay, Municipality, Province"
-                  autoCapitalize="none"
-                  className="text-gray-800"
-                  textAlignVertical="top"
-                />
-              </View>
-            </View>
-          </View>
-
-          <View className="border border-gray-300 px-5 py-3 mb-5">
-            <Text className="text-xl font-bold text-center text-gray-800 mb-5">
-              Your Password
-            </Text>
-            <Text className="px-5 py-3 text-center mb-5">Password should be atleast 8 characters in length</Text>
-            <InputWithIcon icon="lock" placeholder="Password" value={password} setValue={setPassword} secure />
-            <InputWithIcon icon="lock-outline" placeholder="Confirm Password" value={confirmPassword} setValue={setConfirmPassword} secure />
+          <View className="p-4 bg-white shadow-sm border-b border-gray-100 pt-10">
+            <Text className="text-3xl font-extrabold text-teal-900">Add New User</Text>
           </View>
           
-          <TouchableOpacity
-            onPress={handleSignup}
-            className="bg-blue-600 py-4 rounded-lg mt-4 mb-6"
-          >
-            <Text className="text-white text-center font-semibold text-lg">
-              Sign Up
-            </Text>
-          </TouchableOpacity>
+                <View className="px-7 py-10 mx-5 my-5 bg-white shadow-sm border-b border-gray-100 rounded-lg">
+                    <Text className="text-xl font-bold text-gray-800 border-b border-b-gray-800 mb-5">
+                        Add New User
+                    </Text>
+                    <View className="flex-row mb-4">
+                        <View className="border border-gray-300 rounded-tl-lg rounded-bl-lg justify-center items-center px-2">
+                            <FontAwesome6 name={"id-card-clip"} size={28} color="purple" />
+                        </View>
+                        <View className="flex-1 border border-gray-300 border-l-0 rounded-lg px-4 py-1">
+                            <TextInput
+                                value={employeeID}
+                                onChangeText={setEmployeeID}
+                                placeholder="Employee ID#"
+                                keyboardType="default"
+                                autoCapitalize="none"
+                                className="text-gray-800"
+                            />
+                        </View>
+                    </View>
+                    <View className="flex-row mb-4">
+                        <View className="border border-gray-300 rounded-tl-lg rounded-bl-lg justify-center items-center px-2">
+                            <MaterialIcons name={"person"} size={28} color="purple" />
+                        </View>
+                        <View className="flex-1 border border-gray-300 border-l-0 rounded-lg px-4 py-1">
+                            <TextInput
+                                value={firstName}
+                                onChangeText={setFirstName}
+                                placeholder="First Name"
+                                keyboardType="default"
+                                autoCapitalize="none"
+                                className="text-gray-800"
+                            />
+                        </View>
+                    </View>
+                    <View className="flex-row mb-4">
+                        <View className="border border-gray-300 rounded-tl-lg rounded-bl-lg justify-center items-center px-2">
+                            <MaterialIcons name={"person-outline"} size={28} color="purple" />
+                        </View>
+                        <View className="flex-1 border border-gray-300 border-l-0 rounded-lg px-4 py-1">
+                            <TextInput
+                                value={middleName}
+                                onChangeText={setMiddleName}
+                                placeholder="Middle Name"
+                                keyboardType="default"
+                                autoCapitalize="none"
+                                className="text-gray-800"
+                            />
+                        </View>
+                    </View>
+                    <View className="flex-row mb-4">
+                        <View className="border border-gray-300 rounded-tl-lg rounded-bl-lg justify-center items-center px-2">
+                            <MaterialIcons name={"person-outline"} size={28} color="purple" />
+                        </View>
+                        <View className="flex-1 border border-gray-300 border-l-0 rounded-lg px-4 py-1">
+                            <TextInput
+                                value={lastName}
+                                onChangeText={setLastName}
+                                placeholder="Last Name"
+                                keyboardType="default"
+                                autoCapitalize="none"
+                                className="text-gray-800"
+                            />
+                        </View>
+                    </View>
+                    <View className="flex-row mb-4">
+                        <View className="border border-gray-300 rounded-tl-lg rounded-bl-lg justify-center items-center px-2">
+                            <MaterialIcons name={"phone"} size={28} color="purple" />
+                        </View>
+                        <View className="flex-1 border border-gray-300 border-l-0 rounded-lg px-4 py-1">
+                            <TextInput
+                                value={contact}
+                                onChangeText={setContact}
+                                placeholder="Contact#"
+                                secureTextEntry={true}
+                                keyboardType="phone-pad"
+                                autoCapitalize="none"
+                                className="text-gray-800"
+                            />
+                        </View>
+                    </View>
+                    <View className="flex-row mb-4">
+                        <View className="border border-gray-300 rounded-tl-lg rounded-bl-lg justify-center items-center px-2">
+                            <MaterialIcons name={"email"} size={28} color="purple" />
+                        </View>
+                        <View className="flex-1 border border-gray-300 border-l-0 rounded-lg px-4 py-1">
+                            <TextInput
+                                value={email}
+                                onChangeText={setEmail}
+                                placeholder="Email Address"
+                                keyboardType="email-address"
+                                autoCapitalize="none"
+                                className="text-gray-800"
+                            />
+                        </View>
+                    </View>
+                    
+                              
+                                
+                    <View className="flex-row mb-4">
+                        <View className="border border-gray-300 rounded-tl-lg rounded-bl-lg justify-center items-center px-2">
+                            <MaterialIcons name="home" size={28} color="purple" />
+                        </View>
+                        <View className="flex-1 border border-gray-300 border-l-0 rounded-lg px-4 py-1">
+                            <TextInput
+                                multiline
+                                numberOfLines={4}
+                                value={address}
+                                onChangeText={setAddress}
+                                placeholder="Street / Block / House No. , Barangay, Municipality, Province"
+                                autoCapitalize="none"
+                                className="text-gray-800"
+                                textAlignVertical="top"
+                            />
+                        </View>
+                    </View>
+                            
+                    <View className="flex-row gap-2 mb-10">
+                        <Text className="flex-1 justify-center">
+                            Receive SMS Notification for Full SmartBins:
+                        </Text>
+                        <View className="flex-1 items-left justify-center ml-5">
+                            <Checkbox
+                                value={sendSmsNotification}
+                                onValueChange={setSendSmsNotification}
+                                className="h-10 w-10 rounded border border-gray-400"
+                                color={sendSmsNotification ? "#22c55e" : undefined}
+                            />
+                        </View>
+                    </View>
 
-          <View className="flex-row justify-center mb-10">
-            <Text className="text-gray-600">Already have an account? </Text>
-              <Link href="/" asChild>
-                <TouchableOpacity>
-                  <Text className="text-blue-600 font-semibold">
-                    Login
-                  </Text>
-                </TouchableOpacity>
-              </Link>
+                    <TouchableOpacity
+                                onPress={handleSignup}
+                                className="bg-blue-600 py-4 rounded-lg mt-4 mb-6"
+                              >
+                                <Text className="text-white text-center font-semibold text-lg">
+                                  Submit
+                                </Text>
+                    </TouchableOpacity>
 
-          </View>
-          
+                    <View className="flex flex-col relative self-start items-center mt-10">
+                        <Link href="/(tabs)/Profile" asChild>
+                            <TouchableOpacity>
+                                <Text className="text-blue-600 font-semibold">
+                                    Back
+                                </Text>
+                            </TouchableOpacity>
+                        </Link>
+                    </View>
+                </View>
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>

@@ -50,7 +50,7 @@ export default function OTPRequestScreen() {
             "employeeID": employeeID,
             "otp": otpCode
         }
-        const response = await axiosInstance.post("/user/verify-otp-codes", data, {withCredentials: true});
+        const response = await axiosInstance.post("/users/is-valid-otp", data, {withCredentials: true});
             if(!response.data.success){
                 Toast.show({
                 type: 'error',
@@ -122,7 +122,7 @@ export default function OTPRequestScreen() {
             "password": newPassword,
             "confirmPassword": confirmNewPassword
         }
-        const response = await axiosInstance.post("/user/reset-password-with-otp", data, {withCredentials: true});
+        const response = await axiosInstance.post("/users/reset-password", data, {withCredentials: true});
             if(!response.data.success){
                 Toast.show({
                 type: 'error',
