@@ -10,7 +10,7 @@ import {
   TextInput,
   FlatList
 } from "react-native";
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons, Entypo } from '@expo/vector-icons';
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Link, router, Redirect } from "expo-router";
 import loadingOverlay from "../components/LoadingOverlay";
@@ -76,6 +76,14 @@ const ProfileTab =()=>{
         setDevices([]);*/
     }
 
+    const addDeviceEventHandler = async()=>{
+        console.log("Add New device!");
+        router.push({
+            pathname: "/NewDevice",
+        }); 
+        setDevices([]);
+    }
+
     return(
         <SafeAreaView className="flex-1 bg-gray-100">
             {isLoading && loadingOverlay()}
@@ -91,9 +99,18 @@ const ProfileTab =()=>{
 
                 <View className="px-7 py-10 mx-5 my-5 bg-white shadow-sm border-b border-gray-100 rounded-lg">
                     <View className="flex-row border-b border-b-gray-800 mb-5">
-                        <Text className="text-xl font-bold text-gray-800 ">
+                        <Text className="flex-1 text-xl font-bold text-gray-800 align-middle">
                             List of Devices
                         </Text>
+                        <TouchableOpacity
+                            onPress={addDeviceEventHandler}
+                            className="flex flex-row w-fit gap-2 bg-blue-600 py-2 px-3 rounded-lg my-2"
+                        >
+                            <Entypo name={"plus"} size={20} color="white" />
+                            <Text className="text-white text-center font-semibold text-sm">
+                                New Device
+                            </Text>
+                        </TouchableOpacity>
                     </View>
                     {devices.length>0 && <FlatList
                         data={devices}
