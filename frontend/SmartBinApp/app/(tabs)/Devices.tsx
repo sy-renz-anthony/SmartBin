@@ -69,11 +69,11 @@ const ProfileTab =()=>{
     }, []);
     
     const pressEventHandler = async(device)=>{
-        /*router.push({
+        router.push({
             pathname: "/device/[deviceID]",
             params: { deviceID: device.deviceID },
         }); 
-        setDevices([]);*/
+        setDevices([]);
     }
 
     const addDeviceEventHandler = async()=>{
