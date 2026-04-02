@@ -19,7 +19,7 @@ import Toast from "react-native-toast-message";
 
 import DeviceCard from "../components/DeviceCard.jsx";
 
-const ProfileTab =()=>{
+const DevicesScreen =()=>{
     const [isLoading, setIsLoading] = useState(false);
     const [devices, setDevices] = useState([]);
 
@@ -71,7 +71,13 @@ const ProfileTab =()=>{
     const pressEventHandler = async(device)=>{
         router.push({
             pathname: "/device/[deviceID]",
-            params: { deviceID: device.deviceID },
+            params: { 
+                _id: device._id,
+                deviceID: device.deviceID,
+                location: device.location,
+                latitude: device.coordinate[0],
+                longitude: device.coordinate[1]
+            },
         }); 
         setDevices([]);
     }
@@ -127,4 +133,4 @@ const ProfileTab =()=>{
     );
 }
 
-export default ProfileTab;
+export default DevicesScreen;

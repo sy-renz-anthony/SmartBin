@@ -189,6 +189,7 @@ export default function NewDeviceScreen() {
                 javaScriptEnabled={true}
                 domStorageEnabled={true}
                 startInLoadingState={true}
+                userAgent="Rain2Cane-App/1.0 (Contact: sy.renz.anthony@gmail.com)"
                 renderLoading={() => <ActivityIndicator size="large" color="#0000ff" style={{flex: 1}} />}
               />
             </View>
