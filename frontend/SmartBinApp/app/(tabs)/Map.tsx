@@ -90,37 +90,39 @@ const MapTab = () => {
       {isLoading && loadingOverlay()}
 
       <View className="p-4 bg-white shadow-sm border-b border-gray-100 pt-10">
-        <Text className="text-3xl font-extrabold text-green-700">Map View</Text>
         <View className="flex-row justify-between items-center mt-2">
-          <Text className="text-base text-gray-500">Rain2Cane Device Routing</Text>
-          <View className="flex-row items-center">
-            <Text className="mr-2 text-gray-600">Route</Text>
+          <Text className="text-3xl font-extrabold text-teal-900">Map</Text>
+          
+        </View>
+      </View>
+
+      <View className="flex-1 px-7 py-10 mx-5 my-5 bg-white shadow-sm border-b border-gray-100 rounded-lg">
+        <View className="flex-row border-b border-b-gray-800 mb-5">
+          <Text className="flex-1 text-xl font-bold text-gray-800 align-middle">
+            Route to Collect Garbage
+          </Text>   
+          <View className="flex-row items-center justify-self-end">
+            <Text className="mr-2 text-gray-600 text-sm">Show Route</Text>
             <Switch 
               value={showRoute} 
               onValueChange={setShowRoute} 
               trackColor={{ false: "#767577", true: "#15803d" }}
             />
-          </View>
+          </View>           
+        </View>
+        <View className="flex-1 overflow-hidden border border shadow-xl bg-white">
+          <WebView 
+            originWhitelist={['*']}
+            source={{ html: mapHTML }}
+            style={{ flex: 1 }}
+            javaScriptEnabled={true}
+            domStorageEnabled={true}
+            userAgent="Rain2Cane-App/1.0 (Contact: sy.renz.anthony@gmail.com)"
+            startInLoadingState={true}
+          />
         </View>
       </View>
 
-      <View className="flex-1 m-4 overflow-hidden rounded-2xl border border-gray-300 shadow-xl bg-white">
-        <WebView 
-          originWhitelist={['*']}
-          source={{ html: mapHTML }}
-          style={{ flex: 1 }}
-          javaScriptEnabled={true}
-          domStorageEnabled={true}
-          userAgent="Rain2Cane-App/1.0 (Contact: sy.renz.anthony@gmail.com)"
-          startInLoadingState={true}
-        />
-      </View>
-
-      <View className="px-6 py-4 mb-5">
-         <Text className="text-gray-400 text-center text-xs">
-           Interactive Leaflet Map via WebView
-         </Text>
-      </View>
     </SafeAreaView>
   );
 };

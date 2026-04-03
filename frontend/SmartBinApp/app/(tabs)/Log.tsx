@@ -38,13 +38,14 @@ const ProfileTab =()=>{
             >
                 
                 <View className="p-4 bg-white shadow-sm border-b border-gray-100 pt-10">
-                    <Text className="text-3xl font-extrabold text-green-700">Logs</Text>
-                    <Text className="text-base text-gray-500">view Sensor data Reading history of your Devices</Text>
+                    <Text className="text-3xl font-extrabold text-teal-800">Usages</Text>
                 </View>
 
                 <View className="px-7 py-10 mx-5 my-5 bg-white shadow-sm border-b border-gray-100 rounded-lg">
-                    <View className="flex flex-row w-full h-auto gap-4 my-2">
-                        <Text className="text-black font-bold text-xl">Device Sensor Reading Cards in here</Text>
+                    <View className="flex-row border-b border-b-gray-800 mb-5">
+                        <Text className="flex-1 text-xl font-bold text-gray-800 align-middle">
+                            Search Usage Records
+                        </Text>              
                     </View>
                     
                 </View>
