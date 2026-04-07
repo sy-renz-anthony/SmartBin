@@ -63,6 +63,24 @@ export default function _Layout() {
                 )
             }}
         />
+{/*---------------------------------- This is my hiddent navbar button for events screen ----------------------------------------------------*/}
+        <Tabs.Screen 
+            name="Events"
+            options={{
+                title: 'Events',
+                headerShown: false,
+                href: null,
+            }}
+        />
+        <Tabs.Screen 
+            name="Volume"
+            options={{
+                title: 'Volume',
+                headerShown: false,
+                href: null,
+            }}
+        />
+{/*------------------------------------------------------------------------------------------------------------------------------------------*/}
         <Tabs.Screen 
             name="Map"
             options={{

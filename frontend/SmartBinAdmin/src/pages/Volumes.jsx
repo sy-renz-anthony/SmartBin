@@ -297,9 +297,9 @@ const Volumes = () => {
                     {data.map((volumeRecord) => (
                       <tr key={volumeRecord[(Object.keys(data[0])[0]).toLowerCase()]} className="tablerow-general">
                         <td className="tableentry-general">{volumeRecord[(Object.keys(data[0])[0]).toLowerCase()]}</td>
-                        <td className="tableentry-general">{volumeRecord.sum.BIODEGRADABLE != null ? (volumeRecord.sum.BIODEGRADABLE): 0}</td>
-                        <td className="tableentry-general">{volumeRecord.sum["NON-BIODEGRADABLE"] != null ? (volumeRecord.sum["NON-BIODEGRADABLE"]) : 0}</td>
-                        <td className="tableentry-general">{volumeRecord.sum.HAZARDOUS != null ? (volumeRecord.sum.HAZARDOUS) :0}</td>
+                        <td className="tableentry-general">{volumeRecord.sum.BIODEGRADABLE != null ? (volumeRecord.sum.BIODEGRADABLE).toFixed(6): 0}</td>
+                        <td className="tableentry-general">{volumeRecord.sum["NON-BIODEGRADABLE"] != null ? (volumeRecord.sum["NON-BIODEGRADABLE"]).toFixed(6) : 0}</td>
+                        <td className="tableentry-general">{volumeRecord.sum.HAZARDOUS != null ? (volumeRecord.sum.HAZARDOUS).toFixed(6) :0}</td>
                       </tr>
                     ))} 
                   </tbody>

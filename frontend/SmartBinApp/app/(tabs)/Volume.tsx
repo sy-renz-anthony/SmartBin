@@ -15,15 +15,15 @@ import Toast from "react-native-toast-message";
 import loadingOverlay from "../components/LoadingOverlay";
 import {router} from "expo-router";
 
-const GARBAGE_TYPES = ['All', 'Biodegradable', 'Non-Biodegradable', 'Hazardous'];
+const GROUP_CATEGORIES = ['Barangay', 'Municipality', 'Province', 'Region'];
 
-const UsageScreen = () => {
+const VolumeScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
 
   // Search States
-  const [keyword, setKeyword] = useState("");
-  const [selectedType, setSelectedType] = useState("All");
+  const [locationName, setLocationName] = useState("");
+  const [selectedType, setSelectedType] = useState("Barangay");
   
   // Date States (Stored as Date objects for the picker)
   const [startDate, setStartDate] = useState(new Date());
@@ -59,16 +59,21 @@ const UsageScreen = () => {
   const handleSubmit = async () => {
     setIsLoading(true);
     try {
-      const searchParams = {
-        keyword: keyword,
-        isBiodegradable: selectedType === "Biodegradable",
-        isNonBiodegradable: selectedType === "Non-Biodegradable",
-        isHazardous: selectedType === "Hazardous",
-        startDate: formatDate(startDate),
-        endDate: formatDate(endDate)
-      };
+      const searchParams={
+                "startDate": formatDate(startDate),
+                "endDate": formatDate(endDate)
+      }
+      if(selectedType == "Barangay"){
+        searchParams["barangay"] = locationName;
+      }else if(selectedType == "Municipality"){
+        searchParams["municipality"] = locationName;
+      }else if(selectedType == "Province"){
+        searchParams["province"] = locationName;
+      }else if(selectedType == "Region"){
+        searchParams["region"] = locationName;
+      }
 
-      const response = await axiosInstance.post("/usages/search-record", searchParams, {withCredentials: true});
+      const response = await axiosInstance.post("volume-records/search-record/group-by/location", searchParams, {withCredentials: true});
       
       if (!response.data.success) {
         Toast.show({ type: 'error', text1: response.data.message });
@@ -85,8 +90,8 @@ const UsageScreen = () => {
   };
 
   const clearAll = () => {
-    setKeyword("");
-    setSelectedType("All");
+    setLocationName("");
+    setSelectedType("Barangay");
     setStartDate(new Date());
     setEndDate(new Date());
     setData([]);
@@ -102,9 +107,9 @@ const UsageScreen = () => {
           }); 
           setData([]);
       }
-  const volumeButtonHandler = async()=>{
+  const usageButtonHandler = async()=>{
           router.push({
-              pathname: "/(tabs)/Volume",
+              pathname: "/(tabs)/Log",
           }); 
           setData([]);
       }
@@ -122,9 +127,17 @@ const UsageScreen = () => {
         <View className="px-5 py-6 mx-4 my-5 bg-white shadow-md rounded-xl">
           <View className="flex-row border-b border-b-gray-800 mb-5">
             <Text className="flex-1 text-xl font-bold text-gray-800 align-middle">
-              Search Usage Records
+              Search Volume Records
             </Text>   
             <View className="flex-row items-center justify-self-end">
+              <TouchableOpacity
+                  onPress={usageButtonHandler}
+                  className="flex flex-row w-fit gap-2 py-2 px-3 rounded-lg my-2"
+              >
+                <Text className="text-blue-600 text-center font-semibold text-sm">
+                  usage
+                </Text>
+              </TouchableOpacity>
               <TouchableOpacity
                   onPress={eventButtonHandler}
                   className="flex flex-row w-fit gap-2 py-2 px-3 rounded-lg my-2"
@@ -133,42 +146,32 @@ const UsageScreen = () => {
                   event
                 </Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                  onPress={volumeButtonHandler}
-                  className="flex flex-row w-fit gap-2 py-2 px-3 rounded-lg my-2"
-              >
-                <Text className="text-blue-600 text-center font-semibold text-sm">
-                  volume
-                </Text>
-              </TouchableOpacity>
             </View>           
           </View>
 
-          <Text className="text-gray-600 mb-1 font-semibold">Device ID / Location:</Text>
+          <Text className="text-gray-600 mb-1 font-semibold">Location Name:</Text>
           <TextInput
             className="border border-gray-300 rounded-lg p-3 mb-4 bg-gray-50"
             placeholder="Search location..."
-            value={keyword}
-            onChangeText={setKeyword}
+            value={locationName}
+            onChangeText={setLocationName}
           />
 
           {/* Picker / Dropdown */}
-          <Text className="text-gray-600 mb-1 font-semibold">Garbage Type:</Text>
+          <Text className="text-gray-600 mb-1 font-semibold">Group by:</Text>
           <View className="border border-gray-300 rounded-lg mb-4 bg-gray-50">
             <Picker
               selectedValue={selectedType}
               onValueChange={(itemValue) => setSelectedType(itemValue)}
               style={{ height: Platform.OS === 'ios' ? 150 : 60, color: "black" }}
             >
-              {GARBAGE_TYPES.map((type) => (
+              {GROUP_CATEGORIES.map((type) => (
                 <Picker.Item key={type} label={type} value={type} />
               ))}
             </Picker>
           </View>
 
-          {/* Date Selection Section */}
           <View className="flex-row justify-between mb-6">
-            {/* Start Date */}
             <View className="w-[48%]">
               <Text className="text-gray-600 mb-1 font-semibold">From:</Text>
               <TouchableOpacity 
@@ -187,7 +190,6 @@ const UsageScreen = () => {
               )}
             </View>
 
-            {/* End Date */}
             <View className="w-[48%]">
               <Text className="text-gray-600 mb-1 font-semibold">To:</Text>
               <TouchableOpacity 
@@ -208,7 +210,6 @@ const UsageScreen = () => {
             </View>
           </View>
 
-          {/* Action Buttons */}
           <View className="flex-row gap-3">
             <TouchableOpacity 
               onPress={clearAll}
@@ -226,22 +227,25 @@ const UsageScreen = () => {
           </View>
         </View>
 
-        {/* Results Table Section */}
         {data.length > 0 && (
           <View className="mx-4 mb-10 p-4 bg-white rounded-xl shadow-md">
-            {/* <Text className="font-bold text-lg mb-3 text-gray-700">Results ({data.length})</Text>*/}
+            {
+            /* <Text className="font-bold text-lg mb-3 text-gray-700">Results ({data.length})</Text>*/}
             
             <View className="flex-row border-b border-gray-300 pb-2 mb-2">
-              <Text className="flex-1 font-bold text-[10px]">Date</Text>
-              <Text className="flex-1 font-bold text-[10px] text-center">Device</Text>
-              <Text className="flex-1 font-bold text-[10px] text-center">Garbage Type</Text>
+              <Text className="flex-1 font-bold text-[10px]">{selectedType}</Text>
+              <Text className="flex-1 font-bold text-[10px] text-center">Biodegradable</Text>
+              <Text className="flex-1 font-bold text-[10px] text-center">Non-Biodegradable</Text>
+              <Text className="flex-1 font-bold text-[10px] text-center">Hazardous</Text>
             </View>
 
-            {data.map((item) => (
-              <View key={item._id} className="flex-row py-3 border-b border-gray-100">
-                <Text className="flex-1 text-[10px]">{item.eventDate}</Text>
-                <Text className="flex-1 text-[10px] text-center">{item.device.deviceID}</Text>
-                <Text className="flex-1 text-[8px]">{item.garbageType}</Text>
+            {
+            data.map((item) => (
+              <View key={item[(Object.keys(data[0])[0]).toLowerCase()]} className="flex-row py-3 border-b border-gray-100">
+                <Text className="flex-1 text-[10px]">{item[(Object.keys(data[0])[0]).toLowerCase()]}</Text>
+                <Text className="flex-1 text-[10px] text-center">{item.sum.BIODEGRADABLE != null ? (item.sum.BIODEGRADABLE).toFixed(6): 0}</Text>
+                <Text className="flex-1 text-[8px] text-center">{item.sum["NON-BIODEGRADABLE"] != null ? (item.sum["NON-BIODEGRADABLE"]).toFixed(6) : 0}</Text>
+                <Text className="flex-1 text-[8px] text-center">{item.sum.HAZARDOUS != null ? (item.sum.HAZARDOUS).toFixed(6) :0}</Text>
               </View>
             ))}
 
@@ -260,4 +264,4 @@ const UsageScreen = () => {
   );
 };
 
-export default UsageScreen;
+export default VolumeScreen;
