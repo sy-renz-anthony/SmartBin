@@ -206,7 +206,12 @@ export const updateDevice = async(req, res) =>{
 
 export const deviceSelfCheck = async(req, res) =>{
     const deviceID = req.body.deviceID;
-    
+    const biodegradableStatus=req.body.biodegradableStatus === 'o';
+    const nonBiodegradableStatus=req.body.nonBiodegradableStatus === 'o';
+    const hazardousStatus=req.body.hazardousStatus === 'o';
+
+    //console.log("bio: "+biodegradableStatus+"     nonBio: "+nonBiodegradableStatus+"    haz: "+hazardousStatus);
+
     if(deviceID != null && deviceID.toString().length <=0){
         return res.status(200).json({success: false, message: "Invalid Device ID!"});    
     }
@@ -222,6 +227,10 @@ export const deviceSelfCheck = async(req, res) =>{
             const device = existingDevice[0];
             device.isOnline=true;
             device.lastOnlineCheck=Date.now();
+            device.isBiodegradableBinFull=biodegradableStatus;
+            device.isNonBiodegradableBinFull=nonBiodegradableStatus;
+            device.isHazardousBinFull=hazardousStatus;
+                        
             await Device.findByIdAndUpdate(device._id, device, {new: true, session});
             await session.commitTransaction();
 
