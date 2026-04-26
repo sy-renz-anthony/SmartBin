@@ -250,6 +250,7 @@ export const deviceSelfCheck = async(req, res) =>{
 
 export const getOnlineStatusCount = async (req, res) =>{
     try{
+        /*
         const result = await Device.aggregate([
             {
                 $group: {
@@ -265,6 +266,34 @@ export const getOnlineStatusCount = async (req, res) =>{
                 },
                 value: 1
                 }
+            }
+        ]);*/
+        const result = await Device.aggregate([
+            {
+                $group: {
+                _id: null,
+                onlineCount: {
+                    $sum: { $cond: [{ $eq: ["$isOnline", true] }, 1, 0] }
+                },
+                offlineCount: {
+                    $sum: { $cond: [{ $eq: ["$isOnline", false] }, 1, 0] }
+                }
+                }
+            },
+            {
+                $project: {
+                _id: 0,
+                results: [
+                    { status: "Online", value: "$onlineCount" },
+                    { status: "Offline", value: "$offlineCount" }
+                ]
+                }
+            },
+            {
+                $unwind: "$results"
+            },
+            {
+                $replaceRoot: { newRoot: "$results" }
             }
         ]);
 

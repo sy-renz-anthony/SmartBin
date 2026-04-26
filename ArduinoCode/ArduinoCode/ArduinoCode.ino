@@ -28,8 +28,6 @@ Servo floorServo2;
 
 #define DEFAULT_ANGLE 60
 
-SoftwareSerial sim800 = SoftwareSerial(2, 3);
-
 char STATE_IDLE = 'a',
      STATE_IDENTIFYING = 'b',
      STATE_DUMPING = 'c',
@@ -45,7 +43,7 @@ char TYPE_BIODEGRADABLE = 'b',
 
 char garbageType;
 
-boolean isBiodegradableFull,
+bool isBiodegradableFull,
         isNonBiodegradableFull,
         isHazardousFull;
 int biodegradableFullCounter,
@@ -67,13 +65,17 @@ bool sentBiodegradableReset,
 
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
-boolean isInitializing;
+bool isInitializing;
 char inputString[100];
 byte index;
 
 int currentAngle=DEFAULT_ANGLE,
     targetAngle=DEFAULT_ANGLE;
 int multiplier=1;
+
+unsigned long currentTime, previousSerialUpdate;
+
+bool serialBio, serialNonBio, serialHzrd;
 
 //---------------------------------- function to read the distance using HC-SR04 sensor --------------------------------------
 long readDistance(int echoPin) {
@@ -121,6 +123,7 @@ void checkBins(){
         Serial.println(TYPE_BIODEGRADABLE);
         sentBiodegradableNotif=false;
         sentBiodegradableReset=true;
+        serialBio=false;
       }
     }
   }
@@ -149,6 +152,7 @@ void checkBins(){
         Serial.println(TYPE_NONBIODEGRADABLE);
         sentNonBiodegradableNotif=false;
         sentNonBiodegradableReset=true;
+        serialNonBio=false;
       }
     }
   }
@@ -177,6 +181,7 @@ void checkBins(){
         Serial.println(TYPE_HAZARDOUS);
         sentHazardousNotif=false;
         sentHazardousReset=true;
+        serialHzrd=false;
       }
     }
   }
@@ -203,6 +208,7 @@ void checkBins(){
         Serial.println(TYPE_BIODEGRADABLE);
         sentBiodegradableNotif=true;
         sentBiodegradableReset=false;
+        serialBio=true;
       }
     }
     if(isNonBiodegradableFull){
@@ -212,6 +218,7 @@ void checkBins(){
         Serial.println(TYPE_NONBIODEGRADABLE);
         sentNonBiodegradableNotif=true;
         sentNonBiodegradableReset=false;
+        serialNonBio=true;
       }
     }
     if(isHazardousFull){
@@ -221,6 +228,7 @@ void checkBins(){
         Serial.println(TYPE_HAZARDOUS);
         sentHazardousNotif=true;
         sentHazardousReset=false;
+        serialHzrd=true;
       }
     }
   }
@@ -342,36 +350,6 @@ void dumpError(){
 }
 
 //----------------------------------------------------------------------------------------------------------------------------
-void readSIM800Response(unsigned long timeout = 3000) {
-  unsigned long start = millis();
-  while (millis() - start < timeout) {
-    while (sim800.available()) {
-      char c = sim800.read();
-      Serial.write(c);  // forward SIM800L reply to Serial Monitor
-    }
-  }
-  Serial.println(); // new line for readability
-}
-
-// Function to send an SMS
-void sendSMS(const char* number, const char* message) {
-  Serial.println("Setting SMS text mode...");
-  sim800.println("AT+CMGF=1");
-  readSIM800Response();
-
-  Serial.print("Sending SMS to ");
-  Serial.println(number);
-  sim800.print("AT+CMGS=\"");
-  sim800.print(number);
-  sim800.println("\"");
-  readSIM800Response();
-
-  sim800.print(message);
-  delay(500);
-
-  sim800.write(26); // CTRL+Z
-  readSIM800Response(10000); // wait longer for network
-}
 
 void setup() {
   Serial.begin(9600);
@@ -412,19 +390,16 @@ void setup() {
   isInitializing=true;
   garbageType=TYPE_NULL;
   index=0;
-
-  /*sim800.begin(9600);    // SIM800L serial
-  delay(2000);
-
-  
-  Serial.println("Testing SIM800L...");
-  sim800.println("AT");
-  readSIM800Response();
-  sendSMS("+639701061974", "Hello from SIM800L!");//*/
+  previousSerialUpdate=0;
+  currentTime=0;
+  serialBio=false; 
+  serialNonBio=false; 
+  serialHzrd=false;
 }
 
 
 void loop() {
+  currentTime=millis();
   processMessage();
   if(isInitializing){
     return;
@@ -568,6 +543,27 @@ void loop() {
     }
   }
   
-  checkBins();
+  if(currentTime-previousSerialUpdate>2000){
+    checkBins();
+    Serial.print("c");
+    if(serialBio){
+      Serial.print("F");
+    }else{
+      Serial.print("N");
+    }
+    if(serialNonBio){
+      Serial.print("F");
+    }else{
+      Serial.print("N");
+    }
+    if(serialHzrd){
+      Serial.print("F");
+    }else{
+      Serial.print("N");
+    }
+    Serial.println();
+    previousSerialUpdate=currentTime;
+  }
+
   delay(1000);
 }

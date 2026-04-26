@@ -31,6 +31,7 @@ const Home = () => {
         if(!response2.data.success){
               toast.error("Can't get the status of SmartBin devices!");
         }else{
+          console.log(JSON.stringify(response2.data.data));
             setDeviceStatusCount(response2.data.data);
         }
 
