@@ -8,7 +8,6 @@ import {MdSummarize} from 'react-icons/md'
 import {BsFillTrashFill} from 'react-icons/bs'
 
 import PieChartDashboard from '../components/PieChartDashboard';
-import BarChartDashboard from '../components/BarChartDashboard';
 
 import assets from '../assets/assets';
 
@@ -85,8 +84,17 @@ const Home = () => {
           </div>
           
           <div className="flex flex-col w-full h-full">
-            <BarChartDashboard data={deviceStatusCount} />
-            <div className="grid grid-cols-1 lg:flex lg:flex-row w-full h-fit gap-10">
+            <div className="flex flex-col-2 h-full py-10 px-3">
+              <div className="flex-1 flex-row text-center">
+                <img src={assets.onlineBin} className="w-full h-auto my-5" />
+                <h2 className="text-xl text-gray-600 mt-5">Online: {(deviceStatusCount && deviceStatusCount.length>0) && deviceStatusCount[0].value}</h2>
+              </div>
+              <div className="flex-1 flex-row text-center">
+                <img src={assets.offlineBin} className="w-full h-auto my-5" />
+                <h2 className="text-xl text-gray-600 mt-5">Offline: {(deviceStatusCount && deviceStatusCount.length>0) && deviceStatusCount[1].value}</h2>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 mb-5 lg:flex lg:flex-row w-full h-fit gap-10">
               <Link to="/usages" className="button-in-use h-fit mt-10 flex gap-3">
                 <MdSummarize size="30"/> Check Usage Records
               </Link>
