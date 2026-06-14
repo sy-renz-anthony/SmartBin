@@ -3,10 +3,23 @@ import './global.css';
 import { StatusBar } from "expo-status-bar";
 import Toast from 'react-native-toast-message';
 import { AuthProvider } from '../context/AuthContext';
+import { NotificationProvider } from '../context/NotificationContext';  
+
+import * as Notifications from "expo-notifications";
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true, 
+    shouldShowBanner: true,
+    shouldShowList: true,
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+  }),
+});
 
 export default function RootLayout() {
   return (
     <AuthProvider>
+      <NotificationProvider>
         <StatusBar hidden={true} />
         <Stack screenOptions={{ headerShown: false }}>
             <Stack.Screen name="index" />
@@ -15,7 +28,8 @@ export default function RootLayout() {
             <Stack.Screen name="OTPPasswordResetScreen" />
             <Stack.Screen name="(tabs)" options={{ gestureEnabled: false }} />
         </Stack>
-    <Toast />
+      <Toast />
+      </NotificationProvider>
     </AuthProvider>
   );
 }

@@ -40,6 +40,5 @@ yarn-error.*
 app-example
 
 # generated native folders
-google-services.json
 /ios
 /android

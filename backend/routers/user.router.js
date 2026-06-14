@@ -1,6 +1,6 @@
 import express from 'express';
 import userAuthentication from '../functions/userAuthentication.js';
-import {register, update, login, logout, changePassword, sendPasswordResetOTP, resetPassword, getMyInfo, searchEmployees, getAllEmployees, isOTPCodesCorrect, validateMyPassword, getAllUserNumberToSendSMS} from '../controllers/user.controller.js';
+import {register, update, login, logout, changePassword, sendPasswordResetOTP, resetPassword, getMyInfo, searchEmployees, getAllEmployees, isOTPCodesCorrect, validateMyPassword, getAllUserNumberToSendSMS, setExpoPushNotificationToken} from '../controllers/user.controller.js';
 
 const router =express.Router();
 
@@ -17,5 +17,6 @@ router.get("/my-info", userAuthentication, getMyInfo);
 router.get("/search-employees", userAuthentication, searchEmployees);
 router.get("/all", userAuthentication, getAllEmployees);
 router.get("/for-sms", getAllUserNumberToSendSMS);
+router.put("/set-notification-token", userAuthentication, setExpoPushNotificationToken);
 
 export default router;

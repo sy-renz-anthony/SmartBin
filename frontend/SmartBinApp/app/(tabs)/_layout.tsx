@@ -63,7 +63,7 @@ export default function _Layout() {
                 )
             }}
         />
-{/*---------------------------------- This is my hiddent navbar button for events screen ----------------------------------------------------*/}
+{/*---------------------------------- This is my hidden navbar button for events screen ----------------------------------------------------*/}
         <Tabs.Screen 
             name="Events"
             options={{

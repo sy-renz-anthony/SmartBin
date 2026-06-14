@@ -4,23 +4,30 @@
     "slug": "app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/logo_header.png",
+    "icon": "./assets/images/logo_launcher.png",
     "scheme": "app",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.smartbin.app",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/images/logo_header.png",
-        "backgroundImage": "./assets/images/logo_header.png",
-        "monochromeImage": "./assets/images/logo_header.png"
+        "foregroundImage": "./assets/images/logo_launcher.png",
+        "backgroundImage": "./assets/images/logo_launcher.png",
+        "monochromeImage": "./assets/images/logo_launcher.png"
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.anonymous.app"
+      "package": "com.smartbin.app",
+      "googleServicesFile": "./google-services.json",
+      "compileSdkVersion": 34,
+      "targetSdkVersion": 34
     },
     "web": {
       "output": "static",
