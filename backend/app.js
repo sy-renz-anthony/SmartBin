@@ -44,7 +44,7 @@ app.use("/api/events", eventRouters);
 app.use("/api/volume-records", volumeRecordRouters);
 
 setInterval(checkOfflineDevices, 60000);
-setInterval(checkDevicesForFullBin, 4800000);
+//setInterval(checkDevicesForFullBin, 4800000);
 
 app.listen(PORT, ()=>{
     dbConnectionString();
