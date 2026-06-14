@@ -118,7 +118,8 @@ const DevicesScreen =()=>{
                             </Text>
                         </TouchableOpacity>
                     </View>
-                    {devices.length>0 && <FlatList
+                    {devices.length>0 && 
+                    <FlatList
                         data={devices}
                         keyExtractor={(item) => item.deviceID}
                         renderItem={({ item }) => <DeviceCard device={item} pressEventHandler={pressEventHandler} />}

@@ -17,7 +17,7 @@ const MetricCard = ({ title, value,  iconName, color }) => (
 );
 
 const DeviceCard = ({ device, pressEventHandler }) => {
-  //console.log(JSON.stringify(device));
+  //console.log(JSON.stringify(device.isNonBiodegradableBinFull));
   return (
     <TouchableOpacity
       className="bg-white mx-4 mt-4 p-4 rounded-xl shadow-md border border-gray-100 active:bg-gray-50"
@@ -49,7 +49,7 @@ const DeviceCard = ({ device, pressEventHandler }) => {
         />
         <MetricCard
           title="Non-Biodegradable"
-          value={device.isNonBiodegradableBinBull}
+          value={device.isNonBiodegradableBinFull}
           unit=""
           iconName="bottle-soda"
           color="bg-orange-50"

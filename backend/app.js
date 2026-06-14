@@ -12,6 +12,7 @@ import eventRouters from './routers/eventRecord.router.js';
 import volumeRecordRouters from './routers/volumeRecord.router.js';
 
 import checkOfflineDevices from './functions/checkOfflineDevices.js';
+import checkDevicesForFullBin from './functions/checkDevicesForFullBin.js';
 
 const secretPath =
   fs.existsSync('/etc/secrets/.env')
@@ -43,8 +44,10 @@ app.use("/api/events", eventRouters);
 app.use("/api/volume-records", volumeRecordRouters);
 
 setInterval(checkOfflineDevices, 60000);
+setInterval(checkDevicesForFullBin, 4800000);
 
 app.listen(PORT, ()=>{
     dbConnectionString();
     console.log("server started at http://localhost:"+PORT);
+    checkDevicesForFullBin();
 });
