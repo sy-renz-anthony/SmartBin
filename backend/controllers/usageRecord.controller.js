@@ -5,6 +5,7 @@ import VolumeRecord from '../models/volumeRecord.model.js';
 import User from '../models/user.model.js';
 import { isDateValid } from '../functions/functions.js';
 import moment from 'moment-timezone';
+import checkDevicesForFullBin from '../functions/checkDevicesForFullBin.js';
 
 import mongoose from "mongoose";
 
@@ -313,6 +314,8 @@ export const binFullError = async(req, res) =>{
             }    
             
         });
+        
+        checkDevicesForFullBin();
         res.status(200).json({success: true, message: "Updated Garbage Bin Status Successfully!"});
     }catch(error){
         if(session.inTransaction()){
