@@ -385,8 +385,8 @@ export const changePassword = async (req, res) =>{
         session.startTransaction();
         const hashedPassword = await bcrypt.hash(newPassword, salt);
         user.password = hashedPassword;
-        if(!onRecordUser.expoPushNotificationToken || onRecordUser.expoPushNotificationToken.length<1){
-            onRecordUser.expoPushNotificationToken="";
+        if(!user.expoPushNotificationToken || user.expoPushNotificationToken.length<1){
+            user.expoPushNotificationToken="";
         }
 
         await User.findByIdAndUpdate(id, user, {new: true, session});
